@@ -335,6 +335,11 @@ body {
   font-weight: 600;
 }
 
+.p-info {
+  color: var(--color-header1);
+  font-weight: 600;
+}
+
 .color-blue {
   color: var(--color1);
 }

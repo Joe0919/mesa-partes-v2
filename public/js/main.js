@@ -3,7 +3,9 @@ $(document).ready(function () {
   let idni = $("#dniuser").val();
 
   $("#loader").hide(); // Ocultar DIv de carga
-  datosUsuarioLogeado($("#dniuser").val());
+  datosUsuarioLogeado(contarDocsxArea); // Carga los datos del usuario logeado y los escribe
+
+  contarDocsGeneral();
 
   // ACCIONES GENERALES
   //Boton mostrar datos de Institucion general
@@ -325,7 +327,7 @@ $(document).ready(function () {
   });
 });
 
-function datosUsuarioLogeado() {
+function datosUsuarioLogeado(callback) {
   let opcion = 2;
   let idni = $("#dniuser").val();
   $.ajax({
@@ -341,10 +343,63 @@ function datosUsuarioLogeado() {
       data = $.parseJSON(response);
       nombres = data["nombres"] + " " + data["ap"] + " " + data["am"] + " ";
       $("#info-datos").text(nombres);
-      $("#idareaid").val(data["IDArea"]);
+      $("#id_areaid").val(data["IDArea"]);
       $("#info-area").val(data["Area"]);
+      $("#info-area-desc").text(data["Area"]);
       $("#info-area1").text(data["Area"]);
       $("#idinstitu").val(data["IDInst"]);
+      $("#loader").hide();
+      callback();// llamar a la funcion despues de cargar los datos
+    },
+    error: function (xhr, status, error) {
+      // Manejar errores de la petición AJAX
+      console.error("Error: " + error);
+    },
+  });
+}
+
+function contarDocsxArea() {
+  let opcion = 2;
+  let idubicacion = $("#id_areaid").val();
+  $.ajax({
+    url: "../../app/controllers/documento-controller.php",
+    type: "POST",
+    datatype: "json",
+    data: { opcion: opcion, idubicacion: idubicacion },
+    beforeSend: function () {
+      /* * Se ejecuta al inicio de la petición* */
+      $("#loader").show();
+    },
+    success: function (response) {
+      data = $.parseJSON(response);
+      $("#span_cant_rechazados_area").text(data["cantidad_rechazado_area"]);
+      $("#span_cant_pendientes_area").text(data["cantidad_pendiente_area"]);
+      $("#span_cant_aceptados_area").text(data["cantidad_aceptado_area"]);
+      $("#loader").hide();
+    },
+    error: function (xhr, status, error) {
+      // Manejar errores de la petición AJAX
+      console.error("Error: " + error);
+    },
+  });
+}
+function contarDocsGeneral() {
+  let opcion = 1;
+  $.ajax({
+    url: "../../app/controllers/documento-controller.php",
+    type: "POST",
+    datatype: "json",
+    data: { opcion: opcion },
+    beforeSend: function () {
+      /* * Se ejecuta al inicio de la petición* */
+      $("#loader").show();
+    },
+    success: function (response) {
+      data = $.parseJSON(response);
+
+      $("#span_cant_rechazados").text(data["cantidad_rechazado"]);
+      $("#span_cant_pendientes").text(data["cantidad_pendiente"]);
+      $("#span_cant_aceptados").text(data["cantidad_aceptado"]);
       $("#loader").hide();
     },
     error: function (xhr, status, error) {

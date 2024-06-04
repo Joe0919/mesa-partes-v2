@@ -1,27 +1,15 @@
 <?php
-require_once "../../app/config/config.php";
-require_once "../../app/config/conexion.php";
-
-if (!isset($_SESSION["idusuarios"])) {
-    header("Location:" . URL . "views/Acceso/");
-}
-
-$iduser = $_SESSION["idusuarios"];
-$foto = $_SESSION["foto"];
-$dni = $_SESSION["dni"];
-
-date_default_timezone_set('America/Lima');
+require_once "../inc/Validacion/Validacion.php";
 ?>
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mesa de Partes Virtual</title>
-
+    
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -33,10 +21,12 @@ date_default_timezone_set('America/Lima');
     <link rel="stylesheet" href="../../public/icons/feather.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="../../app/templates/AdminLTE/dist/css/adminlte.min.css">
-
+    
     <link rel="stylesheet" href="../../public/css/style.css">
-
+    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -63,7 +53,7 @@ date_default_timezone_set('America/Lima');
                     <h3 class="font-weight-bold h6 m-0">
                         USUARIO: <span id="info-datos" class="font-weight-normal"></span>
                     </h3>
-                    <input id="idareaid" type="hidden">
+                    <input id="id_areaid" class="id_areaid" type="hidden" value="0">
                     <input id="info-area" type="hidden">
                     <input id="idinstitu" name="idinstitu" type="hidden">
                     <input id="iduser" name="iduser" type="hidden" value="<?php echo $iduser; ?>">
@@ -262,7 +252,6 @@ date_default_timezone_set('America/Lima');
 
             <!-- Main content -->
             <main class="content">
-
                 <div class="container-fluid">
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
@@ -278,7 +267,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-danger"><img src="../../public/images/rechazado.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
-                                                    <span class="info-box-text1 info-box-count">20</span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_rechazados"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -288,7 +277,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-primary"><img src="../../public/images/pendiente.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
-                                                    <span class="info-box-text1 info-box-count">20</span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -298,7 +287,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-green"><img src="../../public/images/documentos.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
-                                                    <span class="info-box-text1 info-box-count">20</span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_aceptados"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -311,7 +300,9 @@ date_default_timezone_set('America/Lima');
                             <div class="card card-outline card-fuchsia">
                                 <div class="card-header">
                                     <h3 class="title-content-h3">
-                                        <i class="ion ion-md-folder-open mr-1"></i><b>RESUMEN DE TRÁMITES DEL ÁREA:<b>
+                                        <i class="ion ion-md-folder-open mr-1"></i><b>RESUMEN DE TRÁMITES DEL ÁREA:
+                                            <span id="info-area-desc" class="p-info"></span>
+                                            <b>
                                     </h3>
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6 col-12">
@@ -319,7 +310,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-danger"><img src="../../public/images/rechazado.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
-                                                    <span class="info-box-text1 info-box-count"><b id="cantR">10</b></span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_rechazados_area"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -329,7 +320,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-primary"><img src="../../public/images/pendiente.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
-                                                    <span class="info-box-text1 info-box-count"><b id="cantP">10</b></span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes_area"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -339,7 +330,7 @@ date_default_timezone_set('America/Lima');
                                                 <span class="info-box-icon bg-green"><img src="../../public/images/documentos.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
-                                                    <span class="info-box-text1 info-box-count"><b id="cantA">10</b></span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_aceptados_area"></span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>
@@ -535,15 +526,15 @@ date_default_timezone_set('America/Lima');
                             </div>
                             <div class="form-group">
                                 <label>Contraseña Actual<span class="span-red"> (*)</span></label>
-                                <input type="password" class="form-control" name="icontra" id="icontra" required minlength="8"/>
+                                <input type="password" class="form-control" name="icontra" id="icontra" required minlength="8" />
                             </div>
                             <div class="form-group">
                                 <label>Contraseña Nueva<span class="span-red"> (*)</span></label>
-                                <input type="password" class="form-control" name="inewcontra" id="inewcontra" required minlength="8"/>
+                                <input type="password" class="form-control" name="inewcontra" id="inewcontra" required minlength="8" />
                             </div>
                             <div class="form-group">
                                 <label>Confirmar nueva contraseña<span class="span-red"> (*)</span></label>
-                                <input type="password" class="form-control" name="iconfirmpsw" id="iconfirmpsw" required minlength="8"/>
+                                <input type="password" class="form-control" name="iconfirmpsw" id="iconfirmpsw" required minlength="8" />
                                 <b id="error3"></b>
                             </div>
                             <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>

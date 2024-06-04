@@ -8,7 +8,7 @@ class Empleado extends Conectar
     {
         $conectar = parent::conexion();
 
-        $consulta = "select e.idempleado ID, p.dni dni, p.nombres, p.ap_paterno ap, p.ap_materno am, 
+        $consulta = "SELECT e.idempleado ID, p.dni dni, p.nombres, p.ap_paterno ap, p.ap_materno am, 
         p.telefono, p.direccion, e.cod_empleado cod, e.idareainstitu ID2,ar.idarea IDArea, ar.area Area, a.idinstitucion IDInst
         FROM empleado e
         INNER JOIN persona p ON e.idpersona = p.idpersona
