@@ -16,7 +16,10 @@ class Usuario extends Conectar
                 header("Location:" . Conectar::ruta() . "views/Acceso/index.php?m=2");
                 exit();
             } else {
-                $sql = "select * from usuarios where dni=? and contraseña=? and estado='ACTIVO'";
+                $sql = "SELECT idusuarios, nombre, u.dni dni, p.email email, foto
+                from usuarios u
+                inner join persona p
+                on p.dni=u.dni where u.dni=? and contrasena=? and estado='ACTIVO'";
                 $sql = $conectar->prepare($sql);
                 $sql->bindValue(1, $usuario);
                 $sql->bindValue(2, $password);
@@ -42,7 +45,9 @@ class Usuario extends Conectar
     {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT idusuarios, nombre, dni, email, estado FROM usuarios";
+        $consulta = "SELECT idusuarios, nombre, u.dni dni, email, estado FROM usuarios u
+        INNER JOIN persona p
+        ON p.dni=u.dni";
         $consulta = $conectar->prepare($consulta);
         $consulta->execute();
         return $consulta->fetchall(pdo::FETCH_ASSOC);
@@ -52,9 +57,11 @@ class Usuario extends Conectar
     {
         $conectar = parent::conexion();
 
-        $consulta = "select idusuarios ID1, idpersona ID2, p.dni dni, nombres ,ap_paterno ap, ap_materno am, telefono, direccion, u.email email, nombre,r.idroles IDR, estado,foto
-        from persona p, usuarios u, roles r
-        where p.dni=u.dni and r.idroles=u.idroles and idusuarios=? and p.dni=?";
+        $consulta = "SELECT u.idusuarios ID1, p.idpersona ID2, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email, nombre, r.idroles IDR, u.estado, u.foto
+        FROM usuarios u
+        INNER JOIN persona p ON p.dni = u.dni
+        INNER JOIN roles r ON r.idroles = u.idroles
+        WHERE u.idusuarios = ? AND p.dni = ?";
         $consulta = $conectar->prepare($consulta);
         $consulta->bindValue(1, $idusu);
         $consulta->bindValue(2, $dni);
@@ -63,18 +70,85 @@ class Usuario extends Conectar
         return $consulta->fetch(pdo::FETCH_ASSOC);
     }
 
-    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion)
+    public function validarDuplicidadDatosUsuario($dni,  $email, $celular, $nom_usu)
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT count(*) total from usuarios u inner join persona p
+        on u.dni=p.dni where p.dni=? or nombre=? or p.email=? or telefono=?";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->bindValue(1, $dni);
+        $consulta->bindValue(2, $nom_usu);
+        $consulta->bindValue(3, $email);
+        $consulta->bindValue(4, $celular);
+        $consulta->execute();
+        $data = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        if ($data['total'] == 0) {
+            $data = 0;
+        } else {
+            $data = 1;
+        }
+        return $data;
+    }
+    public function crearNuevoUsuario($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol)
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT count(*) total from usuarios u inner join persona p
+        on u.dni=p.dni where p.dni=? or nombre=? or p.email=? or telefono=?";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->bindValue(1, $dni);
+        $consulta->bindValue(2, $nom_usu);
+        $consulta->bindValue(3, $email);
+        $consulta->bindValue(4, $celular);
+        $consulta->execute();
+        $data = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        if ($data['total'] == 0) {
+            $consulta = "INSERT into persona values (null,?,?,?,?,?,?,?,null,null)";
+            $consulta = $conectar->prepare($consulta);
+            $consulta->bindValue(1, $dni);
+            $consulta->bindValue(2, $appat);
+            $consulta->bindValue(3, $apmat);
+            $consulta->bindValue(4, $nombre);
+            $consulta->bindValue(5, $email);
+            $consulta->bindValue(6, $celular);
+            $consulta->bindValue(7, $direccion);
+            $consulta->execute();
+
+            $consulta = "INSERT into usuarios values (null,?,?,?,sysdate(),null,sysdate(),'INACTIVO','files/images/0/persona.png',?)";
+            $consulta = $conectar->prepare($consulta);
+            $consulta->bindValue(1, $nom_usu);
+            $consulta->bindValue(2, $dni);
+            $consulta->bindValue(3, $psw);
+            $consulta->bindValue(4, $rol);
+            $consulta->execute();
+
+            $consulta = "SELECT * FROM usuarios ORDER BY idusuarios DESC LIMIT 1";
+            $resultado = $conectar->prepare($consulta);
+            $resultado->execute();
+            $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $data = 1;
+        }
+        return $data;
+    }
+
+
+    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado)
     {
         $conectar = parent::conexion();
 
         $consulta = "SELECT count(*) AS total FROM persona p 
         INNER JOIN usuarios u ON p.dni = u.dni 
         INNER JOIN roles r ON r.idroles = u.idroles
-        WHERE (nombre = ? OR u.email = ?) AND idpersona != ?";
+        WHERE (nombre=? or p.email=? or telefono=?) AND idpersona != ?";
         $resultado = $conectar->prepare($consulta);
         $resultado->bindValue(1, $nom_usu);
         $resultado->bindValue(2, $email);
-        $resultado->bindValue(3, $idper);
+        $resultado->bindValue(3, $celular);
+        $resultado->bindValue(4, $idper);
         $resultado->execute();
         $data = $resultado->fetch(PDO::FETCH_ASSOC);
 
@@ -92,17 +166,19 @@ class Usuario extends Conectar
             $resultado->bindValue(7, $idper);
             $resultado->execute();
 
-            $consulta = "UPDATE usuarios SET nombre=?, email=?, fechaedicion=sysdate()
+            $consulta = "UPDATE usuarios SET nombre=?, fechaedicion=sysdate(), estado=?
                 WHERE idusuarios=?";
             $resultado = $conectar->prepare($consulta);
             $resultado->bindValue(1, $nom_usu);
-            $resultado->bindValue(2, $email);
+            $resultado->bindValue(2, $estado);
             $resultado->bindValue(3, $idusu);
             $resultado->execute();
-            return $data = $resultado->fetch(PDO::FETCH_ASSOC);
+            $data = $resultado->fetch(PDO::FETCH_ASSOC);
         } else {
             $data = 1;
         }
+
+        return $data;
     }
 
     public function editarFotoUsuarioID($idusu, $nueva_ruta)
@@ -122,7 +198,7 @@ class Usuario extends Conectar
     {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT count(*) total FROM usuarios where contraseña=? and idusuarios=?";
+        $consulta = "SELECT count(*) total FROM usuarios where contrasena=? and idusuarios=?";
         $resultado = $conectar->prepare($consulta);
         $resultado->bindValue(1, $psw_anterior);
         $resultado->bindValue(2, $idusu);
@@ -132,7 +208,7 @@ class Usuario extends Conectar
         if ($data['total'] == 0) {
             $data = 1;
         } else {
-            $consulta = "UPDATE usuarios SET contraseña=?, fechaedicion=sysdate() where idusuarios=?";
+            $consulta = "UPDATE usuarios SET contrasena=?, fechaedicion=sysdate() where idusuarios=?";
             $resultado = $conectar->prepare($consulta);
             $resultado->bindValue(1, $psw_nueva);
             $resultado->bindValue(2, $idusu);
@@ -140,5 +216,39 @@ class Usuario extends Conectar
             $data = $resultado->fetch(PDO::FETCH_ASSOC);
         }
         return $data;
+    }
+
+    public function eliminarUsuarioID($dni)
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT count(*) total from empleado where idpersona=(select idpersona from persona where dni='$dni');";
+        $resultado = $conectar->prepare($consulta);
+        $resultado->execute();
+        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+
+        if ($data['total'] == 0) {
+            $consulta = "DELETE FROM usuarios WHERE dni='$dni' ";
+            $resultado = $conectar->prepare($consulta);
+            $resultado->execute();
+
+            $consulta = "DELETE FROM persona WHERE dni='$dni'";
+            $resultado = $conectar->prepare($consulta);
+            $resultado->execute();
+        } else {
+            $data = 1;
+        }
+        return $data;
+    }
+
+    public function consultarRoles()
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT * FROM roles r";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->execute();
+
+        return $consulta->fetchAll(pdo::FETCH_ASSOC);
     }
 }

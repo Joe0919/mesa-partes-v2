@@ -18,7 +18,10 @@ $celular = (isset($_POST['icel'])) ? $_POST['icel'] : '';
 $direccion = (isset($_POST['idir'])) ? strtoupper(trim($_POST['idir'])) : '';
 $email = (isset($_POST['iemail'])) ? $_POST['iemail'] : '';
 
-
+$nom_usu = (isset($_POST['inomusu'])) ? $_POST['inomusu'] : '';
+$rol = (isset($_POST['irol'])) ? $_POST['irol'] : '';
+$estado = (isset($_POST['estado'])) ? $_POST['estado'] : '';
+$psw = (isset($_POST['ipassco'])) ? $_POST['ipassco'] : '';
 
 $psw_anterior = (isset($_POST['icontra'])) ? $_POST['icontra'] : '';
 $psw_nueva = (isset($_POST['inewcontra'])) ? $_POST['inewcontra'] : '';
@@ -32,7 +35,6 @@ switch ($opcion) {
         $data = $usuario->listarUsuarios();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
-
     case 2:
         // Consultar por ID para edición
         $data = $usuario->consultarUsuarioID($idusu, $dni);
@@ -40,11 +42,13 @@ switch ($opcion) {
         break;
     case 3:
         // Editar datos por ID
-        $data = $usuario->editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion);
+        $data = $usuario->editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion,$estado);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 4:
         // ELiminar por ID
+        $data = $usuario->eliminarUsuarioID($dni);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 5:
         // Editar foto por ID
@@ -77,6 +81,23 @@ switch ($opcion) {
         //Editar contraseña de usuario
         $data = $usuario->cambioContraUsuarioID($psw_anterior, $psw_nueva, $idusu);
         // $data = $psw_anterior." - ". $psw_nueva. " - ". $idusu;
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
+    case 7:
+        //validar Datos de Usuario
+        $data = $usuario->validarDuplicidadDatosUsuario($dni, $email, $celular,  $nom_usu);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        // echo $dni, " ",  $appat," ", $apmat," ", $nombre," ", $email," ", $celular," ", $direccion," ", $nom_usu," ", $psw," ", $rol;
+        break;
+    case 8:
+        //Guardar Datos de Usuario
+        $data = $usuario->crearNuevoUsuario($dni, $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw_nueva, $rol);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        // echo $dni, " ",  $appat," ", $apmat," ", $nombre," ", $email," ", $celular," ", $direccion," ", $nom_usu," ", $psw," ", $rol;
+        break;
+    case 10:
+        //Mostrar roles de usuario
+        $data = $usuario->consultarRoles();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     default:

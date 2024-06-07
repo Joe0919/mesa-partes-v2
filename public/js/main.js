@@ -3,9 +3,12 @@ $(document).ready(function () {
   let idni = $("#dniuser").val();
 
   $("#loader").hide(); // Ocultar DIv de carga
-  datosUsuarioLogeado(contarDocsxArea); // Carga los datos del usuario logeado y los escribe
 
-  contarDocsGeneral();
+  cargarDatosInstitucion();
+
+  datosUsuarioLogeado(contarDocsxArea); // Carga los datos del usuario logeado y los escribe y luego cuenta los docs
+
+  contarDocsGeneral(); //Muestra la cantidad de docs pendientes, aceptados y rechazados
 
   // ACCIONES GENERALES
   //Boton mostrar datos de Institucion general
@@ -16,14 +19,22 @@ $(document).ready(function () {
       type: "POST",
       datatype: "json",
       data: { opcion: opcion },
+      beforeSend: function () {
+        /* * Se ejecuta al inicio de la petición* */
+        $("#loader").show();
+      },
       success: function (response) {
         data = $.parseJSON(response);
-
+        $("#loader").hide();
         $("#idinst").val(data["idinstitucion"]);
         $("#iruci").val(data["ruc"]);
         $("#irazoni").val(data["razon"]);
         $("#idirei").val(data["dirección"]);
         $("#modalinstitu").modal({ backdrop: "static", keyboard: false });
+      },
+      error: function (xhr, status, error) {
+        // Manejar errores de la petición AJAX
+        console.error("Error: " + error);
       },
     });
   });
@@ -68,7 +79,7 @@ $(document).ready(function () {
               } else {
                 $("#loader").hide();
                 ResetForm("formperfil");
-                MostrarAlerta("Hecho", "Se actualizaron sus datos.", "success");
+                MostrarAlertaxTiempo("Hecho", "Se actualizaron sus datos.", "success");
                 $("#modalinstitu").modal("hide");
               }
             },
@@ -82,7 +93,11 @@ $(document).ready(function () {
         }
       });
     } else {
-      alert("Por favor. Complete los campos requeridos");
+      MostrarAlerta(
+        "Advertencia",
+        "Por favor, completa los campos requeridos.",
+        "error"
+      );
     }
   });
 
@@ -96,6 +111,10 @@ $(document).ready(function () {
       type: "POST",
       datatype: "json",
       data: { opcion: opcion, idusu: idusu, idni: idni },
+      beforeSend: function () {
+        /* * Se ejecuta al inicio de la petición* */
+        $("#loader").show();
+      },
       success: function (response) {
         data = $.parseJSON(response);
         $("#idusup").val(data["ID1"]);
@@ -109,6 +128,8 @@ $(document).ready(function () {
         $("#idirp").val(data["direccion"]);
         $("#iemailp").val(data["email"]);
         $("#inomusup").val(data["nombre"]);
+        $("#estadop").val(data["estado"]);
+        $("#loader").hide();
 
         $("#modalUsu").modal({ backdrop: "static", keyboard: false });
       },
@@ -158,10 +179,11 @@ $(document).ready(function () {
                   "El correo y/o email ya están registrados",
                   "error"
                 );
+                $("#loader").hide();
               } else {
                 $("#loader").hide();
                 ResetForm("formperfil");
-                MostrarAlerta("Hecho", "Se actualizaron sus datos.", "success");
+                MostrarAlertaxTiempo("Hecho", "Se actualizaron sus datos.", "success");
                 $("#modalUsu").modal("hide");
               }
             },
@@ -173,7 +195,11 @@ $(document).ready(function () {
         }
       });
     } else {
-      alert("Por favor. Complete los campos requeridos");
+      MostrarAlerta(
+        "Advertencia",
+        "Por favor, complete todos los campos requeridos.",
+        "error"
+      );
     }
   });
 
@@ -207,10 +233,15 @@ $(document).ready(function () {
         lector.readAsDataURL(archivo);
       } else {
         // El archivo seleccionado no es una imagen
-        alert("Por favor, selecciona un archivo de imagen.");
+        MostrarAlerta(
+          "Advertencia",
+          "Por favor, selecciona un archivo de imagen.",
+          "error"
+        );
       }
     }
   });
+
   //Accion para cambiar foto del usuario logeado
   $("#FormFotop").on("submit", function (e) {
     e.preventDefault();
@@ -238,7 +269,7 @@ $(document).ready(function () {
           success: function (msg) {
             console.log(msg);
             $("#loader").hide();
-            MostrarAlerta(
+            MostrarAlertaxTiempo(
               "Hecho",
               "Se hizo el cambio de la foto de perfil",
               "success"
@@ -258,6 +289,36 @@ $(document).ready(function () {
   //Mostrar modal general de cambio de contraseña
   $("#conf-psw").click(function () {
     $("#modaleditpswG").modal({ backdrop: "static", keyboard: false });
+  });
+
+  $("#iconfirmpsw").blur(function () {
+    //Validacion de contraseña
+    if ($("#iconfirmpsw").val().length < 8) {
+      $("#ErrorContraG").text("").css("color", "red");
+    } else if ($(this).val() === $("#inewcontra").val()) {
+      $("#ErrorContraG")
+        .text("Las contraseñas coinciden")
+        .css("color", "green");
+    } else {
+      $("#ErrorContraG")
+        .text("Las contraseñas no coinciden")
+        .css("color", "red");
+    }
+  });
+
+  $("#inewcontra").blur(function () {
+    //Validacion de contraseña
+    if ($("#iconfirmpsw").val().length < 8) {
+      $("#ErrorContraG").text("").css("color", "red");
+    } else if ($(this).val() === $("#iconfirmpsw").val()) {
+      $("#ErrorContraG")
+        .text("Las contraseñas coinciden")
+        .css("color", "green");
+    } else {
+      $("#ErrorContraG")
+        .text("Las contraseñas no coinciden")
+        .css("color", "red");
+    }
   });
 
   //Enviar para cambiar contraseña del usuario logeado
@@ -307,7 +368,7 @@ $(document).ready(function () {
                   ResetForm("form-psw");
                   $("#error3").text("");
                   $("#loader").hide();
-                  MostrarAlerta(
+                  MostrarAlertaxTiempo(
                     "Éxito",
                     "Se hizo el cambio de contraseña",
                     "success"
@@ -318,11 +379,19 @@ $(document).ready(function () {
           }
         });
       } else {
-        alert("La contraseña nueva no coincide en la confirmación");
+        MostrarAlerta(
+          "Advertencia",
+          "No ingreso contraseñas que coincidan.",
+          "error"
+        );
         $("#iconfirmpsw").select();
       }
     } else {
-      alert("Por favor. Complete los campos obligatorios");
+      MostrarAlerta(
+        "Advertencia",
+        "Por favor, complete todos los campos requeridos.",
+        "error"
+      );
     }
   });
 });
@@ -349,7 +418,7 @@ function datosUsuarioLogeado(callback) {
       $("#info-area1").text(data["Area"]);
       $("#idinstitu").val(data["IDInst"]);
       $("#loader").hide();
-      callback();// llamar a la funcion despues de cargar los datos
+      callback(); // llamar a la funcion despues de cargar los datos
     },
     error: function (xhr, status, error) {
       // Manejar errores de la petición AJAX
@@ -357,7 +426,6 @@ function datosUsuarioLogeado(callback) {
     },
   });
 }
-
 function contarDocsxArea() {
   let opcion = 2;
   let idubicacion = $("#id_areaid").val();
@@ -408,6 +476,29 @@ function contarDocsGeneral() {
     },
   });
 }
+function cargarDatosInstitucion() {
+  opcion = 1;
+  $.ajax({
+    url: "../../app/controllers/institucion-controller.php",
+    type: "POST",
+    datatype: "json",
+    data: { opcion: opcion },
+    beforeSend: function () {
+      /* * Se ejecuta al inicio de la petición* */
+      $("#loader").show();
+    },
+    success: function (response) {
+      data = $.parseJSON(response);
+      $("#loader").hide();
+      $("#inst_logo").attr("src", "../../public/" + data["logo"]);
+      $("#inst_footer").text(data["razon"]);
+    },
+    error: function (xhr, status, error) {
+      // Manejar errores de la petición AJAX
+      console.error("Error: " + error);
+    },
+  });
+}
 
 function salir() {
   window.location = "../../app/controllers/salir.php";
@@ -419,8 +510,17 @@ function validaNumericos(event) {
   }
   return false;
 }
-function MostrarAlerta(mensaje, descripcion, tipoalerta) {
-  Swal.fire(mensaje, descripcion, tipoalerta);
+function MostrarAlerta(titulo, descripcion, tipoalerta) {
+  Swal.fire(titulo, descripcion, tipoalerta);
+}
+function MostrarAlertaxTiempo(titulo, descripcion, tipoalerta) {
+  Swal.fire({
+    title: titulo,
+    text: descripcion,
+    icon: tipoalerta,
+    showConfirmButton: false,
+    timer: 2000
+  });
 }
 
 function verificarCampos(formulario) {

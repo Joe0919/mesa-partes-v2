@@ -1,138 +1,29 @@
-<?php
-require_once "../../app/config/config.php";
-require_once "../../app/config/conexion.php";
-require_once "../../app/config/cons.php";
-
-if (!isset($_SESSION["idusuarios"])) {
-    header("Location:" . URL . "views/Acceso/");
-}
-
-$iduser = $_SESSION["idusuarios"];
-$foto = $_SESSION["foto"];
-$dni = $_SESSION["dni"];
-?>
+<?php require_once "../inc/Validacion/Validacion.php" ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mesa de Partes Virtual</title>
 
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../app/templates/AdminLTE/plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <link rel="stylesheet" href="../../public/icons/ionicons.css">
-    <!-- Feather Icons -->
-    <link rel="stylesheet" href="../../public/icons/feather.css">
-    <link rel="stylesheet" href="../../app/templates/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../../app/templates/AdminLTE/dist/css/adminlte.min.css">
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Estilos principales -->
-    <link rel="stylesheet" href="../../public/css/style.css">
+    <?php require_once "../inc/MainHead/MainHead.php" ?>
+
+    <title>Usuarios | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+
+    <?php require_once "../inc/Loader/Loader.php" ?>
+
     <div class="wrapper">
 
-        <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-dark navbar-cyan d-flex justify-content-between w-auto">
-            <!-- Left navbar links -->
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-                <li class="nav-item d-flex align-items-center">
-                    <h3 class="font-weight-bold h6 m-0">
-                        USUARIO: <span class="font-weight-normal">ROGER MARTIN MARTINEZ JAMANCA</span>
-                    </h3>
-                    <input id="idareaid" name="idarealogin" type="hidden" value="">
-                    <input id="idarealogin" name="idarealogin" type="hidden" value="">
-                    <input id="idinstitu" name="idinstitu" type="hidden" value="">
-                    <input id="iduser" name="iduser" type="hidden" value="<?php echo $iduser; ?>">
-                    <input id="dniuser" name="dniuser" type="hidden" value="<?php echo $dni; ?>">
-                </li>
-                <li class="nav-item d-flex align-items-center ml-5">
-                    <h3 class="font-weight-bold h6 m-0">ÁREA: <span class="font-weight-normal">SECRETARIA</span></h3>
-                </li>
-            </ul>
+        <?php require_once "../inc/MainHeader/MainHeader.php" ?>
 
-            <!-- Right navbar links -->
-            <ul class="navbar-nav d-flex align-items-center">
-                <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell"></i>
-                        <span class="badge badge-danger navbar-badge h5">15</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">15 Notifications</span>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 4 new messages
-                            <span class="float-right text-muted text-sm">3 mins</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-users mr-2"></i> 8 friend requests
-                            <span class="float-right text-muted text-sm">12 hours</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-file mr-2"></i> 3 new reports
-                            <span class="float-right text-muted text-sm">2 days</span>
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <div class="demo-navbar-user nav-item dropdown">
-                        <a class="nav-link dropdown-toggle m-0 py-0 d-flex align-items-center" href="#" data-toggle="dropdown">
-                            <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
-                                <img src="../../public/<?php echo $foto ?>" alt class="d-block rounded-circle" style="max-width: 35px;">
-                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name">
-                                    <?php
-                                    $utf8_string = $_SESSION['nombre'];
-                                    $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
-                                    echo $iso8859_1_string
-                                    ?>
-                                </span>
-                            </span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-
-                            <a class="dropdown-item btn-general" id="institut" data-toggle="modal">
-                                <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span></a>
-                            <a class="dropdown-item btn-general" id="Fot" data-toggle="modal">
-                                <i class="feather icon-user text-muted"></i><span class="ml-1">Cambiar Foto</span></a>
-                            <a class="dropdown-item btn-general" id="Conf" data-toggle="modal">
-                                <i class="feather icon-settings text-muted"></i><span class="ml-1">Datos del Perfil</span></a>
-                            <a class="dropdown-item btn-general" id="contra" data-toggle="modal">
-                                <i class="feather icon-settings text-muted"></i><span class="ml-1">Cambiar Contraseña</span></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item btn-general" data-toggle="modal" href="#mimodal">
-                                <i class="feather icon-power text-danger"></i><span class="ml-1">Salir</span></a>
-                        </div>
-
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        <!-- /.navbar -->
-
-        <!-- Main Sidebar Container -->
+        <!-- Main Sidebar Container | Seccion de Links  -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a class="brand-link navbar-lightblue">
-                <img src="../../app/templates/AdminLTE/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text span-logo">HACDP</span>
+                <img id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <span class="brand-text span-logo" id="inst_desc">HACDP</span>
             </a>
 
             <!-- Sidebar -->
@@ -140,8 +31,6 @@ $dni = $_SESSION["dni"];
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
                         <li class="nav-item menu-open">
                             <a href="../Home/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
@@ -151,7 +40,7 @@ $dni = $_SESSION["dni"];
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active ">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -231,7 +120,7 @@ $dni = $_SESSION["dni"];
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
+            <!-- Contenido del Encabezado del Cuerpo -->
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
@@ -240,7 +129,7 @@ $dni = $_SESSION["dni"];
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-home"></i>Inicio</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-home"></i>Usuarios</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -259,10 +148,10 @@ $dni = $_SESSION["dni"];
                                     <div class="w-100 d-flex justify-content-between align-items-center">
                                         <h3 class="card-title font-weight-bold card-header-title">Listado de Usuarios Registrados</h3>
                                         <div>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default">
+                                            <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
                                                 <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                             </button>
-                                            <button type="button" class="btn btn-dark">
+                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
                                                 <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
                                             </button>
                                         </div>
@@ -311,40 +200,23 @@ $dni = $_SESSION["dni"];
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
-            <strong>Copyright &copy; <?php echo date("Y") ?> <a href="http://localhost/MesaPartesVirtual/"> Hospital Antonio Caldas Domínguez</a>.</strong>
-            Todos los derechos reservados.
-            <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 1.0
-            </div>
-        </footer>
 
-        <!-- Control Sidebar -->
-        <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
-        </aside>
-        <!-- /.control-sidebar -->
+        <?php
+        require_once "Modals-usuario.php";
+
+        require_once "../inc/Modals/Modals.php";
+
+        require_once "../inc/MainFooter/MainFooter.php";
+
+
+        ?>
+
     </div>
     <!-- ./wrapper -->
 
-    <!-- jQuery -->
-    <script src="../../app/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../../app/templates/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <?php require_once "../inc/MainJS/MainJS.php" ?>
 
     <script src="usuario.js"></script>
-    <!-- DataTables  & Plugins -->
-    <script src="../../app/templates/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../app/templates/AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="../../app/templates/AdminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../app/templates/AdminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="../../app/templates/AdminLTE/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../app/templates/AdminLTE/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../../app/templates/AdminLTE/dist/js/adminlte.js"></script>
-
-
-
 
 </body>
 
