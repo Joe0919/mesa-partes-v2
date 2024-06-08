@@ -490,8 +490,8 @@ function cargarDatosInstitucion() {
     success: function (response) {
       data = $.parseJSON(response);
       $("#loader").hide();
-      $("#inst_logo").attr("src", "../../public/" + data["logo"]);
-      $("#inst_footer").text(data["razon"]);
+      $("#inst_logo").attr("src", "../../public/" + data[0]["logo"]);
+      $("#inst_footer").text(data[0]["razon"]);
     },
     error: function (xhr, status, error) {
       // Manejar errores de la petición AJAX

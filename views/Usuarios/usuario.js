@@ -1,11 +1,13 @@
 $(document).ready(function () {
   var idusu, idper, opcion, idni, ruc, archi, año, area, estado, bdr;
+
   opcion = 1;
 
   area = $("#info-area").val();
 
   bdr = 1;
 
+  $("#loader").show(); // Mostrar DIv de carga
   /*=============================   MOSTRAR TABLA DE USUARIOS  ================================= */
   tablaUsuarios = $("#tablaUsuarios").DataTable({
     destroy: true,
@@ -64,6 +66,10 @@ $(document).ready(function () {
             </div>`,
       },
     ],
+    initComplete: function () {
+      // Oculta el loader una vez que los datos se hayan cargado
+      $("#loader").hide(); // Mostrar DIv de carga
+    },
   });
 
   llenarSelectRol();
@@ -115,7 +121,6 @@ $(document).ready(function () {
               },
               success: function (response) {
                 // Manejar la respuesta del servidor
-                console.log(response);
                 data = $.parseJSON(response);
                 if (data == 1) {
                   MostrarAlerta(
@@ -129,7 +134,7 @@ $(document).ready(function () {
                   $("#form_new_user")[0].reset();
                   tablaUsuarios.ajax.reload(null, false); //Recargar la tabla
                   MostrarAlertaxTiempo(
-                    "Hecho",
+                    "Registrado",
                     "Los datos fueron registrados.",
                     "success"
                   );
@@ -166,7 +171,6 @@ $(document).ready(function () {
         datatype: "json",
         data: { opcion: opcion, idni: idni },
         success: function (response) {
-          console.log(response);
           switch (response) {
             case "0":
               $("#ErrorDNI").text("DNI disponible").css("color", "green");
@@ -217,7 +221,6 @@ $(document).ready(function () {
   $("#iemail").blur(function () {
     //Consulta de disponibilidad de EMAIL al cambiar el click
     let iemail = $.trim($(this).val());
-    console.log(ValidarCorreo(iemail));
     if (iemail.length == 0) {
       $("#ErrorEmail").text("").css("color", "red");
     } else {
@@ -467,7 +470,7 @@ $(document).ready(function () {
           success: function (msg) {
             $("#loader").hide();
             MostrarAlertaxTiempo(
-              "Hecho",
+              "Foto Cambiada",
               "Se hizo el cambio de la foto de perfil",
               "success"
             );
@@ -551,7 +554,6 @@ $(document).ready(function () {
         if (result.isConfirmed) {
           let formData = new FormData(this);
           formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
-          console.log(formData.get("estado"));
           $.ajax({
             url: "../../app/controllers/usuario-controller.php",
             type: "POST",
@@ -578,7 +580,7 @@ $(document).ready(function () {
                 $("#form_edit_user")[0].reset();
                 tablaUsuarios.ajax.reload(null, false); //Recargar la tabla
                 MostrarAlertaxTiempo(
-                  "Hecho",
+                  "Actualizado",
                   "Los datos del usuario fueron actualizados.",
                   "success"
                 );
@@ -658,7 +660,7 @@ $(document).ready(function () {
                   $("#ErrorContraU").text("");
                   $("#loader").hide();
                   MostrarAlertaxTiempo(
-                    "Hecho",
+                    "Contraseña Actualizada",
                     "Se hizo el cambio de contraseña",
                     "success"
                   );
@@ -690,12 +692,11 @@ $(document).ready(function () {
 
   //Borrar usuario
   $(document).on("click", ".btnBorrar", function () {
-    fila = $(this);
     idni = parseInt($(this).closest("tr").find("td:eq(2)").text());
     opcion = 4; //eliminar
     Swal.fire({
       title: "¿Estás seguro?",
-      text: "Se eliminará al usuario seleccionado",
+      text: "Se eliminará al usuario permanentemente",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -723,7 +724,7 @@ $(document).ready(function () {
               );
               $("#loader").hide();
             } else {
-              MostrarAlertaxTiempo("Hecho", "Se eliminó al usuario", "success");
+              MostrarAlertaxTiempo("Eliminado", "Se eliminó al usuario", "success");
               tablaUsuarios.ajax.reload(null, false); //Recargar la tabla
               $("#loader").hide();
             }
@@ -752,7 +753,6 @@ function llenarSelectRol() {
     success: function (response) {
       data = $.parseJSON(response);
       let select = $(".select-rol"); // Reemplaza "selectId" con el ID de tu select
-
       // Recorre los datos devueltos y crea las opciones del select
       for (let i = 0; i < data.length; i++) {
         let option = $("<option></option>");

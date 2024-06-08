@@ -11,7 +11,7 @@ class Institucion extends Conectar
         $consulta = "SELECT * FROM institucion LIMIT 1";
         $consulta = $conectar->prepare($consulta);
         $consulta->execute();
-        return $consulta->fetch(pdo::FETCH_ASSOC);
+        return $consulta->fetchAll(pdo::FETCH_ASSOC);
     }
 
     public function editarDatosInstitucion($idinstitu, $rucinsti, $razon,$direc)

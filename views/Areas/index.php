@@ -7,7 +7,7 @@
 
     <?php require_once "../inc/MainHead/MainHead.php" ?>
 
-    <title>Usuarios | Mesa de Partes Virtual</title>
+    <title>Áreas | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="../Usuarios/" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../Areas/" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-door-closed"></i>
                                 <p>
                                     Áreas
@@ -129,7 +129,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user"></i>Usuarios</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-door-closed"></i>Áreas</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -146,9 +146,9 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Usuarios Registrados</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Áreas Registrados</h3>
                                         <div>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
+                                            <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_area" title="Agregar nuevo registro">
                                                 <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                             </button>
                                             <button type="button" class="btn btn-dark" title="Generar Reporte">
@@ -164,11 +164,11 @@
 
                                     <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">
                                         <i class="nav-iconfas fas fa-file-pdf"></i>Generar Reporte </a> -->
-                                    <table id="tablaUsuarios" class="table table-hover table-data">
+                                    <table id="tablaAreas" class="table table-hover table-data">
                                         <thead>
                                             <tr>
                                                 <!-- Rellenamos etiquetas de las columnas desde cons.php -->
-                                                <?php foreach (usuarioColumns as $value) : ?>
+                                                <?php foreach (areasColumns as $value) : ?>
                                                     <th><?php echo $value; ?></th>
                                                 <?php endforeach; ?>
 
@@ -181,7 +181,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <?php foreach (usuarioColumns as $value) : ?>
+                                                <?php foreach (areasColumns as $value) : ?>
                                                     <th><?php echo $value; ?></th>
                                                 <?php endforeach; ?>
                                             </tr>
@@ -202,7 +202,7 @@
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-usuario.php";
+        require_once "Modals-area.php";
 
         require_once "../inc/Modals/Modals.php";
 
@@ -216,7 +216,7 @@
 
     <?php require_once "../inc/MainJS/MainJS.php" ?>
 
-    <script src="usuario.js"></script>
+    <script src="area.js"></script>
 
 </body>
 

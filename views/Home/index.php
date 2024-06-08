@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/Areas/" class="nav-link">
+                            <a href="../Areas/" class="nav-link">
                                 <i class="nav-icon fas fa-door-closed"></i>
                                 <p>
                                     Áreas
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/Empleados/" class="nav-link">
+                            <a href="../Empleados/" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
                                 <p>
                                     Empleados
@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/Tramites/" class="nav-link">
+                            <a href="../Tramites/" class="nav-link">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>
                                     Trámites
@@ -72,7 +72,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/NuevoTramite/" class="nav-link">
+                            <a href="../NuevoTramite/" class="nav-link">
                                 <i class="nav-icon fas fa-file-upload"></i>
                                 <p>
                                     Nuevo Trámite
@@ -80,7 +80,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/TramitesRecibidos/" class="nav-link">
+                            <a href="../TramitesRecibidos/" class="nav-link">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos
@@ -88,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/TramitesEnviados/" class="nav-link">
+                            <a href="../TramitesEnviados/" class="nav-link">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados
@@ -96,7 +96,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../view/Busqueda/" class="nav-link">
+                            <a href="../Busqueda/" class="nav-link">
                                 <i class="nav-icon fas fa-search-minus"></i>
                                 <p>
                                     Búsqueda de Trámites

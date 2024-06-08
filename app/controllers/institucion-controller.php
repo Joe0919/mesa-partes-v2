@@ -19,7 +19,6 @@ switch ($opcion) {
         $data = $institucion->mostrarDatosInstitucion();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
-
     case 2:
         // Editar Datos por ID
         $data = $institucion->editarDatosInstitucion($idinstitu,$rucinsti,$razon,$direc);
