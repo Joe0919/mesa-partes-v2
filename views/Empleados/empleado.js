@@ -1,13 +1,13 @@
 $(document).ready(function () {
   $("#loader").show(); // Mostrar DIv de carga
   /*=============================   MOSTRAR TABLA DE AREAS  ================================= */
-  tablaAreas = $("#tablaAreas").DataTable({
+  tablaEmpleados = $("#tablaEmpleados").DataTable({
     destroy: true,
     language: {
       url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
     },
     ajax: {
-      url: "../../app/controllers/area-controller.php",
+      url: "../../app/controllers/empleado-controller.php",
       method: "POST", //usamos el metodo POST
       data: { opcion: opcion }, //enviamos opcion 1 para que haga un SELECT
       dataSrc: "",
@@ -18,17 +18,20 @@ $(document).ready(function () {
     ordering: false,
     columns: [
       { data: "ID" },
-      { data: "cod_area" },
+      { data: "Codigo" },
+      { data: "dni" },
+      { data: "Datos" },
+      { data: "telefono" },
       { data: "area" },
       {
         defaultContent: `<div class='text-center'>
-            <div class='btn-group'>
-                <button class='btn btn-primary btn-sm btn-table btnEditarArea' title='Editar'>
-                  <i class='material-icons'>edit</i></button>
-                <button class='btn btn-danger btn-sm btn-table btnBorrarArea' title='Borrar'>
-                  <i class='material-icons'>lock</i></button>
-            </div>
-        </div>`,
+              <div class='btn-group'>
+                  <button class='btn btn-primary btn-sm btn-table btnEditarEmpleado' title='Editar'>
+                    <i class='material-icons'>edit</i></button>
+                  <button class='btn btn-danger btn-sm btn-table btnBorrarEmpleado' title='Borrar'>
+                    <i class='material-icons'>lock</i></button>
+              </div>
+          </div>`,
       },
     ],
     initComplete: function () {
@@ -339,16 +342,12 @@ function generarCodigo(idtabla, posicion, caracter) {
   // Obtener el último registro de la columna
   let ultimoDato = columnData[columnData.length - 1];
 
-//   let Cod =
-//     caracter +
-//     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
-//       -4
-//     );
-  let Cod =
-    caracter +
-    ("000" + (parseInt(ultimoDato + 1))).slice(
-      -4
-    );
+  //   let Cod =
+  //     caracter +
+  //     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
+  //       -4
+  //     );
+  let Cod = caracter + ("000" + parseInt(ultimoDato + 1)).slice(-4);
 
   // Imprimir el último registro
   return Cod;

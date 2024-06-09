@@ -16,7 +16,7 @@ $dni = (isset($_POST['idni'])) ? $_POST['idni'] : '';
 switch ($opcion) {
     case 1:
         // Consultar todos los datos
-        $data = $empleados->listarempleadoss();
+        $data = $empleado->listarEmpleados();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
 

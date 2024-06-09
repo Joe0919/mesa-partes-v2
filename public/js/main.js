@@ -79,7 +79,11 @@ $(document).ready(function () {
               } else {
                 $("#loader").hide();
                 ResetForm("formperfil");
-                MostrarAlertaxTiempo("Hecho", "Se actualizaron sus datos.", "success");
+                MostrarAlertaxTiempo(
+                  "Hecho",
+                  "Se actualizaron sus datos.",
+                  "success"
+                );
                 $("#modalinstitu").modal("hide");
               }
             },
@@ -183,7 +187,11 @@ $(document).ready(function () {
               } else {
                 $("#loader").hide();
                 ResetForm("formperfil");
-                MostrarAlertaxTiempo("Hecho", "Se actualizaron sus datos.", "success");
+                MostrarAlertaxTiempo(
+                  "Hecho",
+                  "Se actualizaron sus datos.",
+                  "success"
+                );
                 $("#modalUsu").modal("hide");
               }
             },
@@ -519,7 +527,7 @@ function MostrarAlertaxTiempo(titulo, descripcion, tipoalerta) {
     text: descripcion,
     icon: tipoalerta,
     showConfirmButton: false,
-    timer: 2000
+    timer: 2000,
   });
 }
 
@@ -568,3 +576,5 @@ function mostrarImagen() {
 function ResetForm(id) {
   document.getElementById(id).reset();
 }
+
+
