@@ -36,13 +36,13 @@ switch ($opcion) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 2:
-        // Consultar por ID para edición
+        // Consultar por ID y DNI para edición
         $data = $usuario->consultarUsuarioID($idusu, $dni);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 3:
         // Editar datos por ID
-        $data = $usuario->editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion,$estado);
+        $data = $usuario->editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 4:
@@ -100,8 +100,11 @@ switch ($opcion) {
         $data = $usuario->consultarRoles();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
-    default:
-        $data = $nombre . " - " . $opcion;
+    case 11:
+        // Consultar solo por ID para edición
+        $data = $usuario->consultarUsuarioxID($idusu);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
+    default:
         break;
 }

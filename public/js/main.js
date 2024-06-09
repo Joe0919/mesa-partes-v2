@@ -405,7 +405,7 @@ $(document).ready(function () {
 });
 
 function datosUsuarioLogeado(callback) {
-  let opcion = 2;
+  let opcion = 3;
   let idni = $("#dniuser").val();
   $.ajax({
     url: "../../app/controllers/empleado-controller.php",

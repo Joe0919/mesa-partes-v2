@@ -69,6 +69,20 @@ class Usuario extends Conectar
 
         return $consulta->fetch(pdo::FETCH_ASSOC);
     }
+    public function consultarUsuarioxID($idusu)
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT u.idusuarios IDUSU, p.idpersona IDPER, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email
+        FROM usuarios u
+        INNER JOIN persona p ON p.dni = u.dni
+        WHERE u.idusuarios = ?";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->bindValue(1, $idusu);
+        $consulta->execute();
+
+        return $consulta->fetch(pdo::FETCH_ASSOC);
+    }
 
     public function validarDuplicidadDatosUsuario($dni,  $email, $celular, $nom_usu)
     {

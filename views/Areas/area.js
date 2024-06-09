@@ -52,7 +52,7 @@ $(document).ready(function () {
   $("#form_area").on("submit", function (e) {
     e.preventDefault();
 
-    //SI HAY ID SERA INSERCIÓN
+    //SI NO HAY ID SERA INSERCIÓN
     if ($("#idarea").val() === "0") {
       let opcion = 2; // Opcion para el switch del controlador
       let formulario = $(this);
@@ -314,7 +314,7 @@ function llenarSelectInstitucion() {
     },
     success: function (response) {
       data = $.parseJSON(response);
-      let select = $(".select-inst"); // Reemplaza "selectId" con el ID de tu select
+      let select = $(".select-inst");
       // Recorre los datos devueltos y crea las opciones del select
       for (let i = 0; i < data.length; i++) {
         let option = $("<option></option>");

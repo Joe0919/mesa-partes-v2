@@ -8,7 +8,7 @@ class Area extends Conectar
     {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT a.idarea ID, cod_area, area
+        $consulta = "SELECT a.idarea ID, cod_area, area, ae.idareainstitu IdAInst
         from institucion i
         inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
         inner join area a on a.idarea=ae.idarea";
@@ -153,7 +153,6 @@ class Area extends Conectar
                 $resultado = $conectar->prepare($consulta);
                 $resultado->bindValue(1, $id_area);
                 return $resultado->execute();
-
             } else {
                 $data = 2; //SI HAY EMPLEADOS CON ESTA AREA
             }

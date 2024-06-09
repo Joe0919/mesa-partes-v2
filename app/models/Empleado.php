@@ -18,6 +18,19 @@ class Empleado extends Conectar
         return $resultado->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function listarUsuariosPendientes()
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT u.idusuarios ID,  concat('DNI : ',p.dni,' : ',ap_paterno,' ', ap_materno,' ',nombres) Datos
+        from (usuarios u inner join persona p on u.dni=p.dni) left join empleado e on p.idpersona = e.idpersona
+        where e.idpersona is null";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->execute();
+        return $consulta->fetchall(pdo::FETCH_ASSOC);
+    }
+
+
     function consultarEmpleadoDNI($dni)
     {
         $conectar = parent::conexion();

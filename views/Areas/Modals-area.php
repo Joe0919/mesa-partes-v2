@@ -23,7 +23,7 @@
                         <input type="text" class="form-control text-uppercase" name="iarea" id="iarea" required>
                     </div>
                     <div class="form-group">
-                        <label for="irol">Institución</label><span class="span-red"> (*)</span>
+                        <label for="inst">Institución</label><span class="span-red"> (*)</span>
                         <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
                         <select class="form-control select-inst" name="id_inst" id="inst" required></select>
                     </div>

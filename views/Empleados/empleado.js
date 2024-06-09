@@ -40,23 +40,51 @@ $(document).ready(function () {
     },
   });
 
-  llenarSelectInstitucion();
+  llenarSelectAreas();
+  llenarSelectUsuarios();
 
   //Mostrar modal de nuevo usuario
-  $("#btn_new_area").click(function () {
-    $("#icodarea").attr("readonly", false);
-    $("#form_area")[0].reset();
-    $("#submitArea").text("Guardar");
-    $("#icodarea").val(generarCodigo("tablaAreas", 0, "A")); //Sugerimos un codigo
-    $("#modal_area").modal({ backdrop: "static", keyboard: false });
+  $("#btn_new_employed").click(function () {
+    $("#div_users").show();
+    $("#select-user").attr("required", "required");
+    $("#form_empleado")[0].reset();
+    $("#submitEmpleado").text("Guardar");
+    $("#codEmpleado").val(generarCodigo("tablaEmpleados", 0, "E")); //Sugerimos un codigo
+    $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
+  });
+
+  //Mostrar datos del usuario al seleccionar
+  $("#select-user").change(function () {
+    opcion = 11;
+    idusu = $(this).val();
+    $.ajax({
+      url: "../../app/controllers/usuario-controller.php",
+      type: "POST",
+      datatype: "json",
+      data: { opcion: opcion, idusu: idusu },
+      success: function (response) {
+        data = $.parseJSON(response);
+        $("#idusuE").val(data["IDUSU"]);
+        $("#idperE").val(data["IDPER"]);
+        $("#dniU").val(data["dni"]);
+        $("#nomU").val(data["nombres"]);
+        $("#apU").val(data["ap"]);
+        $("#amU").val(data["am"]);
+        $("#celU").val(data["telefono"]);
+        $("#dirU").val(data["direccion"]);
+      },
+      error: function (xhr, status, error) {
+        // Manejar errores de la petición AJAX
+        console.error("Error: " + error);
+      },
+    });
   });
 
   //Registrar o Editar los datos del formulario
-  $("#form_area").on("submit", function (e) {
+  $("#form_empleado").on("submit", function (e) {
     e.preventDefault();
-
-    //SI HAY ID SERA INSERCIÓN
-    if ($("#idarea").val() === "0") {
+    //SI NO HAY ID SERA INSERCIÓN
+    if ($("#idempleado").val() === "0") {
       let opcion = 2; // Opcion para el switch del controlador
       let formulario = $(this);
       if (verificarCampos(formulario)) {
@@ -74,7 +102,7 @@ $(document).ready(function () {
             var formData = new FormData(this);
             formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
             $.ajax({
-              url: "../../app/controllers/area-controller.php",
+              url: "../../app/controllers/empleado-controller.php",
               type: "POST",
               datatype: "json",
               data: formData,
@@ -90,22 +118,22 @@ $(document).ready(function () {
                 switch (data) {
                   case 1:
                     MostrarAlerta(
-                      "Advertencia",
-                      "Código o Area ya estan registrados",
+                      "Datos duplicados",
+                      "El Código ya se encuentra registrados",
                       "error"
                     );
                     $("#loader").hide();
                     break;
                   default:
                     $("#loader").hide();
-                    $("#form_area")[0].reset();
-                    tablaAreas.ajax.reload(null, false); //Recargar la tabla
+                    $("#form_empleado")[0].reset();
+                    tablaEmpleados.ajax.reload(null, false); //Recargar la tabla
                     MostrarAlertaxTiempo(
                       "Registrado",
                       "Los datos fueron registrados.",
                       "success"
                     );
-                    $("#modal_area").modal("hide");
+                    $("#modal_empleado").modal("hide");
                     break;
                 }
               },
@@ -125,12 +153,13 @@ $(document).ready(function () {
       }
     } else {
       // CASO CONTRARIO SERA EDICIÓN
+      $("#select-user").removeAttr("required");
       let opcion = 4;
       let formulario = $(this);
       if (verificarCampos(formulario)) {
         Swal.fire({
           title: "¿Estás seguro?",
-          text: "Se editarán los datos del area",
+          text: "Se editarán los datos del empleado",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
@@ -142,7 +171,7 @@ $(document).ready(function () {
             let formData = new FormData(this);
             formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
             $.ajax({
-              url: "../../app/controllers/area-controller.php",
+              url: "../../app/controllers/empleado-controller.php",
               type: "POST",
               datatype: "json",
               data: formData,
@@ -158,8 +187,8 @@ $(document).ready(function () {
                 switch (data) {
                   case 1:
                     MostrarAlerta(
-                      "Advertencia",
-                      "Código o Area ya estan registrados",
+                      "Datos duplicados",
+                      "El Código ya se encuentra registrados",
                       "error"
                     );
                     $("#loader").hide();
@@ -171,19 +200,19 @@ $(document).ready(function () {
                       "success"
                     );
                     $("#loader").hide();
-                    $("#form_area")[0].reset();
-                    $("#modal_area").modal("hide");
+                    $("#form_empleado")[0].reset();
+                    $("#modal_empleado").modal("hide");
                     break;
                   default:
                     $("#loader").hide();
-                    $("#form_area")[0].reset();
-                    tablaAreas.ajax.reload(null, false); //Recargar la tabla
+                    $("#form_empleado")[0].reset();
+                    tablaEmpleados.ajax.reload(null, false); //Recargar la tabla
                     MostrarAlertaxTiempo(
                       "Actualizado",
                       "Los datos fueron actualizados.",
                       "success"
                     );
-                    $("#modal_area").modal("hide");
+                    $("#modal_empleado").modal("hide");
                     break;
                 }
               },
@@ -205,33 +234,36 @@ $(document).ready(function () {
   });
 
   //Mostrar datos de usuario para edicion
-  $(document).on("click", ".btnEditarArea", function () {
+  $(document).on("click", ".btnEditarEmpleado", function () {
     opcion = 3;
-    fila = $(this).closest("tr");
-    id = parseInt(fila.find("td:eq(0)").text()); //capturo el ID
-    $("#form_area")[0].reset();
+    idni = parseInt($(this).closest("tr").find("td:eq(2)").text()); //capturo el DNI
+    $("#form_empleado")[0].reset();
     $.ajax({
-      url: "../../app/controllers/area-controller.php",
+      url: "../../app/controllers/empleado-controller.php",
       type: "POST",
       datatype: "json",
-      data: { opcion: opcion, id: id },
+      data: { opcion: opcion, idni: idni },
       beforeSend: function () {
         /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
         data = $.parseJSON(response);
-
-        $("#idarea").val(data["ID"]);
-        $("#icodarea").val(data["cod_area"]);
-        $("#icodarea").attr("readonly", true);
-        $("#iarea").val(data["area"]);
-        $("#inst").val(data["idinstitucion"]);
+        $("#div_users").hide();
+        $("#idempleado").val(data["ID"]);
+        $("#dniU").val(data["dni"]);
+        $("#nomU").val(data["nombres"]);
+        $("#apU").val(data["ap"]);
+        $("#amU").val(data["am"]);
+        $("#celU").val(data["telefono"]);
+        $("#dirU").val(data["direccion"]);
+        $("#codEmpleado").val(data["cod"]);
+        $("#select-area").val(data["ID2"]);
 
         $("#loader").hide();
-        $("#submitArea").text("Actualizar");
+        $("#submitEmpleado").text("Actualizar");
 
-        $("#modal_area").modal({ backdrop: "static", keyboard: false });
+        $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
       },
       error: function (xhr, status, error) {
         // Manejar errores de la petición AJAX
@@ -304,10 +336,10 @@ $(document).ready(function () {
   });
 });
 
-function llenarSelectInstitucion() {
+function llenarSelectAreas() {
   let opcion = 1;
   $.ajax({
-    url: "../../app/controllers/institucion-controller.php",
+    url: "../../app/controllers/area-controller.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion },
@@ -317,12 +349,54 @@ function llenarSelectInstitucion() {
     },
     success: function (response) {
       data = $.parseJSON(response);
-      let select = $(".select-inst"); // Reemplaza "selectId" con el ID de tu select
+      let select = $("#select-area");
+      let placeholderOption = $("<option></option>");
+      placeholderOption.val("");
+      placeholderOption.text("Seleccione...");
+      placeholderOption.attr("disabled", true);
+      placeholderOption.attr("selected", true);
+      select.append(placeholderOption);
       // Recorre los datos devueltos y crea las opciones del select
       for (let i = 0; i < data.length; i++) {
         let option = $("<option></option>");
-        option.val(data[i].idinstitucion);
-        option.text(data[i].razon);
+        option.val(data[i].IdAInst);
+        option.text(data[i].area);
+        select.append(option);
+      }
+      $("#loader").hide();
+    },
+    error: function (xhr, status, error) {
+      // Manejar errores de la petición AJAX
+      console.error("Error: " + error);
+    },
+  });
+}
+
+function llenarSelectUsuarios() {
+  let opcion = 6;
+  $.ajax({
+    url: "../../app/controllers/empleado-controller.php",
+    type: "POST",
+    datatype: "json",
+    data: { opcion: opcion },
+    beforeSend: function () {
+      /* * Se ejecuta al inicio de la petición* */
+      $("#loader").show();
+    },
+    success: function (response) {
+      data = $.parseJSON(response);
+      let select = $("#select-user");
+      let placeholderOption = $("<option></option>");
+      placeholderOption.val("");
+      placeholderOption.text("Seleccione...");
+      placeholderOption.attr("disabled", true);
+      placeholderOption.attr("selected", true);
+      select.append(placeholderOption);
+      // Recorre los datos devueltos y crea las opciones del select
+      for (let i = 0; i < data.length; i++) {
+        let option = $("<option></option>");
+        option.val(data[i].ID);
+        option.text(data[i].Datos);
         select.append(option);
       }
       $("#loader").hide();
@@ -347,7 +421,7 @@ function generarCodigo(idtabla, posicion, caracter) {
   //     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
   //       -4
   //     );
-  let Cod = caracter + ("000" + parseInt(ultimoDato + 1)).slice(-4);
+  let Cod = caracter + ("0000" + parseInt(ultimoDato + 1)).slice(-5);
 
   // Imprimir el último registro
   return Cod;
