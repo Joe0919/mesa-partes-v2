@@ -40,8 +40,8 @@ switch ($opcion) {
         break;
     case 5:
         // ELiminar por ID
-        // $data = $area->eliminarAreaID($id_area);
-        // echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        $data = $empleado->eliminarEmpleado($id, $dni);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 6:
         // Consultar usuarios que no son empleados

@@ -133,5 +133,6 @@ class Empleado extends Conectar
         $resultado = $conectar->prepare($consulta);
         $resultado->bindValue(1, $dni);
         return $resultado->execute();
+
     }
 }

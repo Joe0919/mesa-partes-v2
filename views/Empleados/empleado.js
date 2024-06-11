@@ -273,12 +273,13 @@ $(document).ready(function () {
   });
 
   //Borrar registro
-  $(document).on("click", ".btnBorrarArea", function () {
+  $(document).on("click", ".btnBorrarEmpleado", function () {
     id = parseInt($(this).closest("tr").find("td:eq(0)").text());
+    idni = parseInt($(this).closest("tr").find("td:eq(2)").text());
     opcion = 5; //eliminar
     Swal.fire({
       title: "¿Estás seguro?",
-      text: "Se eliminará el Area permanentemente",
+      text: "Se eliminará al Empleado permanentemente",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -288,10 +289,10 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         $.ajax({
-          url: "../../app/controllers/area-controller.php",
+          url: "../../app/controllers/empleado-controller.php",
           type: "POST",
           datatype: "json",
-          data: { opcion: opcion, id: id },
+          data: { opcion: opcion, id: id, idni: idni },
           beforeSend: function () {
             /* * Se ejecuta al inicio de la petición* */
             $("#loader").show();
@@ -299,29 +300,13 @@ $(document).ready(function () {
           success: function (response) {
             data = $.parseJSON(response);
             switch (data) {
-              case 1:
-                MostrarAlerta(
-                  "No se puede borrar",
-                  "Existen documentos asociados a esta Área",
-                  "error"
-                );
-                $("#loader").hide();
-                break;
-              case 2:
-                MostrarAlerta(
-                  "No se puede borrar",
-                  "Existen empleados asociados a esta Área",
-                  "error"
-                );
-                $("#loader").hide();
-                break;
               default:
                 MostrarAlertaxTiempo(
                   "Eliminado",
-                  "Se eliminó el Área",
+                  "Se eliminó al Empleado",
                   "success"
                 );
-                tablaAreas.ajax.reload(null, false); //Recargar la tabla
+                tablaEmpleados.ajax.reload(null, false); //Recargar la tabla
                 $("#loader").hide();
                 break;
             }
