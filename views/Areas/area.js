@@ -1,5 +1,6 @@
 $(document).ready(function () {
   $("#loader").show(); // Mostrar DIv de carga
+  opcion = 1;
   /*=============================   MOSTRAR TABLA DE AREAS  ================================= */
   tablaAreas = $("#tablaAreas").DataTable({
     destroy: true,

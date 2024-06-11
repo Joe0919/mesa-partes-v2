@@ -1,6 +1,7 @@
 $(document).ready(function () {
   $("#loader").show(); // Mostrar DIv de carga
-  /*=============================   MOSTRAR TABLA DE AREAS  ================================= */
+  opcion = 1;
+  /*=============================   MOSTRAR TABLA DE EMPLEADOS  ================================= */
   tablaEmpleados = $("#tablaEmpleados").DataTable({
     destroy: true,
     language: {

@@ -28,7 +28,7 @@ $idder = (isset($_POST['idder'])) ? $_POST['idder'] : '';
 switch ($opcion) {
     case 1:
         // Consultar todos los datos
-        $data = $empleado->listarEmpleados();
+        $data = $tramite->listarTramites();
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 2:

@@ -167,18 +167,20 @@
                                     <table id="tablaTramites" class="table table-hover table-data">
                                         <thead>
                                             <tr>
-                                                <!-- Rellenamos etiquetas de las columnas desde cons.php -->
-                                                <?php
-                                                foreach (empleadosColumns as $value) {
-                                                    if ($value === "Datos") {
-                                                        echo "<th>Apellidos</th>";
-                                                        echo "<th>Nombres</th>";
-                                                    } else {
-                                                        echo "<th>$value</th>";
-                                                    }
-                                                }
-                                                ?>
+                                                <th rowspan="2">Expediente</th>
+                                                <th rowspan="2">Fecha</th>
+                                                <th rowspan="2">Tipo Doc</th>
+                                                <th colspan="2">Remitente</th>
+                                                <th colspan="2">Localización</th>
+                                                <th rowspan="2">Estado</th>
+                                                <th style="width:2px;" rowspan="2">Más...</th>
 
+                                            </tr>
+                                            <tr>
+                                                <th>DNI</th>
+                                                <th>Datos</th>
+                                                <th>Origen</th>
+                                                <th>Actual</th>
                                             </tr>
                                         </thead>
                                         <tbody>
