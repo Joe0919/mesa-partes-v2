@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $("#loader").show(); // Mostrar DIv de carga
-  opcion = 1;
+  let expediente, archivo, ruc;
   /*=============================   MOSTRAR TABLA DE TRAMITES  ================================= */
   tablaTramites = $("#tablaTramites").DataTable({
     destroy: true,
@@ -53,11 +53,10 @@ $(document).ready(function () {
         },
       },
       {
-        defaultContent:
-          `<div class='text-center'>
+        defaultContent: `<div class='text-center'>
             <div class='btn-group'>
-              <button class='btn btn-outline-dark btn-sm btnMas'>
-                <i class='material-icons'>add_circle</i></button>
+                  <button class='btn btn-outline-dark btn-sm btn-table btnMas' title='Más Información'>
+                    <i class='material-icons'>add_circle</i></button>
             </div>
           </div>`,
       },
@@ -68,230 +67,69 @@ $(document).ready(function () {
     },
   });
 
-  llenarSelectAreas();
-  llenarSelectUsuarios();
-
-  //Mostrar modal de nuevo usuario
-  $("#btn_new_employed").click(function () {
-    $("#div_users").show();
-    $("#select-user").attr("required", "required");
-    $("#form_empleado")[0].reset();
-    $("#submitEmpleado").text("Guardar");
-    $("#codEmpleado").val(generarCodigo("tablaEmpleados", 0, "E")); //Sugerimos un codigo
-    $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
-  });
-
-  //Mostrar datos del usuario al seleccionar
-  $("#select-user").change(function () {
-    opcion = 11;
-    idusu = $(this).val();
-    $.ajax({
-      url: "../../app/controllers/usuario-controller.php",
-      type: "POST",
-      datatype: "json",
-      data: { opcion: opcion, idusu: idusu },
-      success: function (response) {
-        data = $.parseJSON(response);
-        $("#idusuE").val(data["IDUSU"]);
-        $("#idperE").val(data["IDPER"]);
-        $("#dniU").val(data["dni"]);
-        $("#nomU").val(data["nombres"]);
-        $("#apU").val(data["ap"]);
-        $("#amU").val(data["am"]);
-        $("#celU").val(data["telefono"]);
-        $("#dirU").val(data["direccion"]);
-      },
-      error: function (xhr, status, error) {
-        // Manejar errores de la petición AJAX
-        console.error("Error: " + error);
-      },
-    });
-  });
-
-  //Registrar o Editar los datos del formulario
-  $("#form_empleado").on("submit", function (e) {
-    e.preventDefault();
-    //SI NO HAY ID SERA INSERCIÓN
-    if ($("#idempleado").val() === "0") {
-      let opcion = 2; // Opcion para el switch del controlador
-      let formulario = $(this);
-      if (verificarCampos(formulario)) {
-        Swal.fire({
-          title: "¿Estás seguro?",
-          text: "Se guardarán los datos ingresados",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-          confirmButtonText: "Si, Guardar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            var formData = new FormData(this);
-            formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
-            $.ajax({
-              url: "../../app/controllers/empleado-controller.php",
-              type: "POST",
-              datatype: "json",
-              data: formData,
-              processData: false, // Evita que jQuery procese los datos del formulario
-              contentType: false, // Evita que jQuery establezca el encabezado Content-Type
-              beforeSend: function () {
-                /* * Se ejecuta al inicio de la petición* */
-                $("#loader").show();
-              },
-              success: function (response) {
-                // Manejar la respuesta del servidor
-                data = $.parseJSON(response);
-                switch (data) {
-                  case 1:
-                    MostrarAlerta(
-                      "Datos duplicados",
-                      "El Código ya se encuentra registrados",
-                      "error"
-                    );
-                    $("#loader").hide();
-                    break;
-                  default:
-                    $("#loader").hide();
-                    $("#form_empleado")[0].reset();
-                    tablaEmpleados.ajax.reload(null, false); //Recargar la tabla
-                    MostrarAlertaxTiempo(
-                      "Registrado",
-                      "Los datos fueron registrados.",
-                      "success"
-                    );
-                    $("#modal_empleado").modal("hide");
-                    break;
-                }
-              },
-              error: function (xhr, status, error) {
-                // Manejar errores de la petición AJAX
-                console.error("Error: " + error);
-              },
-            });
-          }
-        });
-      } else {
-        MostrarAlerta(
-          "Advertencia",
-          "Por favor, complete todos los campos requeridos.",
-          "error"
-        );
-      }
-    } else {
-      // CASO CONTRARIO SERA EDICIÓN
-      $("#select-user").removeAttr("required");
-      let opcion = 4;
-      let formulario = $(this);
-      if (verificarCampos(formulario)) {
-        Swal.fire({
-          title: "¿Estás seguro?",
-          text: "Se editarán los datos del empleado",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          cancelButtonText: "Cancelar",
-          confirmButtonText: "Si, Editar",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            let formData = new FormData(this);
-            formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
-            $.ajax({
-              url: "../../app/controllers/empleado-controller.php",
-              type: "POST",
-              datatype: "json",
-              data: formData,
-              processData: false, // Evita que jQuery procese los datos del formulario
-              contentType: false, // Evita que jQuery establezca el encabezado Content-Type
-              beforeSend: function () {
-                /* * Se ejecuta al inicio de la petición* */
-                $("#loader").show();
-              },
-              success: function (response) {
-                // Manejar la respuesta del servidor
-                data = $.parseJSON(response);
-                switch (data) {
-                  case 1:
-                    MostrarAlerta(
-                      "Datos duplicados",
-                      "El Código ya se encuentra registrados",
-                      "error"
-                    );
-                    $("#loader").hide();
-                    break;
-                  case 2:
-                    MostrarAlertaxTiempo(
-                      "Sin cambios",
-                      "No realizo cambios en los datos.",
-                      "success"
-                    );
-                    $("#loader").hide();
-                    $("#form_empleado")[0].reset();
-                    $("#modal_empleado").modal("hide");
-                    break;
-                  default:
-                    $("#loader").hide();
-                    $("#form_empleado")[0].reset();
-                    tablaEmpleados.ajax.reload(null, false); //Recargar la tabla
-                    MostrarAlertaxTiempo(
-                      "Actualizado",
-                      "Los datos fueron actualizados.",
-                      "success"
-                    );
-                    $("#modal_empleado").modal("hide");
-                    break;
-                }
-              },
-              error: function (xhr, status, error) {
-                // Manejar errores de la petición AJAX
-                console.error("Error: " + error);
-              },
-            });
-          }
-        });
-      } else {
-        MostrarAlerta(
-          "Advertencia",
-          "Por favor, complete todos los campos requeridos.",
-          "error"
-        );
-      }
-    }
-  });
-
   //Mostrar datos de usuario para edicion
-  $(document).on("click", ".btnEditarEmpleado", function () {
+  $(document).on("click", ".btnMas", function () {
     opcion = 3;
-    idni = parseInt($(this).closest("tr").find("td:eq(2)").text()); //capturo el DNI
-    $("#form_empleado")[0].reset();
+    expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
+
     $.ajax({
-      url: "../../app/controllers/empleado-controller.php",
+      url: "../../app/controllers/tramite-controller.php",
       type: "POST",
       datatype: "json",
-      data: { opcion: opcion, idni: idni },
+      data: { opcion: opcion, expediente: expediente },
       beforeSend: function () {
         /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
         data = $.parseJSON(response);
-        $("#div_users").hide();
-        $("#idempleado").val(data["ID"]);
-        $("#dniU").val(data["dni"]);
-        $("#nomU").val(data["nombres"]);
-        $("#apU").val(data["ap"]);
-        $("#amU").val(data["am"]);
-        $("#celU").val(data["telefono"]);
-        $("#dirU").val(data["direccion"]);
-        $("#codEmpleado").val(data["cod"]);
-        $("#select-area").val(data["ID2"]);
+        if (data.length > 0) {
+          // $("#div_iframePDF").show();
+          // $("#loaderPDF").hide();
+          // $("#error-message").hide();
 
-        $("#loader").hide();
-        $("#submitEmpleado").text("Actualizar");
+          $("#iddoc").val(data[0]["dc.iddocumento"]);
+          $("#inrodoc").val(data[0]["nro_doc"]);
+          $("#ifolio").val(data[0]["folios"]);
+          $("#iexpediente").val(data[0]["nro_expediente"]);
+          $("#iestad").val(data[0]["estado"]);
+          $("#itipodoc").val(data[0]["tipodoc"]);
+          $("#iasunt").val(data[0]["asunto"]);
+          $("#iddni1").val(data[0]["dni"]);
+          $("#idremi").val(data[0]["Datos"]);
 
-        $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
+          $("#iruc").val(data[0]["ruc_institu"]);
+          $("#iinsti").val(data[0]["institucion"]);
+
+          archivo = data[0]["archivo"];
+
+          $("#iframePDF").attr("src", "../../public/" + archivo);
+
+          // $("#iframePDF").on("load", function () {
+          //   $("#div_iframePDF").hide();
+          //   $("#loaderPDF").show();
+          //   $("#error-message").hide();
+          // });
+
+          // $("#iframePDF").on("error", function () {
+          //   $("#div_iframePDF").hide();
+          //   $("#loaderPDF").hide();
+          //   $("#error-message").show();
+          // });
+
+          ruc = data[0]["ruc_institu"];
+
+          if (ruc == null || ruc == "" || ruc == " " || ruc == "  ") {
+            $("#radio_natural").prop("checked", true);
+          } else {
+            $("#radio_juridica").prop("checked", true);
+          }
+
+          ResetModalMas(); //Solo mostrar los divs necesarios
+
+          $("#modalmas").modal({ backdrop: "static", keyboard: false });
+          $("#loader").hide();
+        }
       },
       error: function (xhr, status, error) {
         // Manejar errores de la petición AJAX
@@ -300,157 +138,71 @@ $(document).ready(function () {
     });
   });
 
-  //Borrar registro
-  $(document).on("click", ".btnBorrarArea", function () {
-    id = parseInt($(this).closest("tr").find("td:eq(0)").text());
-    opcion = 5; //eliminar
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Se eliminará el Area permanentemente",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonText: "Cancelar",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, Eliminar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: "../../app/controllers/area-controller.php",
-          type: "POST",
-          datatype: "json",
-          data: { opcion: opcion, id: id },
-          beforeSend: function () {
-            /* * Se ejecuta al inicio de la petición* */
-            $("#loader").show();
-          },
-          success: function (response) {
-            data = $.parseJSON(response);
-            switch (data) {
-              case 1:
-                MostrarAlerta(
-                  "No se puede borrar",
-                  "Existen documentos asociados a esta Área",
-                  "error"
-                );
-                $("#loader").hide();
-                break;
-              case 2:
-                MostrarAlerta(
-                  "No se puede borrar",
-                  "Existen empleados asociados a esta Área",
-                  "error"
-                );
-                $("#loader").hide();
-                break;
-              default:
-                MostrarAlertaxTiempo(
-                  "Eliminado",
-                  "Se eliminó el Área",
-                  "success"
-                );
-                tablaAreas.ajax.reload(null, false); //Recargar la tabla
-                $("#loader").hide();
-                break;
-            }
-          },
-          error: function (xhr, status, error) {
-            // Manejar errores de la petición AJAX
-            console.error("Error: " + error);
-          },
-        });
-      }
-    });
+  //Redirige a una nueva pestaña para ver el PDF
+  $("#btn_NuevoPDF").click(function () {
+    $(this).attr("href", "../../public/" + archivo);
   });
+
+  function ResetModalMas() {
+    $("#btn_remitente").addClass("btn btn-light");
+    $("#btn_tramite").removeClass("btn btn-light");
+    $("#btn_tramite").addClass("btn btn-primary");
+    $("#btn_vistaprevia").addClass("btn btn-light");
+    $("#div_tramite").show();
+    $("#div_remitente").hide();
+    $("#div_vistaprevia").hide();
+    $("#btn_NuevoPDF").hide();
+  }
+
+  //CERRAR MODAL y resetear valores
+  $("#btnCerrarMas").click(function () {
+    $("#modalmas").modal("hide");
+    $("#btn_remitente").addClass("btn btn-light");
+    $("#btn_tramite").removeClass("btn btn-light");
+    $("#btn_tramite").addClass("btn btn-primary");
+    $("#btn_vistaprevia").addClass("btn btn-light");
+    $("#div_tramite").show();
+    $("#div_remitente").hide();
+    $("#div_vistaprevia").hide();
+    $("#NuevoPDF").hide();
+    $("#iframePDF").attr("src", "");
+    $("#radio_natural").prop("checked", false);
+    $("#radio_juridica").prop("checked", false);
+    ruc = "";
+    archivo = "";
+  });
+  // VALIDACION PARA MOSTRAR U OCULTAR ELEMENTOS DEL MODAL
+  $("#btn_tramite").click(function () {
+    $("#btn_remitente").addClass("btn btn-light");
+    $(this).removeClass("btn btn-light");
+    $(this).addClass("btn btn-primary");
+    $("#btn_vistaprevia").addClass("btn btn-light");
+    $("#div_tramite").show();
+    $("#div_remitente").hide();
+    $("#div_vistaprevia").hide();
+    $("#btn_NuevoPDF").hide();
+  });
+
+  $("#btn_remitente").click(function () {
+    $(this).removeClass("btn btn-light");
+    $(this).addClass("btn btn-primary");
+    $("#btn_tramite").addClass("btn btn-light");
+    $("#btn_vistaprevia").addClass("btn btn-light");
+    $("#div_tramite").hide();
+    $("#div_remitente").show();
+    $("#div_vistaprevia").hide();
+    $("#btn_NuevoPDF").hide();
+  });
+
+  $("#btn_vistaprevia").click(function () {
+    $("#btn_remitente").addClass("btn btn-light");
+    $("#btn_tramite").addClass("btn btn-light");
+    $(this).removeClass("btn btn-light");
+    $(this).addClass("btn btn-primary");
+    $("#div_tramite").hide();
+    $("#div_remitente").hide();
+    $("#div_vistaprevia").show();
+    $("#btn_NuevoPDF").show();
+  });
+
 });
-
-function llenarSelectAreas() {
-  let opcion = 1;
-  $.ajax({
-    url: "../../app/controllers/area-controller.php",
-    type: "POST",
-    datatype: "json",
-    data: { opcion: opcion },
-    beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
-      $("#loader").show();
-    },
-    success: function (response) {
-      data = $.parseJSON(response);
-      let select = $("#select-area");
-      let placeholderOption = $("<option></option>");
-      placeholderOption.val("");
-      placeholderOption.text("Seleccione...");
-      placeholderOption.attr("disabled", true);
-      placeholderOption.attr("selected", true);
-      select.append(placeholderOption);
-      // Recorre los datos devueltos y crea las opciones del select
-      for (let i = 0; i < data.length; i++) {
-        let option = $("<option></option>");
-        option.val(data[i].IdAInst);
-        option.text(data[i].area);
-        select.append(option);
-      }
-      $("#loader").hide();
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
-      console.error("Error: " + error);
-    },
-  });
-}
-
-function llenarSelectUsuarios() {
-  let opcion = 6;
-  $.ajax({
-    url: "../../app/controllers/empleado-controller.php",
-    type: "POST",
-    datatype: "json",
-    data: { opcion: opcion },
-    beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
-      $("#loader").show();
-    },
-    success: function (response) {
-      data = $.parseJSON(response);
-      let select = $("#select-user");
-      let placeholderOption = $("<option></option>");
-      placeholderOption.val("");
-      placeholderOption.text("Seleccione...");
-      placeholderOption.attr("disabled", true);
-      placeholderOption.attr("selected", true);
-      select.append(placeholderOption);
-      // Recorre los datos devueltos y crea las opciones del select
-      for (let i = 0; i < data.length; i++) {
-        let option = $("<option></option>");
-        option.val(data[i].ID);
-        option.text(data[i].Datos);
-        select.append(option);
-      }
-      $("#loader").hide();
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
-      console.error("Error: " + error);
-    },
-  });
-}
-
-function generarCodigo(idtabla, posicion, caracter) {
-  // Obtener el DataTable
-  let table = $("#" + idtabla).DataTable();
-  // Obtener los datos de la columna deseada
-  let columnData = table.column(posicion).data();
-  // Obtener el último registro de la columna
-  let ultimoDato = columnData[columnData.length - 1];
-
-  //   let Cod =
-  //     caracter +
-  //     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
-  //       -4
-  //     );
-  let Cod = caracter + ("0000" + parseInt(ultimoDato + 1)).slice(-5);
-
-  // Imprimir el último registro
-  return Cod;
-}

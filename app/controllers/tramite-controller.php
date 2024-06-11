@@ -15,8 +15,8 @@ $descripcion = (isset($_POST['descrip'])) ? $_POST['descrip'] : '';
 
 $bdr = (isset($_POST['bdr'])) ? $_POST['bdr'] : '';
 
-$expediente = (isset($_POST['id'])) ? $_POST['id'] : '';
-$expe = (isset($_POST['nrexpe'])) ? $_POST['nrexpe'] : '';
+$id = (isset($_POST['id'])) ? $_POST['id'] : '';
+$expediente = (isset($_POST['expediente'])) ? $_POST['expediente'] : '';
 $año = (isset($_POST['año'])) ? $_POST['año'] : '';
 $dni = (isset($_POST['dni'])) ? $_POST['dni'] : '';
 $area = (isset($_POST['area'])) ? $_POST['area'] : '';
@@ -38,8 +38,8 @@ switch ($opcion) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 3:
-        // Consultar por ID para edición
-        // $data = $empleado->consultarEmpleadoDNI($dni);
+        // Consultar por Expediente
+        $data = $tramite->consultarTramitexExpediente($expediente);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 4:
