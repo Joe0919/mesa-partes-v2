@@ -304,6 +304,9 @@ body {
   font-size: 1.3rem;
 }
 
+.card-color {
+  background-color: var(--color-header2);
+}
 .info-box-title {
   font-size: 20px;
 }

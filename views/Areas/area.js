@@ -345,11 +345,7 @@ function generarCodigo(idtabla, posicion, caracter) {
 //     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
 //       -4
 //     );
-  let Cod =
-    caracter +
-    ("000" + (parseInt(ultimoDato + 1))).slice(
-      -4
-    );
+  let Cod = caracter + ("000" + (parseInt(ultimoDato + 1))).slice(-4);
 
   // Imprimir el último registro
   return Cod;

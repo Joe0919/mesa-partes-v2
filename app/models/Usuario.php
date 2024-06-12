@@ -265,4 +265,6 @@ class Usuario extends Conectar
 
         return $consulta->fetchAll(pdo::FETCH_ASSOC);
     }
+
+    
 }

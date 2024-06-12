@@ -35,4 +35,26 @@ class Tramite extends Conectar
         $consulta->execute();
         return $consulta->fetchAll(pdo::FETCH_ASSOC);
     }
+
+    public function consultarTipoDocs()
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT * FROM tipodoc";
+        $consulta = $conectar->prepare($consulta);
+        $consulta->execute();
+        return $consulta->fetchAll(pdo::FETCH_ASSOC);
+    }
+
+    public function generarNroExpediente()
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT gen_nroexpediente() expediente";
+        $resultado = $conectar->prepare($consulta);
+        $resultado->execute();
+        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        
+        return $data['expediente'];
+    }
 }

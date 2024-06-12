@@ -129,33 +129,39 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i>Trámites</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i>Nuevo Trámite</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
-
             <!-- Main content -->
             <main class="content">
+
                 <div class="container-fluid">
+                    <div class="d-flex mb-3">
+                        <!-- <button type="button" id="btnNuevoT" class="btn btn2 bg-gradient-success mr-2" title="Registrar nuevo Trámite"><i class="fa fa-plus"></i>Nuevo Trámite</button>
+                        <button type="button" id="btnLimpiar" class="btn btn-block btn2 bg-gradient-danger mr-2" title="Borrar datos ingresados"><i class="fa fa-eraser"></i>Limpiar Campos</button>
+                        <button type="button" id="btnSeguir" class="btn btn2 bg-gradient-purple mr-2" title="Hacer seguimiento de su tramite"><i class="fa fa-search"></i>Seguimiento</button> -->
+                    </div>
+
                     <div class="row">
                         <div class="col-12">
-                            <div class="card card-danger">
-                                <div class="card-header">
+                            <div class="card">
+                                <div class="card-header card-color">
                                     <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
                                 </div>
                                 <!-- /.card-header -->
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="card card-primary">
-                                                <div class="card-header">
-                                                    <h3 class="card-title text-bold">DATOS DEL REMITENTE</h3>
-                                                </div>
-                                                <div class="card-body">
-                                                    <form id="formulario-tramite" onsubmit="submitForm(event)" name="formulario-tramite" enctype="multipart/form-data" method="post">
+                                <form id="form_tramite" enctype="multipart/form-data" method="post">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="card card-primary">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title text-bold">DATOS DEL REMITENTE</h3>
+                                                    </div>
+                                                    <div class="card-body">
                                                         <label>Tipo de Persona: </label><span class="span-red"> (*)</span>
                                                         <div class="row mb-2">
                                                             <div class="col-sm-6">
@@ -171,32 +177,32 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div id="mostrar">
+                                                        <div id="div_juridica">
                                                             <div class="form-group">
-                                                                <input type="hidden" class="form-control" id="idpersona" name="idpersona">
+                                                                <input type="hidden" class="form-control" id="idpersona" name="idpersona" readonly value="0">
                                                                 <label>RUC </label><span class="span-red"> (*)</span>
-                                                                <input type="text" class="form-control" id="idruc" name="idruc" onkeypress="return validaNumericos(event)" maxlength="11" minlength="11">
+                                                                <input type="text" class="form-control" id="iruc" name="iruc" onkeypress="return validaNumericos(event)" maxlength="11" minlength="11">
                                                             </div>
-
                                                             <div class="form-group">
                                                                 <label>Entidad </label><span class="span-red"> (*)</span>
-                                                                <input type="text" class="form-control" id="identi" name="identi">
+                                                                <input type="text" class="form-control" id="identidad" name="ientidad">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>DNI</label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" name="iddni" id="iddni" required>
+                                                                    <input type="text" class="form-control" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" name="idni" id="idni" required title="Valide su DNI">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-2">
-                                                                <input id="validar" type="button" class="btn btn-success" value="Validar">
+                                                                <label>dfhsdh</label>
+                                                                <input id="btn_validar" type="button" class="btn btn-success" value="Validar">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Nombres </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idnombre" name="idnombre" required>
+                                                                    <input type="text" class="form-control" id="idnombre" name="inombre" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -205,94 +211,95 @@
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Apellido Paterno </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idap" name="idap" required>
+                                                                    <input type="text" class="form-control" id="idap" name="iappat" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Apellido Materno </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idam" name="idam" required>
+                                                                    <input type="text" class="form-control" id="idam" name="iapmat" required>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>N° Celular </label><span class="span-red"> (*)</span>
-                                                            <input type="text" class="form-control" id="idcel" onkeypress='return validaNumericos(event)' minlength="9" required name="idcel">
+                                                            <input type="text" class="form-control" id="idcel" onkeypress='return validaNumericos(event)' minlength="9" maxlength="9" required name="icel">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Dirección </label><span class="span-red"> (*)</span>
-                                                            <input type="text" class="form-control" id="iddirec" required name="iddirec">
+                                                            <input type="text" class="form-control" id="iddirec" required name="idir">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Correo </label><span class="span-red"> (*)</span>
-                                                            <input type="text" class="form-control" id="idcorre" required name="idcorre">
+                                                            <label>Correo</label><span class="span-red"> (*)</span>
+                                                            <input type="text" class="form-control" id="idemail" required name="iemail">
                                                             <i><b id="Vcorreo"></b></i>
                                                         </div>
                                                         <span class="span-red">(*) Campos Obligatorios </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="card card-info">
-                                                <div class="card-header">
-                                                    <h3 class="card-title text-bold">DATOS DEL DOCUMENTO</h3>
-                                                </div>
-
-                                                <div class="card-body">
-                                                    <div class="form-group">
-                                                        <label>Tipo</label><span class="span-red"> (*)</span>
-                                                        <select class="select-new" name="idtipo" id="idtipo">
-                                                        </select>
-                                                        <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>N° Documento </label><span class="span-red"> (*)</span>
-                                                                <input type="text" class="form-control" id="idnrodoc" onkeypress='return validaNumericos(event)' required name="idnrodoc">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label>N° Folios </label><span class="span-red"> (*)</span>
-                                                                <input type="number" class="form-control" id="idfolios" required name="idfolios">
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Asunto </label><span class="span-red"> (*)</span>
-                                                        <textarea class="form-control" rows="3" id="idasunto" placeholder="Ingrese el asunto del documento" required name="idasunto"></textarea>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <label>Adjuntar archivo (pdf.)</label><span class="span-red"> (*)</span>
-                                                        <div class="file">
-                                                            <p id="alias"></p>
-                                                            <label for="idfile" id="archivo">Elige el Archivo...</label>
-                                                            <input type="file" id="idfile" name="idfile" required accept="application/pdf">
-                                                        </div>
-                                                    </div>
-                                                    <div class="custom-control custom-checkbox div-check">
-                                                        <input class="form-check-input input-check" type="checkbox" id="check" name="check" value="option1" required>
-
-                                                        <label for="customCheckbox4" class="form-check-label">Declaro que la
-                                                            información proporcionada es válida y verídica.
-                                                            Y Acepto que las comunicaciones sean enviadas a la dirección de correo y
-                                                            celular que proporcione.<span class="span-red"> (*)</span></label>
-
-                                                    </div>
-                                                    <br>
-                                                    <div class="col-sm-12">
-                                                        <button type="submit" id="Enviar" class="btn btn-block btn-success" onclick="return RegistroDocumento()">Enviar Trámite</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="col-sm-6">
+                                                <div class="card card-info">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title text-bold">DATOS DEL DOCUMENTO</h3>
+                                                    </div>
 
+                                                    <div class="card-body">
+                                                        <div class="form-group">
+                                                            <label>Tipo</label><span class="span-red"> (*)</span>
+                                                            <select class="form-control select-tipo" name="itipo" id="select-tipo" required></select>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>N° Documento </label><span class="span-red"> (*)</span>
+                                                                    <input type="text" class="form-control" id="idnrodoc" onkeypress='return validaNumericos(event)' required name="n_doc">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label>N° Folios </label><span class="span-red"> (*)</span>
+                                                                    <input type="number" class="form-control" id="idfolios" required name="ifolios">
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>Asunto </label><span class="span-red"> (*)</span>
+                                                            <textarea class="form-control" rows="3" id="idasunto" placeholder="Ingrese el asunto del documento" required name="iasunto"></textarea>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Adjuntar archivo (pdf.)</label><span class="span-red"> (*)</span>
+                                                            <div class="file">
+                                                                <p id="nom_pdf">
+                                                                    <img src="../../public/images/pdf.png" width="25px">
+                                                                    <span id="alias"></span>
+                                                                </p>
+                                                                <label for="idfile" id="archivo">Elige el Archivo...</label>
+                                                                <input type="file" id="idfile" name="idfile" accept="application/pdf">
+                                                            </div>
+                                                        </div>
+                                                        <div class="custom-control custom-checkbox div-check">
+                                                            <input class="form-check-input input-check" type="checkbox" id="check" name="check" value="option1" required>
+
+                                                            <label for="check" class="form-check-label ml-1">Declaro que la
+                                                                información proporcionada es válida y verídica.
+                                                                Y Acepto que las comunicaciones sean enviadas a la dirección de correo y
+                                                                celular que proporcione.<span class="span-red"> (*)</span></label>
+
+                                                        </div>
+                                                        <br>
+                                                        <div class="col-sm-12">
+                                                            <button type="submit" id="Enviar" class="btn btn-block btn-success">Enviar Trámite</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- /.card-body -->
+                                    <!-- /.card-body -->
+                                </form>
                             </div>
                         </div>
                     </div>

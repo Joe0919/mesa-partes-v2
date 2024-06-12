@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var idusu, idper, opcion, idni, ruc, archi, año, area, estado, bdr;
+  let idusu, idper, opcion, idni, ruc, archi, año, area, estado, bdr;
 
   opcion = 1;
 
@@ -106,7 +106,7 @@ $(document).ready(function () {
           confirmButtonText: "Si, Guardar",
         }).then((result) => {
           if (result.isConfirmed) {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
             $.ajax({
               url: "../../app/controllers/usuario-controller.php",
@@ -769,7 +769,7 @@ function llenarSelectRol() {
 }
 
 function ValidarCorreo(correo) {
-  // var expReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  // let expReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   let expReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (expReg.test(correo)) {
     return true; // El correo electrónico es válido
