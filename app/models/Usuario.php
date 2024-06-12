@@ -31,10 +31,10 @@ class Usuario extends Conectar
                     $_SESSION["dni"] = $resultado["dni"];
                     $_SESSION["email"] = $resultado["email"];
                     $_SESSION["foto"] = $resultado["foto"];
-                    header("Location:" . Conectar::ruta() . "views/Home/");
+                    header("Location:" . Conectar::ruta() . "views/inicio/");
                     exit();
                 } else {
-                    header("Location:" . Conectar::ruta()  . "views/Acceso/index.php?m=1");
+                    header("Location:" . Conectar::ruta()  . "views/acceso/index.php?m=1");
                     exit();
                 }
             }

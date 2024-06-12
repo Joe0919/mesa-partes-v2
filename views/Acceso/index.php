@@ -2,7 +2,7 @@
 require_once "../../app/config/conexion.php";
 
 if (isset($_SESSION["idusuarios"])) {
-    header("Location:" . URL . "views/Home/");
+    header("Location:" . URL . "views/inicio/");
 }
 
 

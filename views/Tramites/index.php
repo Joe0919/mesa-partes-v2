@@ -32,7 +32,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item menu-open">
-                            <a href="../Home/" class="nav-link">
+                            <a href="../inicio/" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Inicio
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../Usuarios/" class="nav-link">
+                            <a href="../usuarios/" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -48,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../Areas/" class="nav-link">
+                            <a href="../areas/" class="nav-link">
                                 <i class="nav-icon fas fa-door-closed"></i>
                                 <p>
                                     Áreas
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../Empleados/" class="nav-link">
+                            <a href="../empleados/" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
                                 <p>
                                     Empleados
@@ -72,7 +72,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../NuevoTramite/" class="nav-link">
+                            <a href="../nuevo-tramite/" class="nav-link">
                                 <i class="nav-icon fas fa-file-upload"></i>
                                 <p>
                                     Nuevo Trámite
@@ -80,7 +80,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../TramitesRecibidos/" class="nav-link">
+                            <a href="../tramites-recibidos/" class="nav-link">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos
@@ -88,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../TramitesEnviados/" class="nav-link">
+                            <a href="../tramites-recibidos/" class="nav-link">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados
@@ -96,7 +96,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../Busqueda/" class="nav-link">
+                            <a href="../busqueda/" class="nav-link">
                                 <i class="nav-icon fas fa-search-minus"></i>
                                 <p>
                                     Búsqueda de Trámites

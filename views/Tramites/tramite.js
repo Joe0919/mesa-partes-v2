@@ -88,7 +88,7 @@ $(document).ready(function () {
           // $("#loaderPDF").hide();
           // $("#error-message").hide();
 
-          $("#iddoc").val(data[0]["dc.iddocumento"]);
+          $("#iddoc").val(data[0]["iddocumento"]);
           $("#inrodoc").val(data[0]["nro_doc"]);
           $("#ifolio").val(data[0]["folios"]);
           $("#iexpediente").val(data[0]["nro_expediente"]);
