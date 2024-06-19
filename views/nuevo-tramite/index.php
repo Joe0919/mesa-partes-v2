@@ -148,9 +148,18 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <div class="card">
-                                <div class="card-header card-color">
-                                    <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
+                            <div class="card card-danger">
+                                <div class="card-header">
+                                    <div class="row">
+                                        <div class="col-sm-10 d-flex align-items-center">
+                                            <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" id="btnLimpiar" class="btn btn-block bg-gradient-white">
+                                                <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- /.card-header -->
                                 <form id="form_tramite" enctype="multipart/form-data" method="post">
@@ -276,7 +285,7 @@
                                                                     <img src="../../public/images/pdf.png" width="25px">
                                                                     <span id="alias"></span>
                                                                 </p>
-                                                                <label for="idfile" id="archivo">Elige el Archivo...</label>
+                                                                <label for="idfile" id="archivo"><i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...</label>
                                                                 <input type="file" id="idfile" name="idfile" accept="application/pdf">
                                                             </div>
                                                         </div>
@@ -291,7 +300,8 @@
                                                         </div>
                                                         <br>
                                                         <div class="col-sm-12">
-                                                            <button type="submit" id="Enviar" class="btn btn-block btn-success">Enviar Trámite</button>
+                                                            <button type="submit" class="btn btn-block bg-success">
+                                                                <i class="nav-icon fas fa-paper-plane mr-1"></i><b>Enviar Trámite</b></button>
                                                         </div>
                                                     </div>
                                                 </div>

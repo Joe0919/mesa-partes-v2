@@ -12,7 +12,7 @@ $tramite = new Tramite();
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 // RECIBIR PARAMETROS DE FORMULARIO DE INGRESO DE TRAMITE
-$idper = isset($_POST['idpersona']) ? trim($_POST['idpersona']) : '';
+$idpersona = isset($_POST['idpersona']) ? trim($_POST['idpersona']) : '';
 $ruc = isset($_POST['iruc']) ? trim($_POST['iruc']) : '';
 $entidad = isset($_POST['ientidad']) ? strtoupper(trim($_POST['ientidad'])) : '';
 $dni = isset($_POST['idni']) ? trim($_POST['idni']) : '';
@@ -44,7 +44,7 @@ $año = (isset($_POST['año'])) ? $_POST['año'] : '';
 $area = (isset($_POST['area'])) ? $_POST['area'] : '';
 $estado = (isset($_POST['estado'])) ? $_POST['estado'] : '';
 $idarea = (isset($_POST['idarea'])) ? $_POST['idarea'] : '';
-$idder = (isset($_POST['idder'])) ? $_POST['idder'] : '';
+$idderivacion = (isset($_POST['idderivacion'])) ? $_POST['idderivacion'] : '';
 
 
 switch ($opcion) {
@@ -55,7 +55,6 @@ switch ($opcion) {
         break;
     case 2:
         // Crear nuevo registro
-
         $a = "../../public/"; // Salir del directorio actual 
 
         $ruta = "files/docs/"; // Prefijo de la ruta
@@ -80,149 +79,168 @@ switch ($opcion) {
 
             // Si la persona no esta registrada
             if ($data == 0) {
-
-                // Registramos a la persona
-                $data = $persona->crearNuevaPersona($dni, $appat, $apmat, $nombres, $correo, $cel, $direc, $ruc, $entidad);
-
+                // Registramos a la persona nos devuelve el ID
+                $idpersona = $persona->crearNuevaPersona($dni, $appat, $apmat, $nombres, $correo, $cel, $direc, $ruc, $entidad);
             } else {
-                
-                $resultado1 = mysqli_query($conexion, "UPDATE persona SET email='$correo',telefono='$cel',direccion='$direc' where idpersona='$idper'");
-                $resultado1 = mysqli_query($conexion, "UPDATE usuarios SET email='$correo', fechaedicion=sysdate() where dni=(select dni from persona where idpersona='$idper')");
+                //Editamos datos de la persona  nos devuelve el ID
+                $idpersona = $persona->editarPersona($correo, $cel, $direc, $idpersona);
             }
 
-            $existe1 = mysqli_query($conexion, "SELECT idpersona ID FROM persona where dni='$dni'");
-            $fila2 = mysqli_fetch_assoc($existe1);
-            $id = $fila2['ID'];
-            $consulta2 = "INSERT into documento values (null, '$expediente','$nrodoc','$folios','$asunto','PENDIENTE','$nuevo','$id','$tipo','8')";
-            $resultado2 = mysqli_query($conexion, $consulta2);
+            $data = false;
 
-            $inser = mysqli_query($conexion, "INSERT into historial values(null,sysdate(),'$expediente','$dni','DERIVADO','SECRETARÍA','INGRESO DE NUEVO TRÁMITE')");
+            // Registramos el tramite y guardamos el ID registrado
+            $iddocumento = $tramite->registrarDatos("documento", "null,?,?,?,?,'PENDIENTE',?,?,?,'8'", [$expediente, $nrodoc, $folios, $asunto, $nuevo, $idpersona, $tipo]);
+            //Registramos en el historial
+            $data = $tramite->registrarDatos("historial", "null,sysdate(),?,?,'DERIVADO','SECRETARÍA','INGRESO DE NUEVO TRÁMITE'", [$expediente, $dni]);
 
-            if ($inser) {
-                $iddoc = mysqli_query($conexion, "SELECT max(iddocumento) idmax from documento");
-                $resu = mysqli_fetch_assoc($iddoc);
-                $lastid = $resu['idmax'];
+            if ($data) {
 
-                $consulta = "INSERT into derivacion values (null, sysdate(),'EXTERIOR','8','$lastid','')";
-                $resultado = mysqli_query($conexion, $consulta);
-                $last = mysqli_insert_id($conexion);
+                //Registramos el registro en la tabla derivacion
+                $ultimoID = $tramite->registrarDatos("derivacion", "null, sysdate(),'EXTERIOR','8',?,''", [$iddocumento]);
+                //Consultamos los datos del tramite registrado para enviar el email
+                $data = $tramite->consultarTramitexExpediente([$ultimoID], "idderivacion=?");
+                //Importamos la clase PHPMailer
+                require_once("../../vendor/phpmailer/phpmailer/src/clsMail.php");
 
+                $enviarEmail = new clsMail();
 
-
-                $consul = mysqli_query($conexion, "select nro_expediente expediente, nro_doc nro, tipodoc, concat(nombres, ' ',ap_paterno,' ',ap_materno) Datos, date_format(fechad, '%d/%m/%Y') Fecha
-                from derivacion d, documento dc, areainstitu a, area ae, persona p, tipodoc t where d.iddocumento=dc.iddocumento and
-                d.idareainstitu=a.idareainstitu and a.idarea=ae.idarea and dc.idpersona=p.idpersona and dc.idtipodoc=t.idtipodoc and idderivacion='$last'");
-                $data = mysqli_fetch_assoc($consul);
-
-                require_once("../public/assets/plugins/PHPMailer/clsMail.php");
-                $mailSend = new clsMail();
-
+                // Creamos el cuerpo del EMAIL
                 $bodyHTML = '<html>
                 <head>
-                    <title> Mensaje HTML </title>
+                    <title> Trámite Registrado</title>
                     <style>
-                        body{
-                            font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                    *{
+                    padding:0;
+                    margin:0;
+                    box-sizing: content-box;
+                    }
+                    body{
+                        font-family: -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                    }
+                    h1 {
+                        font-size: 1.6rem;
+                        padding: 12px;
+                        color: #fff;
+                        margin: 0;
+                    }
+
+                    h2 {
+                        font-size: 1.4rem;
+                        margin: 0;
+                        color: yellow;
+                    }
+                    #titu{
+                        background-color: #1f618d;
+                        text-align: center;
+                        height: 105px;
+                    }
+                    #table{
+                        margin: 0 auto;
+                        width: 60%;
+                        max-width: 600px;
+                    }
+                    .title_table{
+                        text-align:center;
+                        color: white;	
+                        font-size: 1.4rem;
+                        height: 50px;
+                        padding: 0;
+                        background-color: #8c0505;
                         }
-                        h1 {
-                            font-size: 1.6rem;
-                            padding: 12px;
-                            color: #F4FA58;
-                            margin: 0;
-                        }
-                
-                        h2 {
-                            font-size: 1.4rem;
-                            margin: 0;
-                            color: white;
-                        }
-                        #titu{
-                            background-color: #096B87;
-                            text-align: center;
-                            height: 105px;
-                        }
-                        #table{
-                            margin: 0 auto;
-                            width: 60%;
-                        }
-                    </style>
+                    #tableDoc{
+                    margin:16px 0;
+                    }
+                    #tableDoc tr{
+                    text-align:center;
+                    font-size:19px;
+                    }
+                    
+                    #tableDoc td{
+                    color: #063a6b;
+                    }
+                    .p_name{
+                    margin: 10px 0;
+                    }
+                </style>
                 </head>
-                
+
                 <body>
                     <div id="titu">
-                        <h1>HOSPITAL ANTONIO CALDAS DOMÍNGUEZ - POMABAMBA</h1>
-                        <h2>MESA DE PARTES VIRTUAL</h2>
+                    <h1>HOSPITAL ANTONIO CALDAS DOMÍNGUEZ - POMABAMBA</h1>
+                    <h2>MESA DE PARTES VIRTUAL</h2>
                     </div>
-                    
-                        <p>Estimado(a): <b>' . $nombres . ' ' . $appat . ' ' . $apmat . '</b></p><hr>
-                        <p>Se le envía este email por parte de la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio Caldas Domínguez - Pomabamba.</b>
-                            <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite recepcionado:
-                        </p>
-                        
-                        
-                        <div id="table">
-                            <table width="100%" border="2" cellspacing="0" cellpadding="5" id="tableDoc">
-                                <tr>
-                                  <th colspan="2" style="text-align:center;color:red;font-size: 1.7rem;height: 50px;padding: 0;">
-                                    DATOS DEL DOCUMENTO</th>
-                                </tr>
-                                <tr style="text-align:center;font-size:20px">
-                                  <th style="width: 40%;">EXPEDIENTE</th>
-                                  <td>' . $data['expediente'] . '</td>
-                                </tr>
-                                <tr style="text-align:center;font-size:20px">
-                                  <th>N°. DOCUMENTO</th>
-                                  <td>' . $data['nro'] . '</td>
-                                </tr>
-                                <tr style="text-align:center;font-size:20px">
-                                  <th>TIPO</th>
-                                  <td>' . $data['tipodoc'] . '</td>
-                                </tr>
-                                <tr style="text-align:center;font-size:18px">
-                                  <th>REMITENTE</th>
-                                  <td>' . $data['Datos'] . '</td>
-                                </tr>
-                                <tr style="text-align:center;font-size:18px">
-                                  <th>FECHA</th>
-                                  <td>' . $data['Fecha'] . '</td>
-                                </tr>
-                              </table>
-                        </div>
-                        
-                        <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes Virtual</b> en la pestaña <b><i>Seguimiento</i></b>
-                            <br>Saludos cordiales
-                            <br><b>HOSPITAL ANTONIO CALDAS DOMÍNGUEZ - POMABAMBA</b>
-                        </p>
-                
-                        <p style="color: #094A8A;">_______________________________<br>
-                        <b>OFICINA DE SISTEMAS Y TELECOMUNICACIONES - HACDP</b> <br>
-                        <b>Contáctos:</b> 043-4510028<br>
-                        <b>Dirección:</b> Carretera Norte KM 1 S/N - Huajtchacra<br>
-                        <b>Plataforma Web:</b> 
-                        </p>
+
+                    <p class="p_name">Estimado(a): <b>' . $nombres . ' ' . $appat . ' ' . $apmat . '</b></p><hr>
+                    <p class="p_name">Se le envía este email por parte de la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio Caldas Domínguez - Pomabamba.</b>
+                    <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite recepcionado:
+                    </p>
+
+
+                    <div id="table">
+                    <table width="100%" border="1" cellspacing="0" cellpadding="5" id="tableDoc">
+                        <tr>
+                        <th colspan="2" class="title_table">
+                            DATOS DEL DOCUMENTO</th>
+                        </tr>
+                        <tr>
+                        <th style="width: 40%;">EXPEDIENTE</th>
+                        <td>' . $data[0]['nro_expediente'] . '</td>
+                        </tr>
+                        <tr>
+                        <th>N°. DOCUMENTO</th>
+                        <td>' . $data[0]['nro_doc'] . '</td>
+                        </tr>
+                        <tr>
+                        <th>TIPO</th>
+                        <td>' . $data[0]['tipodoc'] . '</td>
+                        </tr>
+                        <tr>
+                        <th>REMITENTE</th>
+                        <td>' . $data[0]['Datos'] . '</td>
+                        </tr>
+                        <tr>
+                        <th>FECHA</th>
+                        <td>' . $data[0]['Fecha'] . '</td>
+                        </tr>
+                    </table>
+                    </div>
+
+                    <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes Virtual</b> en la pestaña <b><i>Seguimiento</i></b>
+                    <br>Saludos cordiales
+                    <br><b>HOSPITAL ANTONIO CALDAS DOMÍNGUEZ - POMABAMBA</b>
+                    </p>
+
+                    <p style="color: #094A8A;">_______________________________<br>
+                    <b>OFICINA DE SISTEMAS Y TELECOMUNICACIONES - HACDP</b> <br>
+                    <b>Contáctos:</b> 043-4510028<br>
+                    <b>Dirección:</b> Carretera Norte KM 1 S/N - Huajtchacra<br>
+                    <b>Plataforma Web:</b> 
+                    </p>
                 </body>
-                </html>';
+                </html>
+                ';
 
-                $enviado =  $mailSend->metEnviar("MESA DE PARTES VIRTUAL - HACDP", "Usuario", "$correo", "TRÁMITE ENVIADO", $bodyHTML);
+                //Ejecutamos el envio de email
+                $enviado =  $enviarEmail->metEnviar("MESA DE PARTES VIRTUAL - HACDP", "Usuario", "$correo", "TRÁMITE ENVIADO", $bodyHTML);
 
-
-
-                print '<label><b>Expediente</b>&nbsp;: ' . $data['expediente'] . '</label><br>' .
-                    '<label><b>Nro. Documento</b>&nbsp;: ' . $data['nro'] . '</label><br>' .
-                    '<label><b>Tipo</b>&nbsp;: ' . $data['tipodoc'] . '</label><br>' .
-                    '<label><b>Remitente</b>&nbsp;: ' . $data['Datos'] . '</label><br>' .
-                    '<label><b>Fecha</b>&nbsp;: ' . $data['Fecha'] . '</label>';
+                //Consultamos e imprimimos los datos del registro realizado
+                $data = '<label><b>Expediente</b>&nbsp;: ' . $data[0]['nro_expediente'] . '</label><br>' .
+                    '<label><b>Nro. Documento</b>&nbsp;: ' . $data[0]['nro_doc'] . '</label><br>' .
+                    '<label><b>Tipo</b>&nbsp;: ' . $data[0]['tipodoc'] . '</label><br>' .
+                    '<label><b>Remitente</b>&nbsp;: ' . $data[0]['Datos'] . '</label><br>' .
+                    '<label><b>Fecha</b>&nbsp;: ' . $data[0]['Fecha'] . '</label>' .
+                    '<label><b>Fecha</b>&nbsp;: ' . $enviado . '</label>';
             } else {
-                print 'Error no se guardo en el historial';
+                $data = 'Error no se guardo en el historial';
             }
         } else {
-            echo 'ERROR AL GUARDAR EL ARCHIVO';
+            $data = 'ERROR AL GUARDAR EL ARCHIVO';
         }
-
+        echo $data;
         break;
     case 3:
         // Consultar por Expediente
-        $data = $tramite->consultarTramitexExpediente($expediente);
+        $data = $tramite->consultarTramitexExpediente([$expediente], "nro_expediente=?");
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 4:

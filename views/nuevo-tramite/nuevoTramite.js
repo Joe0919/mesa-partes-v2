@@ -49,7 +49,6 @@ $(document).ready(function () {
         },
         success: function (response) {
           data = $.parseJSON(response);
-          console.log(data);
           $("#btn_validar").prop("disabled", true);
           if (!data) {
             Swal.fire({
@@ -86,7 +85,7 @@ $(document).ready(function () {
             ruc = data["ruc_institu"];
             if (ruc == null || ruc == "" || ruc == " " || ruc == "  ") {
               $("#radio_natural").prop("checked", true);
-              $("#mostrar").hide();
+              $("#div_juridica").hide();
             } else {
               $("#radio_juridica").prop("checked", true);
               $("#div_juridica").show();
@@ -94,13 +93,12 @@ $(document).ready(function () {
               $("#identi").prop("readonly", true);
             }
             $("#loader").hide();
-            // $("#Avisoa").show();
           }
         },
       });
     }
   });
-
+  //Accion al enviar los datos del tramite
   $("#form_tramite").on("submit", function (e) {
     e.preventDefault();
     opcion = 2;
@@ -118,6 +116,7 @@ $(document).ready(function () {
         if (result.isConfirmed) {
           let formData = new FormData(this);
           formData.append("opcion", opcion);
+          $("#loader").show();
           $.ajax({
             url: "../../app/controllers/tramite-controller.php",
             type: "POST",
@@ -136,11 +135,15 @@ $(document).ready(function () {
                 html: '<div style="text-align:left">' + response + "</div>",
               });
               $("#form_tramite")[0].reset();
-              //   $("#Avisoa").hide();
+              $("#nom_pdf").hide();
+              $("#loader").hide();
             },
             error: function (xhr, status, error) {
               // Manejar errores de la petición AJAX
               console.error("Error: " + error);
+            },
+            complete: function () {
+              $("#loader").hide(); // Ocultar Div de carga al completar la solicitud
             },
           });
         }
@@ -153,6 +156,13 @@ $(document).ready(function () {
         "error"
       );
     }
+  });
+
+  $("#btnLimpiar").click(function () {
+    $("#form_tramite")[0].reset();
+    $("#nom_pdf").hide();
+    $("#div_juridica").hide();
+    $("#btn_validar").prop("disabled", false);
   });
 });
 
