@@ -13,12 +13,14 @@ $(document).ready(function () {
       data: { opcion: opcion }, //enviamos opcion 1 para que haga un SELECT
       dataSrc: "",
     },
-    // columnDefs: [
-    //   { targets: -2, width: "20px" }, // -2 se refiere a la penúltima columna
-    // ],
+    columnDefs: [
+      { targets: -5, width: "30%" }, // -2 se refiere a la penúltima columna
+    ],
     ordering: false,
     columns: [
-      { data: "expediente" },
+      { data: "expediente", render : function (data, type) {
+        return '<b>' + data + '</b>';
+      }},
       { data: "Fecha" },
       { data: "tipodoc" },
       { data: "dni" },
@@ -28,24 +30,24 @@ $(document).ready(function () {
       {
         data: "estado",
         render: function (data, type) {
-          let country = "";
+          let color = "";
           switch (data) {
             case "PENDIENTE":
-              country = "bg-black";
+              color = "bg-black";
               break;
             case "ACEPTADO":
-              country = "bg-success";
+              color = "bg-success";
               break;
             case "RECHAZADO":
-              country = "bg-danger";
+              color = "bg-danger";
               break;
             case "ARCHIVADO":
-              country = "bg-primary";
+              color = "bg-primary";
               break;
           }
           return (
             '<span style="font-size:14px"  class="badge ' +
-            country +
+            color +
             '">' +
             data +
             "</span> "
@@ -67,7 +69,7 @@ $(document).ready(function () {
     },
   });
 
-  //Mostrar datos de usuario para edicion
+  //Mostrar mas informacion del tramite
   $(document).on("click", ".btnMas", function () {
     opcion = 3;
     expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente

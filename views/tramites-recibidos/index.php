@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites/" class="nav-link active">
+                            <a href="../tramites/" class="nav-link">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>
                                     Trámites
@@ -80,7 +80,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos

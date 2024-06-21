@@ -28,7 +28,8 @@ class Tramite extends Conectar
         $conectar = parent::conexion();
 
         $consulta = "SELECT idderivacion ID, nro_expediente,dc.iddocumento doc, nro_doc,folios, estado, tipodoc, asunto, dni,
-         concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, ruc_institu, institucion, archivo, area, date_format(fechad, '%d/%m/%Y') Fecha
+         concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, ruc_institu, institucion, archivo, area, 
+         date_format(fechad, '%d/%m/%Y') Fecha, descripcion
         from derivacion d inner join documento dc on d.iddocumento=dc.iddocumento
         inner join areainstitu a on d.idareainstitu=a.idareainstitu
         inner join area ae on a.idarea=ae.idarea
@@ -73,5 +74,18 @@ class Tramite extends Conectar
         $id = $conectar->lastInsertId();
 
         return $id;
+    }
+
+    public function editarDatos(string $tabla, string $marcadores, array $datos, string $condicion)
+    {
+        $conectar = parent::conexion();
+
+        $consulta = "UPDATE $tabla set $marcadores where $condicion";
+        $resultado = $conectar->prepare($consulta);
+        $resultado->execute($datos);
+
+        $idEditado = $conectar->lastInsertId();
+
+        return $idEditado;
     }
 }

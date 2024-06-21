@@ -33,7 +33,7 @@ $archivo = isset($_FILES['idfile']) ? $_FILES['idfile'] : '';
 // PARAMETROS PARA ACCION DE ACEPTAR, DERIVAR O RECHAZAR UN TRAMITE
 $origen = (isset($_POST['origen'])) ? $_POST['origen'] : '';
 $destino = (isset($_POST['destino'])) ? $_POST['destino'] : '';
-$descripcion = (isset($_POST['descrip'])) ? $_POST['descrip'] : '';
+$descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
 
 
 $bdr = (isset($_POST['bdr'])) ? $_POST['bdr'] : '';
@@ -47,6 +47,8 @@ $idarea = (isset($_POST['idarea'])) ? $_POST['idarea'] : '';
 $idderivacion = (isset($_POST['idderivacion'])) ? $_POST['idderivacion'] : '';
 
 
+$accion = (isset($_POST['accion'])) ? $_POST['accion'] : '';
+
 switch ($opcion) {
     case 1:
         // Consultar todos los datos
@@ -54,7 +56,8 @@ switch ($opcion) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 2:
-        // Crear nuevo registro
+        // Crear nuevo registro y guardar archivo PDF
+
         $a = "../../public/"; // Salir del directorio actual 
 
         $ruta = "files/docs/"; // Prefijo de la ruta
@@ -254,8 +257,39 @@ switch ($opcion) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 6:
-        // Consultar usuarios que no son empleados
-        // $data = $empleado->listarUsuariosPendientes();
+        // Controlar si se Acepta o Rechaza un Tramite
+        if ($accion === 'ACEPTAR') {
+            //Cambiamos el estado del documento a aceptado
+            $tramite->editarDatos("documento", "estado = 'ACEPTADO'", [$expediente], "iddocumento = ?");
+            //Guardamos la Aceptacion en el historial del doc
+            $data = $tramite->registrarDatos("historial", "null,sysdate(),?,?,'ACEPTADO',?,?", [$expediente, $dni, $origen, $descripcion]);
+        } else if ($accion === 'RECHAZAR') {
+
+            //Validamos si en SECRETARIA se rechaza el tramite 
+            if ($origen === 'SECRETARIA') {
+                //No es necesario Derivar a Secretaria, solo se rechaza
+
+                //Colocamos la descripcion por la que se esta Rechazando
+                $tramite->editarDatos("derivacion", "descripcion = ? ", [$descripcion, $idderivacion], "idderivacion = ?");
+
+                //Guardamos el Rechazo en el historial del doc
+                $tramite->registrarDatos("historial", "null,sysdate(),?,?,'RECHAZADO',?,?", [$expediente, $dni, $origen, $descripcion]);
+            } else {
+                // Se cumple que es otra area
+
+                //Derivamos el Tramite a Secretaria
+                $tramite->registrarDatos("derivacion", "null,sysdate(),?,(SELECT idarea from area where area=?),?,?", [$origen, $origen, $expediente, $descripcion]);
+
+                //Guardamos el Rechazo en el historial del doc
+                $tramite->registrarDatos("historial", "null,sysdate(),?,?,'RECHAZADO',?,?", [$expediente, $dni, $origen, $descripcion]);
+
+                //Guardamos la Derivacion a SECRETARIA en el historial 
+                $tramite->registrarDatos("historial", "null,sysdate(),?,?,'DERIVADO','SECRETARIA',?", [$expediente, $dni, $descripcion]);
+            }
+            //Cambiamos el estado del documento a RECHAZADO
+            $data = $tramite->editarDatos("documento", "estado = 'RECHAZADO'", [$expediente], "iddocumento = ?");
+            
+        }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 7:

@@ -204,7 +204,6 @@
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-tramite.php";
 
         require_once "../inc/Modals/Modals.php";
 
