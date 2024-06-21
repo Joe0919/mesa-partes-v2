@@ -1,6 +1,10 @@
 $(document).ready(function () {
-  let idusu = $("#iduser").val();
-  let idni = $("#dniuser").val();
+  let idusu,
+    idni,
+    opcion,
+    datosCargados = false;
+  idusu = $("#iduser").val();
+  idni = $("#dniuser").val();
 
   $("#loader").hide(); // Ocultar DIv de carga
 
@@ -427,6 +431,7 @@ function datosUsuarioLogeado(callback) {
       $("#idinstitu").val(data["IDInst"]);
       $("#loader").hide();
       callback(); // llamar a la funcion despues de cargar los datos
+      datosCargados = true;
     },
     error: function (xhr, status, error) {
       // Manejar errores de la petición AJAX
@@ -576,5 +581,3 @@ function mostrarImagen() {
 function ResetForm(id) {
   document.getElementById(id).reset();
 }
-
-

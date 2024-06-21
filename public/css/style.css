@@ -231,8 +231,8 @@ body {
   font-size: 18px;
 }
 
-.select-info {
-  width: 300px;
+.select-tipo-estado {
+  width: 250px;
   height: 30px;
   color: var(--color6);
 }

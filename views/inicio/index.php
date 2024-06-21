@@ -88,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-recibidos/" class="nav-link">
+                            <a href="../tramites-enviados/" class="nav-link">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados

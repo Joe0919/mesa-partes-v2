@@ -4,7 +4,7 @@ class Tramite extends Conectar
 {
 
 
-    public function listarTramites()
+    public function listarTramites(string $condicion = "", array $valores = [])
     {
         $conectar = parent::conexion();
 
@@ -12,14 +12,18 @@ class Tramite extends Conectar
         from derivacion d inner join documento dc on d.iddocumento=dc.iddocumento
         inner join areainstitu a on d.idareainstitu=a.idareainstitu
         inner join area ae on a.idarea=ae.idarea
-        inner join persona p on dc.idpersona=p.idpersona
-        inner join tipodoc t on dc.idtipodoc=t.idtipodoc order by fechad desc;";
+        inner join persona p on dc.idpersona=p.idpersona 
+        inner join tipodoc t on dc.idtipodoc=t.idtipodoc 
+        $condicion order by fechad desc;";
         $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
+
+        // Validamos si hay valores de condicion o no
+        $condicion == "" ? $resultado->execute() : $resultado->execute($valores);
+
         return $resultado->fetchAll(pdo::FETCH_ASSOC);
     }
 
-    public function consultarTramitexExpediente(array $valores, string $condicion )
+    public function consultarTramitexExpediente(array $valores, string $condicion)
     {
         $conectar = parent::conexion();
 
@@ -58,16 +62,16 @@ class Tramite extends Conectar
         return $data['expediente'];
     }
 
-    public function registrarDatos(string $tabla ,string $marcadores, array $datos)
+    public function registrarDatos(string $tabla, string $marcadores, array $datos)
     {
         $conectar = parent::conexion();
 
         $consulta = "INSERT into $tabla values ($marcadores)";
         $resultado = $conectar->prepare($consulta);
         $resultado->execute($datos);
-        
+
         $id = $conectar->lastInsertId();
-    
+
         return $id;
     }
 }

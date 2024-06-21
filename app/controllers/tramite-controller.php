@@ -249,9 +249,9 @@ switch ($opcion) {
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 5:
-        // ELiminar por ID
-        // $data = $area->eliminarAreaID($id_area);
-        // echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        // Consultar todos los tramites del area
+        $data = $tramite->listarTramites("where area=? and estado=? and idubi=?", [$area, $estado, $idarea]);
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 6:
         // Consultar usuarios que no son empleados

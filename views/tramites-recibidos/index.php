@@ -7,7 +7,7 @@
 
     <?php require_once "../inc/MainHead/MainHead.php" ?>
 
-    <title>Trámites | Mesa de Partes Virtual</title>
+    <title>Docs. Recibidos | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -64,7 +64,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="../tramites/" class="nav-link active">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>
                                     Trámites
@@ -80,7 +80,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-recibidos/" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos
@@ -129,7 +129,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i>Trámites</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-download"></i>Trámites Recibidos</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -146,14 +146,23 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Todos los Trámites Registrados</h3>
-                                        <div>
+                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Trámites Recibidos</h3>
+                                        <div class="d-flex align-items-center">
                                             <!-- <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_file" title="Agregar nuevo registro">
                                                 <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                             </button> -->
-                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
+                                            <!-- <button type="button" class="btn btn-dark mr-2" title="Generar Reporte">
                                                 <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                            </button>
+                                            </button> -->
+                                            <div class="d-flex align-items-center">
+                                                <label class="mr-1 mb-0">Listar por: </label>
+                                                <select class="select-reporte select-tipo-estado" name="select_estado" id="select_estado">
+                                                    <option value="PENDIENTE">PENDIENTES</option>
+                                                    <option value="ACEPTADO">ACEPTADOS</option>
+                                                    <option value="RECHAZADO">RECHAZADOS</option>
+                                                    <option value="ARCHIVADO">ARCHIVADOS</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                     <!-- <a class="btn btn-flat btn-a bg-success" data-toggle="modal" id="Nuevo">
@@ -164,7 +173,7 @@
 
                                     <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">
                                         <i class="nav-iconfas fas fa-file-pdf"></i>Generar Reporte </a> -->
-                                    <table id="tablaTramites" class="table table-hover table-data">
+                                    <table id="tablaTramitesRecibidos" class="table table-hover table-data">
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Expediente</th>
@@ -173,8 +182,8 @@
                                                 <th colspan="2">Remitente</th>
                                                 <th colspan="2">Localización</th>
                                                 <th rowspan="2">Estado</th>
-                                                <th style="width:2px;" rowspan="2">Más...</th>
-
+                                                <th style="width:2px;" rowspan="2">Ver más</th>
+                                                <th rowspan="2">Acción</th>
                                             </tr>
                                             <tr>
                                                 <th>DNI</th>
@@ -204,7 +213,7 @@
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-tramite.php";
+        require_once "Modals-tramitesRecibidos.php";
 
         require_once "../inc/Modals/Modals.php";
 
@@ -218,7 +227,7 @@
 
     <?php require_once "../inc/MainJS/MainJS.php" ?>
 
-    <script src="tramite.js"></script>
+    <script src="tramitesRecibidos.js"></script>
 
 </body>
 

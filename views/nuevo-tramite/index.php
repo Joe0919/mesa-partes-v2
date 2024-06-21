@@ -320,7 +320,6 @@
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-nuevoTramite.php";
 
         require_once "../inc/Modals/Modals.php";
 
