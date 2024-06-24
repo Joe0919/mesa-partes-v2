@@ -81,57 +81,40 @@ $(document).ready(function () {
             </div>`,
         },
         {
-          defaultContent: `<div class='text-center'>
+          //Personalizamos la columna dependiento del estado
+          data: null,
+          render: function (data, type, row) {
+            let botones = "";
+            switch (row.estado) {
+              case "PENDIENTE":
+                botones = `<button class='btn btn-success btn-sm btn-table btnAceptar' title='Aceptar Trámite'>
+                          <i class='material-icons'>task_alt</i></button>`;
+                break;
+              case "ACEPTADO":
+                botones = `<button class='btn btn-warning btn-sm btn-table btnSeguimiento' title='Ver Historial'>
+                  <i class='material-icons'>search</i></button>
+                  <button class='btn btn-danger btn-sm btn-table btnDerivar' title='Derivar Documento'>
+                  <i class='material-icons'>output</i></button>`;
+                break;
+              default:
+                botones = `<button class='btn btn-warning btn-sm btn-table btnSeguimiento' title='Ver Historial'>
+                    <i class='material-icons'>search</i></button>`;
+                break;
+            }
+            return `<div class='text-center'>
               <div class='btn-group'>
-                    <button class='btn btn-success btn-sm btn-table btnAceptar' title='Aceptar Trámite'>
-                      <i class='material-icons'>task_alt</i></button>
-                    <button class='btn btn-warning btn-sm btn-table btnSeguimiento' title='Ver Historial'>
-                      <i class='material-icons'>search</i></button>
-                    <button class='btn btn-danger btn-sm btn-table btnDerivar' title='Derivar Documento'>
-                      <i class='material-icons'>output</i></button>
+                    ${botones}
               </div>
-            </div>`,
+            </div>`;
+          },
         },
       ],
       initComplete: function () {
         // Oculta el loader una vez que los datos se hayan cargado
         $("#loader").hide();
         //Validamos que botones se deben de mostrar dependiendo del estado del tramite
-        switch (estado) {
-          case "PENDIENTE":
-            $(".btnAceptar").show();
-            $(".btnSeguimiento").hide();
-            $(".btnDerivar").hide();
-            break;
-          case "ACEPTADO":
-            $(".btnAceptar").hide();
-            $(".btnSeguimiento").show();
-            $(".btnDerivar").show();
-            break;
-          case "RECHAZADO" || "ARCHIVADO":
-            $(".btnAceptar").hide();
-            $(".btnSeguimiento").show();
-            $(".btnDerivar").hide();
-            break;
-          case "ARCHIVADO":
-            $(".btnAceptar").hide();
-            $(".btnSeguimiento").show();
-            $(".btnDerivar").hide();
-            break;
-        }
       },
     });
-  }
-
-  function ResetModalMas() {
-    $("#btn_remitente").addClass("btn btn-light");
-    $("#btn_tramite").removeClass("btn btn-light");
-    $("#btn_tramite").addClass("btn btn-primary");
-    $("#btn_vistaprevia").addClass("btn btn-light");
-    $("#div_tramite").show();
-    $("#div_remitente").hide();
-    $("#div_vistaprevia").hide();
-    $("#btn_NuevoPDF").hide();
   }
 
   $("#select_estado").on("change", function () {
@@ -139,133 +122,7 @@ $(document).ready(function () {
     inicializarTabla(); // Llamar a la función inicializarTabla con el nuevo valor de estado
   });
 
-  //Mostrar mas informacion del tramite
-  $(document).on("click", ".btnMas", function () {
-    opcion = 3;
-    expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
-
-    $.ajax({
-      url: "../../app/controllers/tramite-controller.php",
-      type: "POST",
-      datatype: "json",
-      data: { opcion: opcion, expediente: expediente },
-      beforeSend: function () {
-        /* * Se ejecuta al inicio de la petición* */
-        $("#loader").show();
-      },
-      success: function (response) {
-        data = $.parseJSON(response);
-        if (data.length > 0) {
-          // $("#div_iframePDF").show();
-          // $("#loaderPDF").hide();
-          // $("#error-message").hide();
-
-          $("#iddoc").val(data[0]["iddocumento"]);
-          $("#inrodoc").val(data[0]["nro_doc"]);
-          $("#ifolio").val(data[0]["folios"]);
-          $("#iexpediente").val(data[0]["nro_expediente"]);
-          $("#iestad").val(data[0]["estado"]);
-          $("#itipodoc").val(data[0]["tipodoc"]);
-          $("#iasunt").val(data[0]["asunto"]);
-          $("#iddni1").val(data[0]["dni"]);
-          $("#idremi").val(data[0]["Datos"]);
-
-          $("#iruc").val(data[0]["ruc_institu"]);
-          $("#iinsti").val(data[0]["institucion"]);
-
-          archivo = data[0]["archivo"];
-
-          $("#iframePDF").attr("src", "../../public/" + archivo);
-
-          // $("#iframePDF").on("load", function () {
-          //   $("#div_iframePDF").hide();
-          //   $("#loaderPDF").show();
-          //   $("#error-message").hide();
-          // });
-
-          // $("#iframePDF").on("error", function () {
-          //   $("#div_iframePDF").hide();
-          //   $("#loaderPDF").hide();
-          //   $("#error-message").show();
-          // });
-
-          ruc = data[0]["ruc_institu"];
-
-          if (ruc == null || ruc == "" || ruc == " " || ruc == "  ") {
-            $("#radio_natural").prop("checked", true);
-          } else {
-            $("#radio_juridica").prop("checked", true);
-          }
-
-          ResetModalMas(); //Solo mostrar los divs necesarios
-
-          $("#modalmas").modal({ backdrop: "static", keyboard: false });
-          $("#loader").hide();
-        }
-      },
-      error: function (xhr, status, error) {
-        // Manejar errores de la petición AJAX
-        console.error("Error: " + error);
-      },
-    });
-  });
-
-  //Redirige a una nueva pestaña para ver el PDF
-  $("#btn_NuevoPDF").click(function () {
-    $(this).attr("href", "../../public/" + archivo);
-  });
-
-  //CERRAR MODAL y resetear valores
-  $("#btnCerrarMas").click(function () {
-    $("#modalmas").modal("hide");
-    $("#btn_remitente").addClass("btn btn-light");
-    $("#btn_tramite").removeClass("btn btn-light");
-    $("#btn_tramite").addClass("btn btn-primary");
-    $("#btn_vistaprevia").addClass("btn btn-light");
-    $("#div_tramite").show();
-    $("#div_remitente").hide();
-    $("#div_vistaprevia").hide();
-    $("#NuevoPDF").hide();
-    $("#iframePDF").attr("src", "");
-    $("#radio_natural").prop("checked", false);
-    $("#radio_juridica").prop("checked", false);
-    ruc = "";
-    archivo = "";
-  });
-
-  // VALIDACION PARA MOSTRAR U OCULTAR ELEMENTOS DEL MODAL
-  $("#btn_tramite").click(function () {
-    $("#btn_remitente").addClass("btn btn-light");
-    $(this).removeClass("btn btn-light");
-    $(this).addClass("btn btn-primary");
-    $("#btn_vistaprevia").addClass("btn btn-light");
-    $("#div_tramite").show();
-    $("#div_remitente").hide();
-    $("#div_vistaprevia").hide();
-    $("#btn_NuevoPDF").hide();
-  });
-  $("#btn_remitente").click(function () {
-    $(this).removeClass("btn btn-light");
-    $(this).addClass("btn btn-primary");
-    $("#btn_tramite").addClass("btn btn-light");
-    $("#btn_vistaprevia").addClass("btn btn-light");
-    $("#div_tramite").hide();
-    $("#div_remitente").show();
-    $("#div_vistaprevia").hide();
-    $("#btn_NuevoPDF").hide();
-  });
-  $("#btn_vistaprevia").click(function () {
-    $("#btn_remitente").addClass("btn btn-light");
-    $("#btn_tramite").addClass("btn btn-light");
-    $(this).removeClass("btn btn-light");
-    $(this).addClass("btn btn-primary");
-    $("#div_tramite").hide();
-    $("#div_remitente").hide();
-    $("#div_vistaprevia").show();
-    $("#btn_NuevoPDF").show();
-  });
-
-  //Abrir Modal para Aceptar o Rechazar el Trámite
+    //Abrir Modal para Aceptar o Rechazar el Trámite
   $(document).on("click", ".btnAceptar", function () {
     //Validamos que el documento tenga el estado pendiente
     if ($.trim($(this).closest("tr").find("td:eq(7)").text()) !== "PENDIENTE") {
@@ -372,33 +229,6 @@ $(document).ready(function () {
           },
         });
       }
-    });
-  });
-
-  //Mostrar tabla de seguimienton del tramite
-  $(document).on("click", ".btnSeguimiento", function () {
-    opcion = 3;
-    expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
-    $("#p_expediente").text(expediente);
-    $("#modal_historial").modal("show");
-
-    tablaSeguimiento = $("#tablaSeguimiento").DataTable({
-      destroy: true,
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
-      },
-      ajax: {
-        url: "../../app/controllers/tramite-controller.php",
-        method: "POST", //usamos el metodo POST
-        data: { opcion: opcion, expediente: expediente },
-        dataSrc: "",
-      },
-      columns: [
-        { data: "ID" },
-        { data: "Fecha" },
-        { data: "area" },
-        { data: "descripcion" },
-      ],
     });
   });
 
@@ -566,4 +396,6 @@ $(document).ready(function () {
       },
     });
   }
+
+    // # NOTA: LA FUNCION DE MAS INFORMACION Y SEGUIMIENTO ESTAN EN MAIN.JS EN PUBLIC
 });

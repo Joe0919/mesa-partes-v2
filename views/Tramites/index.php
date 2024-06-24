@@ -146,24 +146,14 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Todos los Trámites Registrados</h3>
-                                        <div>
-                                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_file" title="Agregar nuevo registro">
-                                                <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                            </button> -->
-                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
-                                                <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                            </button>
-                                        </div>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Trámites Registrados</h3>
+
                                     </div>
                                     <!-- <a class="btn btn-flat btn-a bg-success" data-toggle="modal" id="Nuevo">
                                         <i class="nav-icon fas fa-plus"></i>Nuevo Registro </a> -->
                                 </div><!-- /.card-header -->
                                 <!-- /.card-header -->
                                 <div class="card-body">
-
-                                    <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">
-                                        <i class="nav-iconfas fas fa-file-pdf"></i>Generar Reporte </a> -->
                                     <table id="tablaTramites" class="table table-hover table-data">
                                         <thead>
                                             <tr>
@@ -174,7 +164,7 @@
                                                 <th colspan="2">Localización</th>
                                                 <th rowspan="2">Estado</th>
                                                 <th style="width:2px;" rowspan="2">Más...</th>
-
+                                                <th rowspan="2">Acción</th>
                                             </tr>
                                             <tr>
                                                 <th>DNI</th>

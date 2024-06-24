@@ -358,3 +358,51 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<!-- MODAL SEGUIMIENTO-->
+<div class="modal fade" id="modal_historial">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" id="modal-header">
+                <div class="d-flex align-items-center">
+                    <h4 class="modal-title modal-title-h4 mr-2" id="modal-title">Seguimiento del Trámite: Expediente
+                    </h4>
+                    <p id="p_expediente" class="p-descrip mb-0"></p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="tablaSeguimiento" class="table table-hover table-data">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Ubic. Actual</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Ubic. Actual</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn1 btn-success" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>

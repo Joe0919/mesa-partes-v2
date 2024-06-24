@@ -7,7 +7,7 @@
 
     <?php require_once "../inc/MainHead/MainHead.php" ?>
 
-    <title>Usuarios | Mesa de Partes Virtual</title>
+    <title>Docs. Enviados | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="../usuarios/" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -88,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-enviados/" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados
@@ -129,7 +129,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user"></i>Usuarios</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-download"></i>Trámites Recibidos</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -146,32 +146,31 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Usuarios</h3>
-                                        <div>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
-                                                <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                            </button>
-                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
-                                                <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                            </button>
-                                        </div>
+                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Trámites Recibidos</h3>
                                     </div>
-                                    <!-- <a class="btn btn-flat btn-a bg-success" data-toggle="modal" id="Nuevo">
-                                        <i class="nav-icon fas fa-plus"></i>Nuevo Registro </a> -->
                                 </div><!-- /.card-header -->
                                 <!-- /.card-header -->
                                 <div class="card-body">
 
                                     <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">
                                         <i class="nav-iconfas fas fa-file-pdf"></i>Generar Reporte </a> -->
-                                    <table id="tablaUsuarios" class="table table-hover table-data">
+                                    <table id="tablaTramitesEnviados" class="table table-hover table-data">
                                         <thead>
                                             <tr>
-                                                <!-- Rellenamos etiquetas de las columnas desde cons.php -->
-                                                <?php foreach (usuarioColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-
+                                                <th rowspan="2">Expediente</th>
+                                                <th rowspan="2">Fecha</th>
+                                                <th rowspan="2">Tipo Doc</th>
+                                                <th colspan="2">Remitente</th>
+                                                <th colspan="2">Localización</th>
+                                                <th rowspan="2">Estado</th>
+                                                <th style="width:2px;" rowspan="2">Ver más</th>
+                                                <th rowspan="2">Acción</th>
+                                            </tr>
+                                            <tr>
+                                                <th>DNI</th>
+                                                <th>Datos</th>
+                                                <th>Desde</th>
+                                                <th>Hacia</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -179,13 +178,6 @@
                                             <!-- ESPACIO DE LLENADO AUTOMATICO DE LOS DATOS CORRESPONDIENTES -->
 
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <?php foreach (usuarioColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        </tfoot>
                                     </table>
 
                                 </div>
@@ -202,7 +194,6 @@
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-usuario.php";
 
         require_once "../inc/Modals/Modals.php";
 
@@ -216,7 +207,7 @@
 
     <?php require_once "../inc/MainJS/MainJS.php" ?>
 
-    <script src="usuario.js"></script>
+    <script src="tramitesEnviados.js"></script>
 
 </body>
 

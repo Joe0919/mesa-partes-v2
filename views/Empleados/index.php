@@ -88,7 +88,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-recibidos/" class="nav-link">
+                            <a href="../tramites-enviados/" class="nav-link">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados
@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#ModalInformes" class="nav-link" data-toggle="modal">
+                            <a href="../informes/" class="nav-link" data-toggle="modal">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes
@@ -146,7 +146,7 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Empleados Registrados</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Empleados</h3>
                                         <div>
                                             <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_employed" title="Agregar nuevo registro">
                                                 <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro

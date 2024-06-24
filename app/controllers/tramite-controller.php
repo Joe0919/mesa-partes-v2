@@ -336,8 +336,8 @@ switch ($opcion) {
         echo json_encode($accion, JSON_UNESCAPED_UNICODE);
         break;
     case 9:
-        // Consultar usuarios que no son empleados
-        // $data = $empleado->listarUsuariosPendientes();
+        // Consultar todos los tramites enviados desde el area
+        $data = $tramite->listarTramites("where origen=?", [$area]);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 10:
