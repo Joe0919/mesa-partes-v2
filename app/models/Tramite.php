@@ -41,13 +41,13 @@ class Tramite extends Conectar
         return $resultado->fetchAll(pdo::FETCH_ASSOC);
     }
 
-    public function consultarTipoDocs()
+    public function consultarTipoDocs(string $columnas = "*", string $tabla, string $condicion = "", array $valores = [])
     {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT * FROM tipodoc";
+        $consulta = "SELECT $columnas FROM $tabla $condicion";
         $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
+        $resultado->execute($valores);
         return $resultado->fetchAll(pdo::FETCH_ASSOC);
     }
 

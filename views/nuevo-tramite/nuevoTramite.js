@@ -128,7 +128,6 @@ $(document).ready(function () {
               $("#loader").show(); // Mostrar DIv de carga
             },
             success: function (response) {
-              console.log(response);
               Swal.fire({
                 icon: "success",
                 title: "TRÁMITE REGISTRADO",

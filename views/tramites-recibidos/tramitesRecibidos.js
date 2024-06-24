@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $("#loader").show(); // Mostrar DIv de carga
-  let id, expediente, archivo, ruc, idarea, area, estado, bdr, accion, dni;
+  let id, expediente, archivo, ruc, idarea, area, estado, accion, dni, destino;
   opcion = 5;
 
   //Esperamos que se carguen los datos del usuario logueado
@@ -27,8 +27,7 @@ $(document).ready(function () {
           area: area,
           estado: estado,
           idarea: idarea,
-          bdr: bdr,
-        }, //enviamos opcion 4 para que haga un SELECT
+        },
         dataSrc: "",
       },
       columnDefs: [{ targets: -1, width: "10px" }],
@@ -376,7 +375,7 @@ $(document).ready(function () {
     });
   });
 
-  //Mostrar tabla de seguimienton de los datos
+  //Mostrar tabla de seguimienton del tramite
   $(document).on("click", ".btnSeguimiento", function () {
     opcion = 3;
     expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
@@ -402,4 +401,169 @@ $(document).ready(function () {
       ],
     });
   });
+
+  //Mostrar modal para Derivar o Archivar
+  $(document).on("click", ".btnDerivar", function () {
+    if ($.trim($(this).closest("tr").find("td:eq(7)").text()) !== "ACEPTADO") {
+      //El documento tiene otro estado
+      MostrarAlerta(
+        "Advertencia",
+        "No es posible realizar esta accion",
+        "error"
+      );
+    } else {
+      expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
+      dni = $(this).closest("tr").find("td:eq(3)").text(); //capturo el DNI DEL remitente
+      $("#expediente_d").val(expediente);
+      $("#dni_d").val(dni);
+      $("#idorigen").val($("#info-area").val());
+      $("#p_expediente_d").text(expediente);
+      $("#modal_derivacion").modal("show");
+      opcion = 3;
+      $.ajax({
+        url: "../../app/controllers/tramite-controller.php",
+        type: "POST",
+        datatype: "json",
+        data: { opcion: opcion, expediente: expediente },
+        beforeSend: function () {
+          $("#loader").show();
+        },
+        success: function (response) {
+          data = $.parseJSON(response);
+          if (data.length > 0) {
+            $("#iddoc_d").val(data[0]["doc"]);
+            llenarSelectDestino();
+            $("#select-destino").attr("required", "required");
+          }
+        },
+        error: function (error) {
+          console.error("Error: " + error);
+        },
+      });
+    }
+  });
+
+  //Ocultar Areas destino al solo ARCHIVAR
+  $("#idaccion").change(function () {
+    let sel = $(this).val();
+    if (sel == "2") {
+      $("#column").hide();
+      $("#btnEnviarDerivacion").text("Archivar");
+      $("#select-destino").removeAttr("required");
+    } else {
+      $("#column").show();
+      $("#btnEnviarDerivacion").text("Derivar");
+      $("#select-destino").attr("required", "required");
+    }
+  });
+
+  //Registrar o Editar los datos del formulario
+  $("#form_derivacion").on("submit", function (e) {
+    e.preventDefault();
+    accion = $("#idaccion").val();
+    destino = $("#select-destino option:selected").text();
+    origen = $("#idorigen").val();
+    let opcion = 8; // Opcion para el switch del controlador
+    let formulario = $(this);
+    let aux, titulo;
+    accion === "1"
+      ? ((aux = "DERIVAR"),
+        (titulo = `¿Está seguro de ${aux}?`),
+        (html = `El documento se va a <b>${aux}</b> a <b>${destino}</b>.`))
+      : ((aux = "ARCHIVAR"),
+        (titulo = `¿Está seguro de ${aux}?`),
+        (html = `El documento se va a <b>${aux}</b> en <b>${origen}</b>.`));
+    if (verificarCampos(formulario)) {
+      Swal.fire({
+        title: titulo,
+        html: html,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Si, Continuar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var formData = new FormData(this);
+          formData.append("opcion", opcion);
+          formData.append("accion", accion);
+          $.ajax({
+            url: "../../app/controllers/tramite-controller.php",
+            type: "POST",
+            datatype: "json",
+            data: formData,
+            processData: false, // Evita que jQuery procese los datos del formulario
+            contentType: false, // Evita que jQuery establezca el encabezado Content-Type
+            beforeSend: function () {
+              /* * Se ejecuta al inicio de la petición* */
+              $("#loader").show();
+            },
+            success: function (response) {
+              // Manejar la respuesta del servidor
+              accion === "1" ? (aux = "DERIVADO") : (aux = "ARCHIVADO");
+              MostrarAlerta(
+                `Hecho`,
+                `El documento fue ${aux} correctamente`,
+                "success"
+              );
+              $("#form_derivacion")[0].reset();
+              $("#modal_derivacion").modal("hide");
+              inicializarTabla();
+              $("#loader").hide();
+            },
+            error: function (xhr, status, error) {
+              // Manejar errores de la petición AJAX
+              console.error("Error: " + error);
+            },
+          });
+        }
+      });
+    } else {
+      MostrarAlerta(
+        "Advertencia",
+        "Por favor, complete todos los campos requeridos.",
+        "error"
+      );
+    }
+  });
+
+  //Llenar el Select Con Areas distintas al actual
+  function llenarSelectDestino() {
+    // LLenar el select con opciones de tipos de documentos
+    opcion = 7;
+    area = $("#info-area").val();
+    $.ajax({
+      url: "../../app/controllers/tramite-controller.php",
+      type: "POST",
+      datatype: "json",
+      data: { opcion: opcion, area: area },
+      beforeSend: function () {
+        /* * Se ejecuta al inicio de la petición* */
+        $("#loader").show();
+      },
+      success: function (response) {
+        data = $.parseJSON(response);
+        let select = $("#select-destino");
+        let placeholderOption = $("<option></option>");
+        placeholderOption.val("");
+        placeholderOption.text("Seleccione destino...");
+        placeholderOption.attr("disabled", true);
+        placeholderOption.attr("selected", true);
+        select.append(placeholderOption);
+        // Recorre los datos devueltos y crea las opciones del select
+        for (let i = 0; i < data.length; i++) {
+          let option = $("<option></option>");
+          option.val(data[i].ID);
+          option.text(data[i].area);
+          select.append(option);
+        }
+        $("#loader").hide();
+      },
+      error: function (xhr, status, error) {
+        // Manejar errores de la petición AJAX
+        console.error("Error: " + error);
+      },
+    });
+  }
 });

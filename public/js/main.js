@@ -279,7 +279,6 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (msg) {
-            console.log(msg);
             $("#loader").hide();
             MostrarAlertaxTiempo(
               "Hecho",

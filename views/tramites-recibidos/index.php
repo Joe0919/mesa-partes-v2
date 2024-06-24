@@ -148,15 +148,9 @@
                                     <div class="w-100 d-flex justify-content-between align-items-center">
                                         <h3 class="card-title font-weight-bold card-header-title">Listado de Trámites Recibidos</h3>
                                         <div class="d-flex align-items-center">
-                                            <!-- <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_file" title="Agregar nuevo registro">
-                                                <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                            </button> -->
-                                            <!-- <button type="button" class="btn btn-dark mr-2" title="Generar Reporte">
-                                                <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                            </button> -->
                                             <div class="d-flex align-items-center">
                                                 <label class="mr-1 mb-0">Listar por: </label>
-                                                <select class="select-reporte select-tipo-estado" name="select_estado" id="select_estado">
+                                                <select class="form-control select-reporte select-tipo-estado" name="select_estado" id="select_estado">
                                                     <option value="PENDIENTE">PENDIENTES</option>
                                                     <option value="ACEPTADO">ACEPTADOS</option>
                                                     <option value="RECHAZADO">RECHAZADOS</option>
@@ -165,8 +159,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <a class="btn btn-flat btn-a bg-success" data-toggle="modal" id="Nuevo">
-                                        <i class="nav-icon fas fa-plus"></i>Nuevo Registro </a> -->
                                 </div><!-- /.card-header -->
                                 <!-- /.card-header -->
                                 <div class="card-body">

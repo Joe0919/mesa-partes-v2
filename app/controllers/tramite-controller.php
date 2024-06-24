@@ -31,10 +31,9 @@ $archivo = isset($_FILES['idfile']) ? $_FILES['idfile'] : '';
 
 
 // PARAMETROS PARA ACCION DE ACEPTAR, DERIVAR O RECHAZAR UN TRAMITE
-$origen = (isset($_POST['origen'])) ? $_POST['origen'] : '';
-$destino = (isset($_POST['destino'])) ? $_POST['destino'] : '';
-$descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
-
+$origen = (isset($_POST['iorigen'])) ? $_POST['iorigen'] : '';
+$destino = (isset($_POST['idestino'])) ? $_POST['idestino'] : '';
+$descripcion = (isset($_POST['idescripcion'])) ?  strtoupper(trim($_POST['idescripcion'])) : '';
 
 $bdr = (isset($_POST['bdr'])) ? $_POST['bdr'] : '';
 
@@ -248,7 +247,7 @@ switch ($opcion) {
         break;
     case 4:
         // Consultar Tipos de Documentos
-        $data = $tramite->consultarTipoDocs();
+        $data = $tramite->consultarTipoDocs("*", "tipodoc", "", []);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 5:
@@ -260,7 +259,7 @@ switch ($opcion) {
         // Controlar si se Acepta o Rechaza un Tramite
         if ($accion === 'ACEPTAR') {
             //Cambiamos el estado del documento a aceptado
-            $tramite->editarDatos("documento", "estado = 'ACEPTADO'", [$expediente], "iddocumento = ?");
+            $tramite->editarDatos("documento", "estado = 'ACEPTADO'", [$id], "iddocumento = ?");
             //Guardamos la Aceptacion en el historial del doc
             $data = $tramite->registrarDatos("historial", "null,sysdate(),?,?,'ACEPTADO',?,?", [$expediente, $dni, $origen, $descripcion]);
         } else if ($accion === 'RECHAZAR') {
@@ -278,7 +277,7 @@ switch ($opcion) {
                 // Se cumple que es otra area
 
                 //Derivamos el Tramite a Secretaria
-                $tramite->registrarDatos("derivacion", "null,sysdate(),?,(SELECT idarea from area where area=?),?,?", [$origen, $origen, $expediente, $descripcion]);
+                $tramite->registrarDatos("derivacion", "null,sysdate(),?,(SELECT idarea from area where area='SECRETARIA'),?,?", [$origen, $id, $descripcion]);
 
                 //Guardamos el Rechazo en el historial del doc
                 $tramite->registrarDatos("historial", "null,sysdate(),?,?,'RECHAZADO',?,?", [$expediente, $dni, $origen, $descripcion]);
@@ -287,20 +286,54 @@ switch ($opcion) {
                 $tramite->registrarDatos("historial", "null,sysdate(),?,?,'DERIVADO','SECRETARIA',?", [$expediente, $dni, $descripcion]);
             }
             //Cambiamos el estado del documento a RECHAZADO
-            $data = $tramite->editarDatos("documento", "estado = 'RECHAZADO'", [$expediente], "iddocumento = ?");
-            
+            $data = $tramite->editarDatos("documento", "estado = 'RECHAZADO'", [$id], "iddocumento = ?");
         }
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 7:
-        // Consultar usuarios que no son empleados
-        // $data = $empleado->listarUsuariosPendientes();
+        // Consultar Areas Destino
+        $data = $tramite->consultarTipoDocs(
+            "ae.idareainstitu ID, cod_area, area",
+            "institucion i inner join areainstitu ae on ae.idinstitucion = i.idinstitucion inner join area a on a.idarea=ae.idarea",
+            "where area != ?",
+            [$area]
+        );
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
         break;
     case 8:
-        // Consultar usuarios que no son empleados
-        // $data = $empleado->listarUsuariosPendientes();
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        // Controlar si se Deriva o Archiva un Tramite
+        if ($accion === '1') {
+
+            //Derivamos el Tramite al Area Destino
+            $tramite->registrarDatos("derivacion", "null,sysdate(),?,?,?,?", [$origen, $destino, $id, $descripcion]);
+
+            //Cambiamos el estado  a PENDIENTE ya actualizamos la ubicacion del doc
+            $tramite->editarDatos("documento", "estado = 'PENDIENTE', idubi=?", [$destino, $id], "iddocumento = ?");
+
+            //Guardamos la Derivacion en el historial 
+            $tramite->registrarDatos(
+                "historial",
+                "null,sysdate(),?,?,'DERIVADO',
+            (SELECT area from area a, areainstitu e where a.idarea=e.idarea and idareainstitu=?),?",
+                [$expediente, $dni, $destino, $descripcion]
+            );
+            $data = "DERIVADO";
+        } else if ($accion === '2') {
+
+            //Cambiamos el estado  a ARCHIVADO ya actualizamos la ubicacion del doc
+            $tramite->editarDatos("documento", "estado = 'ARCHIVADO'", [$id], "iddocumento = ?");
+
+            //Guardamos la Archivacion en el historial 
+            $tramite->registrarDatos(
+                "historial",
+                "null,sysdate(),?,?,'ARCHIVADO',?,?",
+                [$expediente, $dni, $origen, $descripcion]
+            );
+
+            $data = "Archivado";
+        }
+
+        echo json_encode($accion, JSON_UNESCAPED_UNICODE);
         break;
     case 9:
         // Consultar usuarios que no son empleados
