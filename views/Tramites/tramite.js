@@ -8,12 +8,12 @@ $(document).ready(function () {
     },
     ajax: {
       url: "../../app/controllers/tramite-controller.php",
-      method: "POST", //usamos el metodo POST
-      data: { opcion: opcion }, //enviamos opcion 1 para que haga un SELECT
+      method: "POST", 
+      data: { opcion: opcion },
       dataSrc: "",
     },
     columnDefs: [
-      { targets: -5, width: "30%" }, // -2 se refiere a la penúltima columna
+      { targets: -6, width: "28%" }, 
     ],
     ordering: false,
     columns: [

@@ -125,7 +125,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">SISTEMA DE MESA DE PARTES VIRTUAL</h3>
+                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
@@ -151,10 +151,10 @@
                             <div class="card card-danger">
                                 <div class="card-header">
                                     <div class="row">
-                                        <div class="col-sm-10 d-flex align-items-center">
+                                        <div class="col-sm-9 d-flex align-items-center">
                                             <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
                                         </div>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-3">
                                             <button type="button" id="btnLimpiar" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>

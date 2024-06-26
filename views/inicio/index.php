@@ -125,7 +125,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">SISTEMA DE MESA DE PARTES VIRTUAL</h3>
+                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
