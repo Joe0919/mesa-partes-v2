@@ -238,13 +238,13 @@
                                 <div class="form-group">
                                     <input type="hidden" class="form-control" name="iddoc" id="iddoc">
 
-                                    <label>N° Documento </label><span class="span-red"> (*)</span>
+                                    <label>N° Documento </label>
                                     <input type="text" class="form-control input-form" id="inrodoc" disabled name="inrodoc">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>N° Folios </label><span class="span-red"> (*)</span>
+                                    <label>N° Folios </label>
                                     <input type="number" class="form-control input-form" id="ifolio" disabled name="ifolio">
                                 </div>
                             </div>
@@ -252,13 +252,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>N° Expediente </label><span class="span-red"> (*)</span>
+                                    <label>N° Expediente </label>
                                     <input type="text" class="form-control input-form" id="iexpediente" disabled name="iexpediente">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Estado </label><span class="span-red"> (*)</span>
+                                    <label>Estado </label>
                                     <input type="text" class="form-control input-form" id="iestad" disabled name="iestad">
                                 </div>
                             </div>
@@ -266,13 +266,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Tipo</label><span class="span-red"> (*)</span>
+                                    <label>Tipo</label>
                                     <input type="text" class="form-control input-form" id="itipodoc" disabled name="itipodoc">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Asunto </label><span class="span-red"> (*)</span>
+                                    <label>Asunto </label>
                                     <textarea disabled class="form-control input-form" rows="4" id="iasunt" name="iasunt" style=" resize: none;"></textarea>
                                 </div>
                             </div>
@@ -283,13 +283,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>DNI </label><span class="span-red"> (*)</span>
+                                    <label>DNI </label>
                                     <input type="number" class="form-control input-form" id="iddni1" disabled name="iddni1">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Tipo de Persona: </label><span class="span-red"> (*)</span>
+                                    <label>Tipo de Persona: </label>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="custom-control custom-radio">
@@ -310,13 +310,13 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>RUC </label><span class="span-red"> (*)</span>
+                                    <label>RUC </label>
                                     <input type="text" class="form-control input-form" id="iruc" disabled name="iruc">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Entidad </label><span class="span-red"> (*)</span>
+                                    <label>Entidad </label>
                                     <input type="text" class="form-control input-form" id="iinsti" disabled name="iinsti">
                                 </div>
                             </div>
@@ -324,7 +324,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Apellidos y Nombres </label><span class="span-red"> (*)</span>
+                                    <label>Apellidos y Nombres </label>
                                     <input type="text" class="form-control input-form" id="idremi" disabled name="idremi">
                                 </div>
                             </div>

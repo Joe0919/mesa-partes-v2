@@ -482,6 +482,7 @@ $(document).ready(function () {
   //Redirige a una nueva pestaña para ver el PDF
   $("#btn_NuevoPDF").click(function () {
     $(this).attr("href", "../../public/" + archivo);
+    $(this).find("img").attr("src", "../images/inst/logo.png");
   });
 
   //CERRAR MODAL y resetear valores
@@ -546,32 +547,32 @@ $(document).ready(function () {
   }
 
   //*************** ACCIONES PARA MOSTRAR TABLA SEGUIMIENTO DEL TRAMITE ***************
-    //Mostrar tabla de seguimienton del tramite
-    $(document).on("click", ".btnSeguimiento", function () {
-      opcion = 3;
-      expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
-      $("#p_expediente").text(expediente);
-      $("#modal_historial").modal("show");
-  
-      tablaSeguimiento = $("#tablaSeguimiento").DataTable({
-        destroy: true,
-        language: {
-          url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
-        },
-        ajax: {
-          url: "../../app/controllers/tramite-controller.php",
-          method: "POST", //usamos el metodo POST
-          data: { opcion: opcion, expediente: expediente },
-          dataSrc: "",
-        },
-        columns: [
-          { data: "ID" },
-          { data: "Fecha" },
-          { data: "area" },
-          { data: "descripcion" },
-        ],
-      });
+  //Mostrar tabla de seguimienton del tramite
+  $(document).on("click", ".btnSeguimiento", function () {
+    opcion = 3;
+    expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
+    $("#p_expediente").text(expediente);
+    $("#modal_historial").modal("show");
+
+    tablaSeguimiento = $("#tablaSeguimiento").DataTable({
+      destroy: true,
+      language: {
+        url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      },
+      ajax: {
+        url: "../../app/controllers/tramite-controller.php",
+        method: "POST", //usamos el metodo POST
+        data: { opcion: opcion, expediente: expediente },
+        dataSrc: "",
+      },
+      columns: [
+        { data: "ID" },
+        { data: "Fecha" },
+        { data: "area" },
+        { data: "descripcion" },
+      ],
     });
+  });
 });
 
 function datosUsuarioLogeado(callback) {

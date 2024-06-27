@@ -7,7 +7,7 @@
 
     <?php require_once "../inc/MainHead/MainHead.php" ?>
 
-    <title>Empleados | Mesa de Partes Virtual</title>
+    <title>Informes | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -56,7 +56,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a href="../empleados/" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
                                 <p>
                                     Empleados
@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../informes/" class="nav-link">
+                            <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes
@@ -129,80 +129,80 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user-friends"></i>Empleados</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file"></i>Informes</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
             <!-- /.content-header -->
-
             <!-- Main content -->
             <main class="content">
+
                 <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
                     <div class="row">
-                        <section class="col-lg-12 ">
+                        <div class="col-12">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Empleados</h3>
-                                        <div>
-                                            <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_employed" title="Agregar nuevo registro">
-                                                <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                            </button>
-                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
-                                                <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                            </button>
-                                        </div>
+                                        <h3 class="card-title font-weight-bold card-header-title">Generador de Informes</h3>
                                     </div>
-                                    <!-- <a class="btn btn-flat btn-a bg-success" data-toggle="modal" id="Nuevo">
-                                        <i class="nav-icon fas fa-plus"></i>Nuevo Registro </a> -->
-                                </div><!-- /.card-header -->
-                                <!-- /.card-header -->
-                                <div class="card-body">
+                                    <hr>
+                                    <div class="card-body">
+                                        <form id="form_new_user" method="post">
+                                            <div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="irol">Estado del Documento</label><span class="span-red"> (*)</span>
+                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
+                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="irol">Rango de Fechas</label><span class="span-red"> (*)</span>
+                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
+                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="irol">Año</label><span class="span-red"> (*)</span>
+                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
+                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <label for="irol">Mes</label><span class="span-red"> (*)</span>
+                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
+                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                    <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">
-                                        <i class="nav-iconfas fas fa-file-pdf"></i>Generar Reporte </a> -->
-                                    <table id="tablaEmpleados" class="table table-hover table-data">
-                                        <thead>
-                                            <tr>
-                                                <!-- Rellenamos etiquetas de las columnas desde cons.php -->
-                                                <?php foreach (empleadosColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <!-- ESPACIO DE LLENADO AUTOMATICO DE LOS DATOS CORRESPONDIENTES -->
-
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <?php foreach (empleadosColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-
+                                                <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn1 btn-danger" data-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary" id="Actualizar">Actualizar Datos</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <!-- /.card-body -->
                             </div>
-                        </section>
+                        </div>
                     </div>
-                    <!-- /.row -->
-
-                </div><!-- /.container-fluid -->
+                </div>
             </main>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
 
         <?php
-        require_once "Modals-empleado.php";
 
         require_once "../inc/Modals/Modals.php";
 
@@ -216,7 +216,7 @@
 
     <?php require_once "../inc/MainJS/MainJS.php" ?>
 
-    <script src="empleado.js"></script>
+    <script src="busqueda.js"></script>
 
 </body>
 

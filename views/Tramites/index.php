@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#ModalInformes" class="nav-link" data-toggle="modal">
+                            <a href="#ModalInformes" class="nav-link">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes

@@ -36,9 +36,12 @@ $(document).ready(function () {
           $("#btnhistorial").prop("disabled", false);
           $("#datos_buscados").show();
         } else {
+          $("#expediente-info").text($("#expediente_b").val());
+          $("#dni-info").text($("#dni_b").val());
+          $("#anio-info").text($("#select-año").val());
           $("#div_no_encontrado").show();
-          $("#form_busqueda")[0].reset();
           $("#expediente_b").focus();
+          $("#form_busqueda")[0].reset();
         }
 
         $("#loader").hide();
@@ -63,9 +66,7 @@ $(document).ready(function () {
   });
 
   $("#btnHistorial").click(function () {
-    if (
-      $("#celdaexpe").text().length < 6 
-    ) {
+    if ($("#celdaexpe").text().length < 6) {
       MostrarAlerta("Error", "No se puede realizar esta acción", "error");
     } else {
       opcion = 11;
@@ -76,7 +77,12 @@ $(document).ready(function () {
         url: "../../app/controllers/tramite-controller.php",
         type: "POST",
         datatype: "json",
-        data: { opcion: opcion, expediente: expediente, anio: anio, idni: idni },
+        data: {
+          opcion: opcion,
+          expediente: expediente,
+          anio: anio,
+          idni: idni,
+        },
         beforesend: function () {
           $("#loader").show();
         },
@@ -112,4 +118,3 @@ $(document).ready(function () {
     $("#btnHistorial").prop("disabled", false);
   }
 });
-

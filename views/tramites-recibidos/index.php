@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../informes/" class="nav-link" data-toggle="modal">
+                            <a href="../informes/" class="nav-link">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes
@@ -146,7 +146,7 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Trámites Recibidos</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla de Trámites Recibidos</h3>
                                         <div class="d-flex align-items-center">
                                             <div class="d-flex align-items-center">
                                                 <label class="mr-1 mb-0">Listar por: </label>

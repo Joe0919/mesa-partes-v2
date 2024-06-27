@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../informes/" class="nav-link" data-toggle="modal">
+                            <a href="../informes/" class="nav-link">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes
@@ -129,7 +129,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-download"></i>Trámites Recibidos</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-export"></i>Trámites Enviados</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -146,10 +146,9 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Listado de Trámites Recibidos</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla de Trámites Enviados</h3>
                                     </div>
-                                </div><!-- /.card-header -->
-                                <!-- /.card-header -->
+                                </div>
                                 <div class="card-body">
 
                                     <!-- <a Target="_blank" class="btn btn-flat btn-a bg-gray-dark" href="../../reporte/reporte-areas.php" id="ReportUsu">

@@ -104,7 +104,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../informes/" class="nav-link" data-toggle="modal">
+                            <a href="../informes/" class="nav-link">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes
@@ -129,7 +129,7 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i>Nuevo Trámite</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-search"></i>Seguimiento</li>
                             </ol>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -176,13 +176,13 @@
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>N° Expediente </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" name="expediente"  id="expediente_b" onkeypress='return validaNumericos(event)' required maxlength="6" minlength="6" title="Ingrese el N° de Expediente">
+                                                                    <input type="text" class="form-control" name="expediente" id="expediente_b" onkeypress='return validaNumericos(event)' required maxlength="6" minlength="6" title="Ingrese el N° de Expediente">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>DNI </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" name="idni" id="dni_b" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8"  required title="Ingrese su DNI">
+                                                                    <input type="text" class="form-control" name="idni" id="dni_b" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required title="Ingrese su DNI">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
@@ -221,13 +221,14 @@
                                         <div class="col-sm-3" align="right">
                                             <img class="img-no-search" src="../../public/images/error-404.png">
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-7">
                                             <br>
                                             <h2><i class="fas fa-exclamation-triangle text-warning"></i> TRÁMITE NO ENCONTRADO.</h2>
 
                                             <p>
-                                                No se encontro el trámite con los datos ingresado, puede ser por que no existe un trámite
-                                                registrado con esos datos.<br>
+                                                No se encontró el trámite con el expediente <b id="expediente-info"></b>
+                                                y el DNI <b id="dni-info"></b> presentado el <b id="anio-info"></b>,
+                                                tal vez colocó datos que no son los correctos.<br>
                                                 <b>Por favor, intente realizar nuevamente la búsqueda ingresando los datos correctos.<b>
                                             </p>
                                         </div>
@@ -309,7 +310,7 @@
                                                     <tr>
                                                         <th colspan="2">
                                                             <h5 class="font-w-600">DATOS DEL REMITENTE</h5>
-                                                            
+
                                                         </th>
                                                     </tr>
                                                     <tr>
