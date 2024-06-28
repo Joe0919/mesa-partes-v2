@@ -151,7 +151,7 @@
                                             <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_employed" title="Agregar nuevo registro">
                                                 <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                             </button>
-                                            <button type="button" class="btn btn-dark" title="Generar Reporte">
+                                            <button type="button" class="btn btn-dark" onclick="window.open('../../app/models/reports/report-employed.php', '_blank')" title="Generar Reporte">
                                                 <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
                                             </button>
                                         </div>

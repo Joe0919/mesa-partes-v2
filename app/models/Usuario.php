@@ -41,15 +41,17 @@ class Usuario extends Conectar
         }
     }
 
-    public function listarUsuarios()
-    {
+    public function listarUsuarios(
+        string $columnas = "idusuarios, nombre, u.dni dni, email, estado",
+        string $tablas = "usuarios u inner join persona p on p.dni=u.dni",
+        string $condicion = "",
+        array $valores = []
+    ) {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT idusuarios, nombre, u.dni dni, email, estado FROM usuarios u
-        INNER JOIN persona p
-        ON p.dni=u.dni";
+        $consulta = "SELECT $columnas FROM $tablas $condicion";
         $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
+        $condicion == "" ? $resultado->execute($valores) : $resultado->execute();
         return $resultado->fetchall(pdo::FETCH_ASSOC);
     }
 

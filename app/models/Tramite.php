@@ -23,6 +23,28 @@ class Tramite extends Conectar
         return $resultado->fetchAll(pdo::FETCH_ASSOC);
     }
 
+    public function listarDocumentos(
+        string $columnas = "nro_expediente expediente,  date_format(fechad, '%d/%m/%Y') Fecha, tipodoc, dni, concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, origen, area, estado",
+        string $condicion = "",
+        array $valores = []
+    ) {
+        $conectar = parent::conexion();
+
+        $consulta = "SELECT $columnas
+        from derivacion d inner join documento dc on d.iddocumento=dc.iddocumento
+        inner join areainstitu a on d.idareainstitu=a.idareainstitu
+        inner join area ae on a.idarea=ae.idarea
+        inner join persona p on dc.idpersona=p.idpersona 
+        inner join tipodoc t on dc.idtipodoc=t.idtipodoc 
+        $condicion";
+        $resultado = $conectar->prepare($consulta);
+
+        // Validamos si hay valores de condicion o no
+        $condicion == "" ? $resultado->execute() : $resultado->execute($valores);
+
+        return $resultado->fetchAll(pdo::FETCH_ASSOC);
+    }
+
     public function consultarTramitexExpediente(string $columnas, array $valores, string $condicion)
     {
         $conectar = parent::conexion();

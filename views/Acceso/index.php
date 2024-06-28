@@ -18,10 +18,11 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/png" href="../../public/files/images/inst/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="../../public/css/style.css">
-    <title>Inicio</title>
+    <title>Acceso al Sistema</title>
 </head>
 
 <body>
@@ -51,7 +52,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         <form class="form-signin d-flex" method="post">
                             <h3>INICIO DE SESIÓN</h3>
                             <input type="text" name="usuario" id="inputEmail" class="form-control" placeholder="Usuario" required autofocus>
-                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Contraseña" required >
+                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
                             <input type="hidden" name="enviar" class="form-control" value="si">
                             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Ingresar</button>
                         </form>

@@ -4,15 +4,16 @@ class Empleado extends Conectar
 {
 
 
-    function listarEmpleados()
+    function listarEmpleados(
+        string $columnas ="idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area",
+        string $tabla = "empleado e inner join persona p on e.idpersona=p.idpersona
+        inner join areainstitu a on e.idareainstitu=a.idareainstitu
+        inner join area ae on ae.idarea=a.idarea")
     {
 
         $conectar = parent::conexion();
 
-        $consulta = "SELECT idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area
-        from empleado e inner join persona p on e.idpersona=p.idpersona
-        inner join areainstitu a on e.idareainstitu=a.idareainstitu
-        inner join area ae on ae.idarea=a.idarea";
+        $consulta = "SELECT $columnas from $tabla";
         $resultado = $conectar->prepare($consulta);
         $resultado->execute();
         return $resultado->fetchAll(PDO::FETCH_ASSOC);

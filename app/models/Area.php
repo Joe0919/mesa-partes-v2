@@ -4,15 +4,19 @@ class Area extends Conectar
 {
 
 
-    public function listarAreas()
-    {
+    public function listarAreas(
+        string $columnas = "a.idarea ID, cod_area, area, ae.idareainstitu IdAInst",
+        string $tablas = "institucion i
+        inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
+        inner join area a on a.idarea=ae.idarea",
+        string $condicion = "",
+        array $valores = []
+    ) {
         $conectar = parent::conexion();
 
-        $consulta = "SELECT a.idarea ID, cod_area, area, ae.idareainstitu IdAInst
-        from institucion i
-        inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
-        inner join area a on a.idarea=ae.idarea";
+        $consulta = "SELECT $columnas from $tablas $condicion";
         $consulta = $conectar->prepare($consulta);
+        ($condicion != "") ? $consulta->execute($valores) : $consulta->execute();
         $consulta->execute();
         return $consulta->fetchall(pdo::FETCH_ASSOC);
     }
