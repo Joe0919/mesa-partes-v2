@@ -435,6 +435,31 @@ switch ($opcion) {
             HTML;
         break;
 
+    case 12:
+        $data = $tramite->consultarTabla(
+            "distinct date_format(fechad,'%Y') dato",
+            "derivacion",
+        );
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
+    case 13:
+
+        if ($anio === '') {
+            $data = $tramite->consultarTabla(
+                "distinct date_format(fechad,'%m') dato",
+                "derivacion",
+            );
+        } else {
+            $data = $tramite->consultarTabla(
+                "distinct date_format(fechad,'%m') dato",
+                "derivacion",
+                "where date_format(fechad,'%Y')=?",
+                [$anio]
+            );
+        }
+
+        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        break;
     default:
         echo "OPCION NO VALIDA" . $opcion;
         break;

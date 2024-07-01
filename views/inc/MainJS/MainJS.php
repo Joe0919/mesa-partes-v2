@@ -2,7 +2,7 @@
     <script src="../../app/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
     <!-- jQuery UI 1.11.4 -->
     <script src="../../app/templates/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
-
+    <!-- JS PRINCIPAL DEL PROYECTO -->
     <script src="../../public/js/main.js"></script>
 
     <!-- Bootstrap 4 -->
@@ -14,11 +14,12 @@
     <script src="../../app/templates/AdminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
     <script src="../../app/templates/AdminLTE/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../../app/templates/AdminLTE/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <!-- AdminLTE App -->
 
+    <!-- FOR DATA PICKER -->
+    <script src="../../app/templates/AdminLTE/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="../../app/templates/AdminLTE/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../app/templates/AdminLTE/dist/js/adminlte.js"></script>
 
+    <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-

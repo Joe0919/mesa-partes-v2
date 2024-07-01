@@ -11,6 +11,8 @@
 <!-- Feather Icons -->
 <link rel="stylesheet" href="../../public/icons/feather.css">
 <link rel="stylesheet" href="../../app/templates/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<!-- Date Picker -->
+<link rel="stylesheet" href="../../app/templates/AdminLTE/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="../../app/templates/AdminLTE/dist/css/adminlte.min.css">
 <!-- Material Icons -->

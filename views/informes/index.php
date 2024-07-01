@@ -145,52 +145,46 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Generador de Informes</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Generador de Informes de Trámites</h3>
                                     </div>
-                                    <hr>
-                                    <div class="card-body">
-                                        <form id="form_new_user" method="post">
-                                            <div>
-                                                <div class="row">
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-body pb-0">
+                                        <form id="form_informes" action="../../app/models/reports/report-documents.php" method="post" target="_blank">
+                                            <div class="div_informes">
+                                                <div class="row div_principal">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="irol">Estado del Documento</label><span class="span-red"> (*)</span>
-                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
-                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                            <label>Estado del Documento</label><span class="span-red"> (*)</span>
+                                                            <select class="form-control text-center font-w-600" name="estado" id="slct_estado" required>
+                                                                <option value="0">TODOS</option>
+                                                                <option value="PENDIENTE">PENDIENTES</option>
+                                                                <option value="ACEPTADO">ACEPTADOS</option>
+                                                                <option value="RECHAZADO">RECHAZADOS</option>
+                                                                <option value="ARCHIVADO">ARCHIVADOS</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label for="irol">Rango de Fechas</label><span class="span-red"> (*)</span>
-                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
-                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group">
-                                                            <label for="irol">Año</label><span class="span-red"> (*)</span>
-                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
-                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group">
-                                                            <label for="irol">Mes</label><span class="span-red"> (*)</span>
-                                                            <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
-                                                            <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                                            <label>Fechas</label><span class="span-red"> (*)</span>
+                                                            <select class="form-control text-center font-w-600" name="fecha" id="select_fechas" required>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
                                             </div>
-                                            <div class="modal-footer justify-content-between">
-                                                <button type="button" class="btn btn1 btn-danger" data-dismiss="modal">Cancelar</button>
-                                                <button type="submit" class="btn btn-primary" id="Actualizar">Actualizar Datos</button>
-                                            </div>
+                                            <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
                                         </form>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="col-sm-4">
+                                            <button type="submit" form="form_informes" class="btn btn-block bg-gradient-danger">
+                                                <i class="nav-icon fas fa-file-pdf mr-1"></i><b>Generar Informe PDF</b></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +210,7 @@
 
     <?php require_once "../inc/MainJS/MainJS.php" ?>
 
-    <script src="busqueda.js"></script>
+    <script src="informes.js"></script>
 
 </body>
 
