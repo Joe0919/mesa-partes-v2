@@ -1,6 +1,6 @@
 <?php
 
-class Institucion extends Conectar
+class InstitucionModel extends Conectar
 {
 
 

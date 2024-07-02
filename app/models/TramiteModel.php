@@ -1,6 +1,6 @@
 <?php
 
-class Tramite extends Conectar
+class TramiteModel extends Conectar
 {
 
 

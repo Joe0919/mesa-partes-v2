@@ -1,13 +1,13 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Persona.php";
-require_once "../models/Usuario.php";
-require_once "../models/Tramite.php";
+require_once "../models/PersonaModel.php";
+require_once "../models/UsuarioModel.php";
+require_once "../models/TramiteModel.php";
 
-$persona = new Persona();
-$usuario = new Usuario();
-$tramite = new Tramite();
+$persona = new PersonaModel();
+$usuario = new UsuarioModel();
+$tramite = new TramiteModel();
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 

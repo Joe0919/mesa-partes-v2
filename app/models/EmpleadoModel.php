@@ -1,6 +1,6 @@
 <?php
 
-class Empleado extends Conectar
+class EmpleadoModel extends Conectar
 {
 
 

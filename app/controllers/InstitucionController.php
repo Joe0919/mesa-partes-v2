@@ -1,9 +1,9 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Institucion.php";
+require_once "../models/InstitucionModel.php";
 
-$institucion = new Institucion();
+$institucion = new InstitucionModel();
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 $idinstitu = (isset($_POST['idinst'])) ? $_POST['idinst'] : '';

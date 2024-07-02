@@ -1,6 +1,6 @@
 <?php
 
-class Usuario extends Conectar
+class UsuarioModel extends Conectar
 {
 
     public function login()

@@ -1,6 +1,6 @@
 <?php
 
-class Persona extends Conectar
+class PersonaModel extends Conectar
 {
 
     public function consultarPersonaDNI($dni)

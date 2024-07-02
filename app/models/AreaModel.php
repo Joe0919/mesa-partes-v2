@@ -1,6 +1,6 @@
 <?php
 
-class Area extends Conectar
+class AreaModel extends Conectar
 {
 
 

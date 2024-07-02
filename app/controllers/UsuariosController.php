@@ -1,9 +1,9 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Usuario.php";
+require_once "../models/UsuarioModel.php";
 
-$usuario = new Usuario();
+$usuario = new UsuarioModel();
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : 0;
 

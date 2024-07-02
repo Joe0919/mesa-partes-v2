@@ -1,6 +1,6 @@
 <?php
 
-class Documento extends Conectar
+class DocumentoModel extends Conectar
 {
 
     function consultarDocsxEstado()

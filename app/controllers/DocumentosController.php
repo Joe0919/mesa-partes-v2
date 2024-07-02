@@ -1,9 +1,9 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Documento.php";
+require_once "../models/DocumentoModel.php";
 
-$documento = new Documento();
+$documento = new DocumentoModel();
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 $idubicacion = (isset($_POST['idubicacion'])) ? $_POST['idubicacion'] : '';

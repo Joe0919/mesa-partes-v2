@@ -1,9 +1,9 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Empleado.php";
+require_once "../models/EmpleadoModel.php";
 
-$empleado = new Empleado();
+$empleado = new EmpleadoModel();
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 

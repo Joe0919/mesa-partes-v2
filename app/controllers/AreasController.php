@@ -1,9 +1,9 @@
 <?php
 
 require_once "../config/conexion.php";
-require_once "../models/Area.php";
+require_once "../models/AreaModel.php";
 
-$area = new Area();
+$area = new AreaModel();
 
 //VALIDAMOS SI SE SE ENVIAN DATOS POR METODO POST E INICIALIZAMOS
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';

@@ -19,7 +19,7 @@ $(document).ready(function () {
   $("#conf-inst").click(function () {
     opcion = 1;
     $.ajax({
-      url: "../../app/controllers/institucion-controller.php",
+      url: "../../app/controllers/InstitucionController.php.php",
       type: "POST",
       datatype: "json",
       data: { opcion: opcion },
@@ -63,7 +63,7 @@ $(document).ready(function () {
           var formData = new FormData(this);
           formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
           $.ajax({
-            url: "../../app/controllers/institucion-controller.php",
+            url: "../../app/controllers/InstitucionController.php.php",
             type: "POST",
             datatype: "json",
             data: formData,
@@ -115,7 +115,7 @@ $(document).ready(function () {
     idusu = $("#iduser").val();
     idni = $("#dniuser").val();
     $.ajax({
-      url: "../../app/controllers/usuario-controller.php",
+      url: "../../app/controllers/UsuarioController.php.php",
       type: "POST",
       datatype: "json",
       data: { opcion: opcion, idusu: idusu, idni: idni },
@@ -168,7 +168,7 @@ $(document).ready(function () {
           var formData = new FormData(this);
           formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
           $.ajax({
-            url: "../../app/controllers/usuario-controller.php",
+            url: "../../app/controllers/UsuarioController.php.php",
             type: "POST",
             datatype: "json",
             data: formData,
@@ -270,7 +270,7 @@ $(document).ready(function () {
       if (result.isConfirmed) {
         $.ajax({
           type: "POST",
-          url: "../../app/controllers/usuario-controller.php",
+          url: "../../app/controllers/UsuarioController.php.php",
           data: new FormData(this),
           contentType: false,
           processData: false,
@@ -354,7 +354,7 @@ $(document).ready(function () {
             formData.append("opcion", opcion); // Agrega la variable  al objeto FormData
             formData.append("idusu", idusu); //
             $.ajax({
-              url: "../../app/controllers/usuario-controller.php",
+              url: "../../app/controllers/UsuarioController.php.php",
               type: "POST",
               datatype: "json",
               data: formData,
@@ -414,7 +414,7 @@ $(document).ready(function () {
     expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
     console.log("Presionaste esto");
     $.ajax({
-      url: "../../app/controllers/tramite-controller.php",
+      url: "../../app/controllers/TramiteController.php.php",
       type: "POST",
       datatype: "json",
       data: { opcion: opcion, expediente: expediente },
@@ -560,7 +560,7 @@ $(document).ready(function () {
         url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
       },
       ajax: {
-        url: "../../app/controllers/tramite-controller.php",
+        url: "../../app/controllers/TramiteController.php.php",
         method: "POST", //usamos el metodo POST
         data: { opcion: opcion, expediente: expediente },
         dataSrc: "",
@@ -579,7 +579,7 @@ function datosUsuarioLogeado(callback) {
   let opcion = 3;
   let idni = $("#dniuser").val();
   $.ajax({
-    url: "../../app/controllers/empleado-controller.php",
+    url: "../../app/controllers/EmpleadoController.php.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion, idni: idni },
@@ -610,7 +610,7 @@ function contarDocsxArea() {
   let opcion = 2;
   let idubicacion = $("#id_areaid").val();
   $.ajax({
-    url: "../../app/controllers/documento-controller.php",
+    url: "../../app/controllers/DocumentoController.php.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion, idubicacion: idubicacion },
@@ -634,7 +634,7 @@ function contarDocsxArea() {
 function contarDocsGeneral() {
   let opcion = 1;
   $.ajax({
-    url: "../../app/controllers/documento-controller.php",
+    url: "../../app/controllers/DocumentoController.php.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion },
@@ -659,7 +659,7 @@ function contarDocsGeneral() {
 function cargarDatosInstitucion() {
   opcion = 1;
   $.ajax({
-    url: "../../app/controllers/institucion-controller.php",
+    url: "../../app/controllers/InstitucionController.php.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion },
