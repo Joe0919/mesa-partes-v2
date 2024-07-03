@@ -1,6 +1,6 @@
 <?php
 
-class AreaModel extends Conectar
+class AreaModel extends Conexion
 {
 
 
@@ -12,7 +12,7 @@ class AreaModel extends Conectar
         string $condicion = "",
         array $valores = []
     ) {
-        $conectar = parent::conexion();
+        $conectar = parent::Conectar();
 
         $consulta = "SELECT $columnas from $tablas $condicion";
         $consulta = $conectar->prepare($consulta);
@@ -23,7 +23,7 @@ class AreaModel extends Conectar
 
     public function consultarAreaID($id_area)
     {
-        $conectar = parent::conexion();
+        $conectar = parent::Conectar();
 
         $consulta = "SELECT a.idarea ID, cod_area, area,  i.idinstitucion
         from institucion i
@@ -40,7 +40,7 @@ class AreaModel extends Conectar
 
     public function crearNuevaArea($codigo, $area, $idinst)
     {
-        $conectar = parent::conexion();
+        $conectar = parent::Conectar();
         // VERFICAR DUPLICIDAD DE CODIGO Y NOMBRE DE AREA
         $consulta = "SELECT count(*) total from area where cod_area=? or area=?";
         $resultado = $conectar->prepare($consulta);
@@ -82,7 +82,7 @@ class AreaModel extends Conectar
 
     public function editarAreaID($id_area, $codigo, $area)
     {
-        $conectar = parent::conexion();
+        $conectar = parent::Conectar();
 
         // VALIDAR DUPLICIDAD DE CODIGO Y NOMBRE DE AREA
         $consulta = "SELECT count(*) total from area where (cod_area=? or area=?) and idarea != ?";
@@ -125,7 +125,7 @@ class AreaModel extends Conectar
 
     public function eliminarAreaID($id_area)
     {
-        $conectar = parent::conexion();
+        $conectar = parent::Conectar();
 
         //VALIDAR SI EXISTEN REGISTROS EN DERIVACION DE ESTA AREA
         $consulta = "SELECT count(*) total from derivacion d

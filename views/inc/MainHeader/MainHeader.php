@@ -7,17 +7,17 @@
                 </li>
                 <li class="nav-item d-flex align-items-center">
                     <h3 class="font-weight-bold h6 m-0">
-                        USUARIO: <span id="info-datos" class="font-weight-normal"></span>
+                        USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['datos'] ?></span>
                     </h3>
                     <input id="id_areaid" type="hidden" value="0">
                     <input id="info-area" type="hidden" value="">
                     <input id="idinstitu" name="idinstitu" type="hidden">
-                    <input id="iduser" name="iduser" type="hidden" value="<?php echo $iduser; ?>">
-                    <input id="dniuser" name="dniuser" type="hidden" value="<?php echo $dni; ?>">
-                    <input id="foto_user" name="foto_user" type="hidden" value="<?php echo $foto; ?>">
+                    <input id="iduser" name="iduser" type="hidden" value="<?= $_SESSION['userData']['idusuarios'] ?>">
+                    <input id="dniuser" name="dniuser" type="hidden" value="<?= $_SESSION['userData']['dni'] ?>">
+                    <input id="foto_user" name="foto_user" type="hidden" value="<?= $_SESSION['userData']['foto'] ?>">
                 </li>
                 <li class="nav-item d-flex align-items-center ml-5">
-                    <h3 class="font-weight-bold h6 m-0">ÁREA: <span id="info-area1" class="font-weight-normal"></span></h3>
+                    <h3 class="font-weight-bold h6 m-0">ÁREA: <span id="info-area1" class="font-weight-normal"><?= $_SESSION['userData']['area'] ?></span></h3>
                 </li>
             </ul>
 
@@ -54,14 +54,12 @@
                     <div class="demo-navbar-user nav-item dropdown">
                         <a class="nav-link dropdown-toggle m-0 py-0 d-flex align-items-center" href="#" data-toggle="dropdown">
                             <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
-                                <img src="../../public/<?php echo $foto ?>" alt class="d-block rounded-circle" style="max-width: 35px;">
-                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name">
-                                    <?php
-                                    $utf8_string = $_SESSION['nombre'];
+                                <img src="<?php echo media() . "/" . $_SESSION['userData']['foto']; ?>" alt class="d-block rounded-circle" style="max-width: 35px;">
+                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name"><?php
+                                    $utf8_string = $_SESSION['userData']['nomusu'];
                                     $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
                                     echo $iso8859_1_string
-                                    ?>
-                                </span>
+                                    ?></span>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">

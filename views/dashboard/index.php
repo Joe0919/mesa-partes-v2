@@ -1,28 +1,29 @@
-<?php require_once "../inc/Validacion/Validacion.php" ?>
+<?php // require_once "views/inc/Validacion/Validacion.php" 
+?>
 
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
-    <?php require_once "../inc/MainHead/MainHead.php" ?>
+    <?php require_once "views/inc/MainHead/MainHead.php" ?>
 
-    <title>Inicio | Mesa de Partes Virtual</title>
+    <title><?php $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-    <?php require_once "../inc/Loader/Loader.php" ?>
+    <?php require_once "views/inc/Loader/Loader.php" ?>
 
     <div class="wrapper">
 
-        <?php require_once "../inc/MainHeader/MainHeader.php" ?>
+        <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 
         <!-- Main Sidebar Container | Seccion de Links  -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a class="brand-link navbar-lightblue">
-                <img id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="<?php echo media() . "/" . $_SESSION['userData']['logo']; ?>" id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text span-logo" id="inst_desc">HACDP</span>
             </a>
 
@@ -151,7 +152,7 @@
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-danger">
-                                                <span class="info-box-icon bg-danger"><img src="../../public/images/rechazado.png"></span>
+                                                <span class="info-box-icon bg-danger"><img src="<?= media() ?>/images/rechazado.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_rechazados"></span>
@@ -161,7 +162,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-primary">
-                                                <span class="info-box-icon bg-primary"><img src="../../public/images/pendiente.png"></span>
+                                                <span class="info-box-icon bg-primary"><img src="<?= media() ?>/images/pendiente.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
@@ -171,7 +172,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-green">
-                                                <span class="info-box-icon bg-green"><img src="../../public/images/documentos.png"></span>
+                                                <span class="info-box-icon bg-green"><img src="<?= media() ?>/images/documentos.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_aceptados"></span>
@@ -194,7 +195,7 @@
                                     <div class="row">
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-danger">
-                                                <span class="info-box-icon bg-danger"><img src="../../public/images/rechazado.png"></span>
+                                                <span class="info-box-icon bg-danger"><img src="<?= media() ?>/images/rechazado.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_rechazados_area"></span>
@@ -204,7 +205,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-primary">
-                                                <span class="info-box-icon bg-primary"><img src="../../public/images/pendiente.png"></span>
+                                                <span class="info-box-icon bg-primary"><img src="<?= media() ?>/images/pendiente.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_pendientes_area"></span>
@@ -214,7 +215,7 @@
                                         </div>
                                         <div class="col-md-4 col-sm-6 col-12">
                                             <div class="info-box bg-green">
-                                                <span class="info-box-icon bg-green"><img src="../../public/images/documentos.png"></span>
+                                                <span class="info-box-icon bg-green"><img src="<?= media() ?>/images/documentos.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
                                                     <span class="info-box-text1 info-box-count" id="span_cant_aceptados_area"></span>
@@ -237,16 +238,16 @@
 
         <?php
 
-        require_once "../inc/Modals/Modals.php";
+        require_once "views/inc/Modals/Modals.php";
 
-        require_once "../inc/MainFooter/MainFooter.php";
+        require_once "views/inc/MainFooter/MainFooter.php";
 
         ?>
 
     </div>
     <!-- ./wrapper -->
 
-    <?php require_once "../inc/MainJS/MainJS.php" ?>
+    <?php require_once "views/inc/MainJS/MainJS.php" ?>
 
 </body>
 

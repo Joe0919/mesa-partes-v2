@@ -202,12 +202,12 @@
         <!-- /.content-wrapper -->
 
         <?php
+
         require_once "Modals-area.php";
 
         require_once "../inc/Modals/Modals.php";
 
         require_once "../inc/MainFooter/MainFooter.php";
-
 
         ?>
 

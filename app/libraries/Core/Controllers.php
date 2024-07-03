@@ -5,22 +5,25 @@ class Controllers
 
     public $model;
     public $views;
+    private $controler;
 
     public function __construct($controler)
     {
+        $this->controler = $controler;
+
         $this->views = new Views();
-        // $this->loadModel($controler);
+        $this->loadModel($this->controler);
     }
 
     public function loadModel($controler)
     {
         // Obtener el nombre del modelo
         $model = $controler . "Model";
-        echo $model;
-        $routClass = "models/" . $model . ".php";
+        $routClass = "app/models/" . $model . ".php";
 
         // Verificar si el archivo del modelo existe
         if (file_exists($routClass)) {
+            
             require_once($routClass);
 
             // Crear una instancia del modelo

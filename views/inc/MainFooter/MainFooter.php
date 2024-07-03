@@ -1,5 +1,5 @@
 <footer class="main-footer">
-    <strong>Copyright &copy; <?php echo date("Y") ?>. <a href="#" id="inst_footer"></a>.</strong>
+    <strong>Copyright &copy; <?php echo date("Y") ?>. <a href="#" id="inst_footer"><?= $_SESSION['userData']['razon'] ?></a>.</strong>
     <!-- Todos los derechos reservados. -->
     <div class="float-right d-none d-sm-inline-block">
         <b>Version</b> 2.0

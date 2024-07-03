@@ -1,15 +1,15 @@
 <?php
-require_once "../../app/config/conexion.php";
 
 if (isset($_SESSION["idusuarios"])) {
-    header("Location:" . URL . "views/inicio/");
+    // header("Location:" . URL . "/views/dashboard/");
+    echo $_SESSION["idusuarios"];
 }
-
 
 if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
-    require_once("../../app/models/Usuario.php");
-    (new Usuario())->login();
+    require_once("app/controllers/AccesoController.php");
+    (new AccesoController())->login();
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -18,11 +18,11 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="icon" type="image/png" href="../../public/files/images/inst/logo.png">
+    <link rel="icon" type="image/png" href="<?= media() ?>/files/images/inst/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../public/css/style.css">
-    <title>Acceso al Sistema</title>
+    <link rel="stylesheet" href="<?= media() ?>/css/style.css">
+    <title><?= ($data["page_title"]) ?></title>
 </head>
 
 <body>
@@ -32,7 +32,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                 <div class="col-sm-6 text-black">
 
                     <div class="px-5 py-3 ms-xl-4 mt-3">
-                        <img src="../../public/images/logo.png " class="logo" />
+                        <img src="<?= media() ?>/images/logo.png " class="logo" />
                     </div>
 
                     <div class="py-3 px-5">
@@ -43,6 +43,13 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         ?>
                                     <div class="alert alert-danger" role="alert">
                                         Datos Incorrectos. Intente de nuevo!
+                                    </div>
+                                <?php
+                                    break;
+                                case "2";
+                                ?>
+                                    <div class="alert alert-danger" role="alert">
+                                        El usuario Ingresado esta inactivo!
                                     </div>
                         <?php
                                     break;
@@ -57,13 +64,13 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Ingresar</button>
                         </form>
 
-                        <p class="small mb-5 pb-lg-2  pt-2 "><a class="forgot-password" href="#!">¿Olvido su contraseña?</a></p>
+                        <p class="small mb-5 pb-lg-2  pt-2 "><a class="forgot-password" href="#">¿Olvido su contraseña?</a></p>
 
                     </div>
 
                 </div>
-                <div class="col-sm-6 px-0d-none d-sm-block bg-success">
-
+                <div class="col-sm-6 px-0d-none d-sm-block">
+                    <?php debug($data) ?>
                 </div>
             </div>
         </div>
