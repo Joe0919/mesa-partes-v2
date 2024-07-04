@@ -1,20 +1,14 @@
 $(document).ready(function () {
-  let idusu,
-    idni,
-    opcion,
-    datosCargados = false;
+  let idusu, idni, opcion;
+
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
 
-  console.log("Js principal");
-
-  $("#loader").hide();
-
-  // cargarDatosInstitucion();
-
-  // datosUsuarioLogeado(contarDocsxArea); // Carga los datos del usuario logeado y los escribe y luego cuenta los docs
+  $("#loader").hide(); // Ocultar DIv de carga
 
   // contarDocsGeneral(); //Muestra la cantidad de docs pendientes, aceptados y rechazados
+
+  // contarDocsxArea();
 
   // ********************** ACCIONES GENERALES **********************
   //Boton mostrar datos de Institucion general
@@ -27,7 +21,7 @@ $(document).ready(function () {
       data: { opcion: opcion },
       beforeSend: function () {
         /* * Se ejecuta al inicio de la petición* */
-        // $("#loader").show();
+        $("#loader").show();
       },
       success: function (response) {
         data = $.parseJSON(response);
@@ -71,7 +65,7 @@ $(document).ready(function () {
             data: formData,
             beforeSend: function () {
               /* * Se ejecuta al inicio de la petición* */
-              // $("#loader").show();
+              $("#loader").show();
             },
             success: function (response) {
               // Manejar la respuesta del servidor
@@ -123,7 +117,7 @@ $(document).ready(function () {
       data: { opcion: opcion, idusu: idusu, idni: idni },
       beforeSend: function () {
         /* * Se ejecuta al inicio de la petición* */
-        // $("#loader").show();
+        $("#loader").show();
       },
       success: function (response) {
         data = $.parseJSON(response);
@@ -178,7 +172,7 @@ $(document).ready(function () {
             contentType: false, // Evita que jQuery establezca el encabezado Content-Type
             beforeSend: function () {
               /* * Se ejecuta al inicio de la petición* */
-              // $("#loader").show();
+              $("#loader").show();
             },
             success: function (response) {
               // Manejar la respuesta del servidor
@@ -278,7 +272,7 @@ $(document).ready(function () {
           processData: false,
           beforeSend: function () {
             /* * Se ejecuta al inicio de la petición* */
-            // $("#loader").show();
+            $("#loader").show();
           },
           success: function (msg) {
             $("#loader").hide();
@@ -364,7 +358,7 @@ $(document).ready(function () {
               contentType: false, // Evita que jQuery establezca el encabezado Content-Type
               beforeSend: function () {
                 /* * Se ejecuta al inicio de la petición* */
-                // $("#loader").show();
+                $("#loader").show();
               },
               success: function (response) {
                 data = $.parseJSON(response);
@@ -422,7 +416,7 @@ $(document).ready(function () {
       data: { opcion: opcion, expediente: expediente },
       beforeSend: function () {
         /* * Se ejecuta al inicio de la petición* */
-        // $("#loader").show();
+        $("#loader").show();
       },
       success: function (response) {
         data = $.parseJSON(response);
@@ -587,7 +581,7 @@ function datosUsuarioLogeado(callback) {
     data: { opcion: opcion, idni: idni },
     beforeSend: function () {
       /* * Se ejecuta al inicio de la petición* */
-      // $("#loader").show();
+      $("#loader").show();
     },
     success: function (response) {
       data = $.parseJSON(response);
@@ -618,7 +612,7 @@ function contarDocsxArea() {
     data: { opcion: opcion, idubicacion: idubicacion },
     beforeSend: function () {
       /* * Se ejecuta al inicio de la petición* */
-      // // $("#loader").show();
+      $("#loader").show();
     },
     success: function (response) {
       data = $.parseJSON(response);
@@ -636,17 +630,17 @@ function contarDocsxArea() {
 function contarDocsGeneral() {
   let opcion = 1;
   $.ajax({
-    url: "../../app/controllers/DocumentoController.php.php",
+    url: base_url + "/app/controllers/DocumentoController.php",
     type: "POST",
     datatype: "json",
     data: { opcion: opcion },
     beforeSend: function () {
       /* * Se ejecuta al inicio de la petición* */
-      // // $("#loader").show();
+      $("#loader").show();
     },
     success: function (response) {
+      console.log(response);
       data = $.parseJSON(response);
-
       $("#span_cant_rechazados").text(data["cantidad_rechazado"]);
       $("#span_cant_pendientes").text(data["cantidad_pendiente"]);
       $("#span_cant_aceptados").text(data["cantidad_aceptado"]);
@@ -667,7 +661,7 @@ function cargarDatosInstitucion() {
     data: { opcion: opcion },
     beforeSend: function () {
       /* * Se ejecuta al inicio de la petición* */
-      // // $("#loader").show();
+      $("#loader").show();
     },
     success: function (response) {
       data = $.parseJSON(response);

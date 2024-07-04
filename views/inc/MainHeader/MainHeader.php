@@ -56,10 +56,10 @@
                             <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
                                 <img src="<?php echo media() . "/" . $_SESSION['userData']['foto']; ?>" alt class="d-block rounded-circle" style="max-width: 35px;">
                                 <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name"><?php
-                                    $utf8_string = $_SESSION['userData']['nomusu'];
-                                    $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
-                                    echo $iso8859_1_string
-                                    ?></span>
+                                                                                    $utf8_string = $_SESSION['userData']['nomusu'];
+                                                                                    $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
+                                                                                    echo $iso8859_1_string
+                                                                                    ?></span>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -73,7 +73,7 @@
                             <a class="dropdown-item btn-general" id="conf-psw" data-toggle="modal">
                                 <i class="feather icon-settings text-muted"></i><span class="ml-1">Cambiar Contraseña</span></a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item btn-general" data-toggle="modal" href="#mimodal">
+                            <a class="dropdown-item btn-general" data-toggle="modal" href="#modal_salir">
                                 <i class="feather icon-power text-danger"></i><span class="ml-1">Salir</span></a>
                         </div>
 

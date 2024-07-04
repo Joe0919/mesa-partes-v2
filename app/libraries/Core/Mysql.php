@@ -62,4 +62,43 @@ class Mysql extends Conexion
         $del = $result->execute();
         return $del;
     }
+
+    public function consultarTabla(string $columnas = "*", string $tabla, string $condicion = "", array $arrDatos = [])
+    {
+
+        $this->strquery = "SELECT $columnas FROM $tabla $condicion";
+        $this->arrValues = $arrDatos;
+        $result = $this->conexion->prepare($this->strquery);
+        $condicion == "" ? $result->execute() : $result->execute($this->arrValues);
+        $data = $result->fetchall(PDO::FETCH_ASSOC);
+        return $data;
+    }
+    public function registrar(string $tabla, string $marcadores, array $arrDatos)
+    {
+        $this->strquery = "INSERT INTO $tabla VALUES $marcadores";
+        $this->arrValues = $arrDatos;
+        $insert = $this->conexion->prepare($this->strquery);
+        $resInsert = $insert->execute($this->arrValues);
+        if ($resInsert) {
+            $lastInsert = $this->conexion->lastInsertId();
+        } else {
+            $lastInsert = 0;
+        }
+        return $lastInsert;
+    }
+
+    public function editar(string $tabla, string $marcadores, array $arrDatos, string $condicion)
+    {
+
+        $this->strquery = "UPDATE $tabla SET $marcadores WHERE $condicion";
+        $this->arrValues = $arrDatos;
+        $update = $this->conexion->prepare($this->strquery);
+        $resExecute = $update->execute($this->arrValues);
+        if ($resExecute) {
+            $lastInsert = $this->conexion->lastInsertId();
+        } else {
+            $lastInsert = 0;
+        }
+        return $lastInsert;
+    }
 }

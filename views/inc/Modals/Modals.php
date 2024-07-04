@@ -199,7 +199,7 @@
     </div>
 </div>
 <!-- MODAL CONFIRMACION CERRAR SESION -->
-<div class="modal fade" id="mimodal" aria-modal="true" role="dialog">
+<div class="modal fade" id="modal_salir" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -213,7 +213,7 @@
             </div>
             <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn1 btn-danger" data-dismiss="modal">No. Continuar </button>
-                <button type="button" class="btn btn1 btn-primary" onclick="salir()">Sí. Salir</button>
+                <button type="button" class="btn btn1 btn-primary" onclick="window.location.href='<?= base_url(); ?>/Salir'">Sí. Salir</button>
             </div>
         </div>
     </div>

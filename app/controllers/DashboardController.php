@@ -5,6 +5,14 @@ class DashboardController extends Controllers
     public function __construct()
     {
         parent::__construct("Dashboard");
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_regenerate_id(true);
+        if (empty($_SESSION['login'])) {
+            header('Location: ' . base_url() . '/acceso');
+        }
+        getPermisos(1);
     }
 
     public function index()
@@ -17,4 +25,6 @@ class DashboardController extends Controllers
 
         $this->views->getView("Dashboard", "index", $data);
     }
+
+    
 }

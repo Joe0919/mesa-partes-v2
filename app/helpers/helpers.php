@@ -39,3 +39,18 @@ function sessionUser(int $IdUser)
     $request = $objLogin->sessionLogin($IdUser);
     return $request;
 }
+function getPermisos(int $idmodulo)
+{
+    require_once("app/models/PermisosModel.php");
+    $objPermisos = new PermisosModel();
+    $idrol = $_SESSION['userData']['idroles'];
+    $arrPermisos = $objPermisos->permisosModulo($idrol);
+    $permisos = '';
+    $permisosMod = '';
+    if (count($arrPermisos) > 0) {
+        $permisos = $arrPermisos;
+        $permisosMod = isset($arrPermisos[$idmodulo]) ? $arrPermisos[$idmodulo] : "";
+    }
+    $_SESSION['permisos'] = $permisos;
+    $_SESSION['permisosMod'] = $permisosMod;
+}

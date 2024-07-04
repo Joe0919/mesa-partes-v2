@@ -7,7 +7,6 @@ class AccesoController extends Controllers
         session_start();
         if (isset($_SESSION['login'])) {
             header('Location: ' . base_url() . '/dashboard');
-            echo $_SESSION['login'];
         }
 
         parent::__construct("Acceso");

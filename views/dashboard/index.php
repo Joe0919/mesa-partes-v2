@@ -33,7 +33,7 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item menu-open">
-                            <a href="#" class="nav-link active">
+                            <a class="nav-link active">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Inicio
@@ -41,7 +41,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../usuarios/" class="nav-link">
+                            <a href="<?= base_url(); ?>/usuarios" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -49,7 +49,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../areas/" class="nav-link">
+                            <a href="<?= base_url(); ?>/areas" class="nav-link">
                                 <i class="nav-icon fas fa-door-closed"></i>
                                 <p>
                                     Áreas
@@ -57,7 +57,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../empleados/" class="nav-link">
+                            <a href="<?= base_url(); ?>/empleados" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
                                 <p>
                                     Empleados
@@ -65,7 +65,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites/" class="nav-link">
+                            <a href="<?= base_url(); ?>/tramites" class="nav-link">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>
                                     Trámites
