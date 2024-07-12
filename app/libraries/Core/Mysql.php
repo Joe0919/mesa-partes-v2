@@ -45,6 +45,14 @@ class Mysql extends Conexion
         $data = $result->fetchall(PDO::FETCH_ASSOC);
         return $data;
     }
+    public function consultar(string $columnas = "*", string $tabla, string $condicion = "", array $arrValues = [])
+    {
+        $this->strquery = "SELECT $columnas FROM $tabla $condicion";
+        $result = $this->conexion->prepare($this->strquery);
+        $condicion == "" ? $result->execute() : $result->execute($arrValues);
+        $data = $result->fetchall(PDO::FETCH_ASSOC);
+        return $data;
+    }
     //Actualiza registros
     public function update(string $query, array $arrValues)
     {
@@ -87,17 +95,15 @@ class Mysql extends Conexion
         return $lastInsert;
     }
 
-    public function editar(string $tabla, string $marcadores, array $arrDatos, string $condicion)
+    public function editar(string $tabla, string $marcadores, string $condicion, array $arrDatos)
     {
 
         $this->strquery = "UPDATE $tabla SET $marcadores WHERE $condicion";
         $this->arrValues = $arrDatos;
         $update = $this->conexion->prepare($this->strquery);
         $resExecute = $update->execute($this->arrValues);
-        if ($resExecute) {
-            $lastInsert = $this->conexion->lastInsertId();
-        } else {
-            $lastInsert = 0;
+        if ($resExecute) {;
+            $lastInsert = 1;
         }
         return $lastInsert;
     }

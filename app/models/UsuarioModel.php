@@ -1,20 +1,49 @@
 <?php
 
-class UsuarioModel extends Conexion
+class UsuarioModel extends Mysql
 {
+    private $intIdUsuario;
+    private $strIdentificacion;
+    private $strNombre;
+    private $strApellido;
+    private $intTelefono;
+    private $strEmail;
+    private $strPassword;
+    private $strToken;
+    private $intTipoId;
+    private $intStatus;
+    private $strNit;
+    private $strNomFiscal;
+    private $strDirFiscal;
 
-    public function listarUsuarios(
+    public function selectUsuarios(
         string $columnas = "idusuarios, nombre, u.dni dni, email, estado",
         string $tablas = "usuarios u inner join persona p on p.dni=u.dni",
         string $condicion = "",
         array $valores = []
     ) {
-        $conectar = parent::Conectar();
+        $whereAdmin = "";
+        if ($_SESSION['idUsuario'] != 1) {
+            $whereAdmin = " and p.idpersona != 1 ";
+        }
+        $sql = "SELECT $columnas FROM $tablas $condicion " . $whereAdmin;
+        $request = $this->select_all($sql);
+        return $request;
+    }
 
-        $consulta = "SELECT $columnas FROM $tablas $condicion";
-        $resultado = $conectar->prepare($consulta);
-        $condicion == "" ? $resultado->execute($valores) : $resultado->execute();
-        return $resultado->fetchall(pdo::FETCH_ASSOC);
+    public function listarUsuarios(
+        string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
+        string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
+        string $condicion = "",
+        array $valores = []
+    ) {
+        $whereAdmin = "";
+        if ($_SESSION['idUsuario'] != 1) {
+            $whereAdmin = " and u.idusuarios != 1 ";
+        }
+
+        $request = $this->consultar($columnas, $tablas, $condicion . $whereAdmin, $valores);
+        return $request;
     }
 
     public function consultarUsuarioID($idusu, $dni)

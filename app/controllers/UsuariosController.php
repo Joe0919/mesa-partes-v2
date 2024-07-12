@@ -13,6 +13,66 @@ class UsuariosController extends Controllers
             header('Location: ' . base_url() . '/dashboard');
         }
     }
+
+    public function index()
+    {
+        if (empty($_SESSION['permisosMod']['rea'])) {
+            header("Location:" . base_url() . '/dashboard');
+        }
+        $data['page_id'] = 3;
+        $data['page_tag'] = "Usuarios";
+        $data['page_name'] = "usuario";
+        $data['page_title'] = "Usuarios";
+        $data['file_js'] = "usuario.js";
+        $this->views->getView("Usuarios", "index", $data);
+    }
+
+    public function getUsuarios()
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $arrData = $this->model->listarUsuarios();
+            for ($i = 0; $i < count($arrData); $i++) {
+                // $btnView = '';
+                $btnEditar = '';
+                $btnEditPsw = '';
+                $btnBorrar = '';
+
+                if ($arrData[$i]['estado'] == "ACTIVO") {
+                    $arrData[$i]['estado'] = '<span class="badge bg-success">ACTIVO</span>';
+                } else {
+                    $arrData[$i]['estado'] = '<span class="badge bg-gray">INACTIVO</span>';
+                }
+
+                // if ($_SESSION['permisosMod']['rea']) {
+                //     $btnView = '<button class="btn btn-info btn-sm btnViewUsuario" onClick="fntViewUsuario(' . $arrData[$i]['idpersona'] . ')" title="Ver usuario"><i class="far fa-eye"></i></button>';
+                // }
+                if ($_SESSION['permisosMod']['upd']) {
+                    if (($_SESSION['idUsuario'] == 1 and $_SESSION['userData']['idroles'] == 1) ||
+                        ($_SESSION['userData']['idroles'] == 1 and $arrData[$i]['idroles'] != 1)
+                    ) {
+                        $btnEditar = '<button class="btn btn-primary btn-sm btn-table btnEditar" title="Editar"><i class="nav-icon fas fa-edit"></i></button>';
+                        $btnEditPsw = '<button class="btn btn-warning btn-sm btn-table btnPsw" title="Cambiar contraseña"><i class="nav-icon fas fa-lock"></i></button>';
+                    } else {
+                        $btnEditar = '<button class="btn btn-primary btn-sm btn-table" title="Editar" disabled><i class="nav-icon fas fa-edit"></i></button>';
+                        $btnEditPsw = '<button class="btn btn-warning btn-sm btn-table" title="Cambiar contraseña" disabled><i class="nav-icon fas fa-lock"></i></button>';
+                    }
+                }
+                if ($_SESSION['permisosMod']['del']) {
+                    if (($_SESSION['idUsuario'] == 1 and $_SESSION['userData']['idroles'] == 1) ||
+                        ($_SESSION['userData']['idroles'] == 1 and $arrData[$i]['idroles'] != 1) and
+                        ($_SESSION['userData']['idusuarios'] != $arrData[$i]['idusuarios'])
+                    ) {
+                        $btnBorrar = '<button class="btn btn-danger btn-sm btn-table btnBorrar" title="Eliminar"><i class="nav-icon fas fa-trash"></i></button>';
+                    } else {
+                        $btnBorrar = '<button class="btn btn-danger btn-sm btn-table" title="Eliminar" disabled><i class="nav-icon fas fa-trash"></i></button>';
+                    }
+                }
+                $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnEditar . ' ' . $btnEditPsw . ' ' . $btnBorrar . '</div></div>';
+            }
+            echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+        }
+        die();
+    }
 }
 
 // require_once "../config/conexion.php";

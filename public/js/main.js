@@ -675,11 +675,6 @@ function cargarDatosInstitucion() {
     },
   });
 }
-
-function salir() {
-  window.location = "../../app/controllers/salir.php";
-}
-
 function validaNumericos(event) {
   if (event.charCode >= 48 && event.charCode <= 57) {
     return true;
@@ -705,10 +700,6 @@ function verificarCampos(formulario) {
   });
 
   return camposVacios.length === 0;
-}
-
-function ResetForm(id) {
-  document.getElementById(id).reset();
 }
 
 function ValidarFormato(formato) {
@@ -741,6 +732,3 @@ function mostrarImagen() {
   }
 }
 
-function ResetForm(id) {
-  document.getElementById(id).reset();
-}

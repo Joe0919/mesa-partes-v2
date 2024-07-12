@@ -1,3 +1,6 @@
+<?php // require_once "views/inc/Validacion/Validacion.php" 
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -10,9 +13,10 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
+
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
-    <div class="wrapper">
+    <div class="wrapper" id="wrapper_content">
 
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 
@@ -36,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active">
+                            <a href="<?= base_url(); ?>/usuarios" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -44,7 +48,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?= base_url(); ?>/roles" class="nav-link">
+                            <a class="nav-link active">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>
                                     Roles
@@ -122,7 +126,7 @@
             <!-- /.Menu de Navegacion -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
+        <!-- CONTENIDO PRINCIPAL -->
         <div class="content-wrapper">
             <!-- Contenido del Encabezado del Cuerpo -->
             <div class="content-header">
@@ -133,12 +137,13 @@
                         </div><!-- /.col -->
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user"></i><?= $data['page_title'] ?></li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-list"></i>Roles</li>
                             </ol>
-                        </div>
-                    </div>
-                </div>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
             </div>
+            <!-- /.content-header -->
 
             <!-- Main content -->
             <main class="content">
@@ -148,10 +153,10 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Usuarios</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Roles de Usuario</h3>
                                         <div>
                                             <?php if ($_SESSION['permisosMod']['cre']) { ?>
-                                                <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
+                                                <button type="button" class="btn btn-success" data-toggle="modal" id="nuevo_rol" title="Agregar nuevo registro">
                                                     <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                                 </button>
                                                 <button type="button" class="btn btn-dark" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
@@ -162,11 +167,12 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <table id="tablaUsuarios" class="table table-hover table-data">
+
+                                    <table id="tablaRoles" class="table table-hover table-data">
                                         <thead>
                                             <tr>
                                                 <!-- Rellenamos etiquetas de las columnas desde cons.php -->
-                                                <?php foreach (usuarioColumns as $value) : ?>
+                                                <?php foreach (rolesColumns as $value) : ?>
                                                     <th><?php echo $value; ?></th>
                                                 <?php endforeach; ?>
 
@@ -177,7 +183,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <?php foreach (usuarioColumns as $value) : ?>
+                                                <?php foreach (rolesColumns as $value) : ?>
                                                     <th><?php echo $value; ?></th>
                                                 <?php endforeach; ?>
                                             </tr>
@@ -191,19 +197,21 @@
                 </div>
             </main>
         </div>
+        <!-- /CONTENIDO PRINCIPAL -->
 
+        <div id="contentAjax"></div>
         <?php
-        require_once "Modals-usuario.php";
+
+        getModal('roles', 'roles', $data);
 
         require_once "views/inc/Modals/Modals.php";
 
         require_once "views/inc/MainFooter/MainFooter.php";
 
-
         ?>
 
     </div>
-    <!-- ./wrapper -->
+
 
     <?php require_once "views/inc/MainJS/MainJS.php" ?>
 

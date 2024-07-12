@@ -8,9 +8,9 @@ if (file_exists($controllerFile)) {
         $controller->{$method}($params);
     } else {
         // require_once("Controllers/Error.php");
-        echo "No existe el método";
+        print_r("No existe el método => " . $method . " en el controlador => " . var_dump($controller));
     }
 } else {
     // require_once("Controllers/Error.php");
-    echo "No existe el controlador";
+    print_r("No existe el controlador => " . $controller);
 }

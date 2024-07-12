@@ -8,7 +8,7 @@
 
     <?php require_once "views/inc/MainHead/MainHead.php" ?>
 
-    <title><?php $data['page_title'] ?> | Mesa de Partes Virtual</title>
+    <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -19,17 +19,15 @@
 
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 
-        <!-- Main Sidebar Container | Seccion de Links  -->
+        <!-- Seccion de Links  -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
             <a class="brand-link navbar-lightblue">
                 <img src="<?php echo media() . "/" . $_SESSION['userData']['logo']; ?>" id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text span-logo" id="inst_desc">HACDP</span>
             </a>
 
-            <!-- Sidebar -->
+            <!-- Menu de Navegacion -->
             <div class="sidebar">
-                <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item menu-open">
@@ -45,6 +43,14 @@
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url(); ?>/roles" class="nav-link">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    Roles
                                 </p>
                             </a>
                         </li>
@@ -114,12 +120,12 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- /.sidebar-menu -->
+                
             </div>
-            <!-- /.sidebar -->
+            <!-- /.Menu de Navegacion -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
+        <!-- CONTENIDO PRINCIPAL -->
         <div class="content-wrapper">
             <!-- Contenido del Encabezado del Cuerpo -->
             <div class="content-header">
@@ -234,8 +240,7 @@
             </main>
             <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
-
+        <!-- /CONTENIDO PRINCIPAL -->
         <?php
 
         require_once "views/inc/Modals/Modals.php";
@@ -245,7 +250,7 @@
         ?>
 
     </div>
-    <!-- ./wrapper -->
+
 
     <?php require_once "views/inc/MainJS/MainJS.php" ?>
 

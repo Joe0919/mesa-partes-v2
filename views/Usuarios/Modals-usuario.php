@@ -1,5 +1,5 @@
 <!-- MODAL FOTO-->
-<div class="modal fade" id="modalfoto">
+<!-- <div class="modal fade" id="modalfoto">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -31,10 +31,10 @@
             </form>
         </div>
     </div>
-</div>
+</div> -->
 <!-- MODAL INGRESO DE USUARIO-->
 <div class="modal fade" id="modal_new_user">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form id="form_new_user" method="post">
                 <div class="modal-header" id="modal-header">
@@ -45,94 +45,109 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="idni">DNI</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required>
-                                <p id="ErrorDNI" class="m-0 p-0 aviso"></p>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="inombre">Nombres</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control text-uppercase" name="inombre" id="inombre" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="ippat">Apellido Paterno</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control text-uppercase" name="iappat" id="iappat" required>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="iapmat">Apellido Materno</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control text-uppercase" name="iapmat" id="iapmat" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="icel">Celular</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control" name="icel" id="icel" required onkeypress='return validaNumericos(event)' maxlength="9" minlength="9">
-                                <p id="ErrorCel" class="m-0 p-0 aviso"></p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="idir">Dirección</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control text-uppercase" name="idir" id="idir" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="iemail">Email</label><span class="span-red"> (*)</span>
-                                <input type="email" class="form-control" name="iemail" id="iemail" required>
-                                <p id="ErrorEmail" class="m-0 p-0 aviso"></p>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="inomusu">Nombre Usuario</label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control" name="inomusu" id="inomusu" required>
-                                <p id="ErrorNomUsu" class="m-0 p-0 aviso"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-4">
+                            <h1 class="modal-body-title mb-2">Foto de perfil Actual</h1>
+                            <figure class="modal-photo" id="foto_perfilf">
+                            </figure>
                             <div class="form-group">
-                                <label for="irol">Rol</label><span class="span-red"> (*)</span>
-                                <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
-                                <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                <label>Elegir Foto (jpg)</label><span class="span-gray"> (Opcional)</span>
+                                <div class="file-photo">
+                                    <input type="hidden" id="opcionf" name="opcion" value='5'>
+                                    <input type="hidden" id="idnif" name="idni" value="">
+                                    <input type="file" id="idfilef" name="idfile" accept="image/jpeg">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="ipass">Contraseña</label><span class="span-red"> (*)</span>
-                                <input type="password" class="form-control" name="ipass" id="ipass" minlength="8" required />
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="idni">DNI</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required>
+                                        <p id="ErrorDNI" class="m-0 p-0 aviso"></p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="inombre">Nombres</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control text-uppercase" name="inombre" id="inombre" required>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="ipassco">Confirmar Contraseña</label><span class="span-red"> (*)</span>
-                                <input type="password" class="form-control" name="ipassco" id="ipassco" minlength="8" required />
-                                <p id="ErrorContra" class="m-0 p-0 aviso"></p>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="ippat">Apellido Paterno</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control text-uppercase" name="iappat" id="iappat" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="iapmat">Apellido Materno</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control text-uppercase" name="iapmat" id="iapmat" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="icel">Celular</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control" name="icel" id="icel" required onkeypress='return validaNumericos(event)' maxlength="9" minlength="9">
+                                        <p id="ErrorCel" class="m-0 p-0 aviso"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="idir">Dirección</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control text-uppercase" name="idir" id="idir" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="iemail">Email</label><span class="span-red"> (*)</span>
+                                        <input type="email" class="form-control" name="iemail" id="iemail" required>
+                                        <p id="ErrorEmail" class="m-0 p-0 aviso"></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="inomusu">Nombre Usuario</label><span class="span-red"> (*)</span>
+                                        <input type="text" class="form-control" name="inomusu" id="inomusu" required>
+                                        <p id="ErrorNomUsu" class="m-0 p-0 aviso"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="irol">Rol</label><span class="span-red"> (*)</span>
+                                        <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
+                                        <select class="form-control select-rol" name="irol" id="irol" required></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="ipass">Contraseña</label><span class="span-red"> (*)</span>
+                                        <input type="password" class="form-control" name="ipass" id="ipass" minlength="8" required />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="ipassco">Confirmar Contraseña</label><span class="span-red"> (*)</span>
+                                        <input type="password" class="form-control" name="ipassco" id="ipassco" minlength="8" required />
+                                        <p id="ErrorContra" class="m-0 p-0 aviso"></p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                     <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
                 </div>
                 <div class="modal-footer justify-content-between">

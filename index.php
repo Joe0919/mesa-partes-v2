@@ -1,7 +1,10 @@
 <?php
 
 require_once "app/config/config.php";
+require_once "app/config/cons.php";
 require_once "app/helpers/helpers.php";
+
+date_default_timezone_set('America/Lima');
 
 $ruta = !empty($_GET['url']) ? $_GET['url'] : 'Home/index';
 $arrayRuta = explode("/", $ruta);

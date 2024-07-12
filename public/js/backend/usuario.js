@@ -15,56 +15,20 @@ $(document).ready(function () {
       url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
     },
     ajax: {
-      url: "../../app/controllers/usuario-controller.php",
-      method: "POST", //usamos el metodo POST
-      data: { opcion: opcion }, //enviamos opcion 1 para que haga un SELECT
+      url: " " + base_url + "/Usuarios/getUsuarios",
       dataSrc: "",
     },
-    columnDefs: [
-      { targets: -2, width: "20px" }, // -2 se refiere a la penúltima columna
-    ],
     ordering: false,
+    responsive: true,
     columns: [
       { data: "idusuarios" },
-      { data: "nombre" },
       { data: "dni" },
+      { data: "datos" },
       { data: "email" },
-      {
-        data: "estado",
-        render: function (data, type) {
-          let country = "";
-          switch (data) {
-            case "ACTIVO":
-              country = "bg-success";
-              break;
-            case "INACTIVO":
-              country = "bg-gray";
-              break;
-          }
-          return '<span  class="badge ' + country + '">' + data + "</span> ";
-        },
-      },
-      {
-        defaultContent: `<div class='text-center'>
-              <div class='btn-group'>
-                <button class='btn btn-warning btn-sm btn-table btnEditfoto' title='Cambiar foto'>
-                  <i class='material-icons'>account_circle</i>
-                </button>
-              </div>
-            </div>`,
-      },
-      {
-        defaultContent: `<div class='text-center'>
-              <div class='btn-group'>
-                <button class='btn btn-primary btn-sm btn-table btnEditar' title='Editar'>
-                  <i class='material-icons'>edit</i></button>
-                <button class='btn btn-secondary btn-sm btn-table btnPsw' title='Cambiar contraseña'>
-                  <i class='material-icons'>lock</i></button>
-                <button class='btn btn-danger btn-sm btn-table btnBorrar' title='Eliminar'>
-                  <i class='material-icons'>delete</i></button>
-              </div>
-            </div>`,
-      },
+      { data: "telefono" },
+      { data: "rol" },
+      { data: "estado" },
+      { data: "opciones" },
     ],
     initComplete: function () {
       // Oculta el loader una vez que los datos se hayan cargado
@@ -72,7 +36,7 @@ $(document).ready(function () {
     },
   });
 
-  llenarSelectRol();
+  // llenarSelectRol();
 
   //Mostrar modal de nuevo usuario
   $("#btn_new_user").click(function () {
@@ -724,7 +688,11 @@ $(document).ready(function () {
               );
               $("#loader").hide();
             } else {
-              MostrarAlertaxTiempo("Eliminado", "Se eliminó al usuario", "success");
+              MostrarAlertaxTiempo(
+                "Eliminado",
+                "Se eliminó al usuario",
+                "success"
+              );
               tablaUsuarios.ajax.reload(null, false); //Recargar la tabla
               $("#loader").hide();
             }

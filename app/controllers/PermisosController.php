@@ -1,20 +1,19 @@
 <?php
 
-class Permisos extends Controllers
+class PermisosController extends Controllers
 {
     public function __construct()
     {
         parent::__construct("Permisos");
     }
-
-    public function getPermisosRol(int $idRol)
+    public function getPermisosRol(int $idrol)
     {
-        $idrol = intval($idRol);
-        if ($idrol > 0) {
+        $rolid = intval($idrol);
+        if ($rolid > 0) {
             $arrModulos = $this->model->selectModulos();
-            $arrPermisosRol = $this->model->selectPermisosRol($idrol);
-            $arrPermisos = array('r' => 0, 'w' => 0, 'u' => 0, 'd' => 0);
-            $arrPermisoRol = array('idrol' => $idrol);
+            $arrPermisosRol = $this->model->selectPermisosRol($rolid);
+            $arrPermisos = array('cre' => 0, 'rea' => 0, 'upd' => 0, 'del' => 0);
+            $arrPermisoRol = array('idrol' => $rolid);
 
             if (empty($arrPermisosRol)) {
                 for ($i = 0; $i < count($arrModulos); $i++) {
@@ -23,22 +22,20 @@ class Permisos extends Controllers
                 }
             } else {
                 for ($i = 0; $i < count($arrModulos); $i++) {
-                    $arrPermisos = array('r' => 0, 'w' => 0, 'u' => 0, 'd' => 0);
+                    $arrPermisos = array('cre' => 0, 'rea' => 0, 'upd' => 0, 'del' => 0);
                     if (isset($arrPermisosRol[$i])) {
                         $arrPermisos = array(
-                            'r' => $arrPermisosRol[$i]['r'],
-                            'w' => $arrPermisosRol[$i]['w'],
-                            'u' => $arrPermisosRol[$i]['u'],
-                            'd' => $arrPermisosRol[$i]['d']
+                            'cre' => $arrPermisosRol[$i]['cre'],
+                            'rea' => $arrPermisosRol[$i]['rea'],
+                            'upd' => $arrPermisosRol[$i]['upd'],
+                            'del' => $arrPermisosRol[$i]['del']
                         );
                     }
                     $arrModulos[$i]['permisos'] = $arrPermisos;
                 }
             }
             $arrPermisoRol['modulos'] = $arrModulos;
-            // $html = getModal("modalPermisos", $arrPermisoRol);
-            //dep($arrPermisoRol);
-
+            getModal('roles', "permisos", $arrPermisoRol);
         }
         die();
     }
@@ -52,11 +49,11 @@ class Permisos extends Controllers
             $this->model->deletePermisos($intIdrol);
             foreach ($modulos as $modulo) {
                 $idModulo = $modulo['idmodulo'];
-                $r = empty($modulo['r']) ? 0 : 1;
-                $w = empty($modulo['w']) ? 0 : 1;
-                $u = empty($modulo['u']) ? 0 : 1;
-                $d = empty($modulo['d']) ? 0 : 1;
-                $requestPermiso = $this->model->insertPermisos($intIdrol, $idModulo, $r, $w, $u, $d);
+                $cre = empty($modulo['cre']) ? 0 : 1;
+                $rea = empty($modulo['rea']) ? 0 : 1;
+                $upd = empty($modulo['upd']) ? 0 : 1;
+                $del = empty($modulo['del']) ? 0 : 1;
+                $requestPermiso = $this->model->insertPermisos($intIdrol, $idModulo, $cre, $rea, $upd, $del);
             }
             if ($requestPermiso > 0) {
                 $arrResponse = array('status' => true, 'msg' => 'Permisos asignados correctamente.');

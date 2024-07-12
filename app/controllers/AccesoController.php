@@ -4,7 +4,9 @@ class AccesoController extends Controllers
 {
     public function __construct()
     {
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         if (isset($_SESSION['login'])) {
             header('Location: ' . base_url() . '/dashboard');
         }
@@ -14,7 +16,6 @@ class AccesoController extends Controllers
 
     public function index()
     {
-        $data['page_id'] = 1;
         $data['page_tag'] = "Acceso";
         $data['page_title'] = "Acceso al Sistema";
         $data['page_name'] = "acceso";
