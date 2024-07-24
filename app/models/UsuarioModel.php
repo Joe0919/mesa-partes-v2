@@ -3,246 +3,215 @@
 class UsuarioModel extends Mysql
 {
     private $intIdUsuario;
-    private $strIdentificacion;
+    private $intIdPersona;
+    private $strDNI;
+    private $strApPaterno;
+    private $strApMaterno;
     private $strNombre;
-    private $strApellido;
-    private $intTelefono;
     private $strEmail;
+    private $intTelefono;
+    private $strDireccion;
+    private $strNombreUsuario;
+    private $strOldPassword;
     private $strPassword;
     private $strToken;
-    private $intTipoId;
-    private $intStatus;
-    private $strNit;
-    private $strNomFiscal;
-    private $strDirFiscal;
+    private $intIdRol;
+    private $strFoto;
+    private $strEstado;
+
 
     public function selectUsuarios(
-        string $columnas = "idusuarios, nombre, u.dni dni, email, estado",
-        string $tablas = "usuarios u inner join persona p on p.dni=u.dni",
-        string $condicion = "",
+        string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
+        string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
+        string $condicion = "where u.deleted != 1 ",
         array $valores = []
     ) {
         $whereAdmin = "";
         if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and p.idpersona != 1 ";
+            $whereAdmin = " and p.idpersona != 1 or idusuarios != 1 ";
         }
         $sql = "SELECT $columnas FROM $tablas $condicion " . $whereAdmin;
         $request = $this->select_all($sql);
         return $request;
     }
 
-    public function listarUsuarios(
-        string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
-        string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
-        string $condicion = "",
-        array $valores = []
-    ) {
-        $whereAdmin = "";
-        if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and u.idusuarios != 1 ";
+    public function insertUsuario($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol, $Foto)
+    {
+        $this->strDNI = $dni;
+        $this->strApPaterno = $appat;
+        $this->strApMaterno = $apmat;
+        $this->strNombre = $nombre;
+        $this->strEmail = $email;
+        $this->intTelefono = $celular;
+        $this->strDireccion = $direccion;
+        $this->strNombreUsuario = $nom_usu;
+        $this->strPassword = $psw;
+        $this->strFoto = $Foto;
+        $this->intIdRol = $rol;
+
+        $where = " WHERE p.dni=? or nombre=? or p.email=? or telefono=? ";
+        $request = $this->consultar(
+            "*",
+            "usuarios u join persona p on u.dni=p.dni",
+            $where,
+            [$this->strDNI, $this->strNombreUsuario, $this->strEmail, $this->intTelefono]
+        );
+
+        if (empty($request)) {
+            $arrData = array($this->strDNI, $this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion);
+            $request_insert = $this->registrar("persona", "(null,?,?,?,?,?,?,?,null,null)", $arrData);
+
+            $arrData = array($this->strNombreUsuario, $this->strDNI, $this->strPassword, $this->strFoto, $this->intIdRol);
+            $request_insert = $this->registrar("usuarios", " (null,?,?,?,sysdate(),null,sysdate(),'INACTIVO',?,?,0)", $arrData);
+
+            $return = $request_insert;
+        } else {
+            $return = "exist";
+        }
+        return $return;
+    }
+
+    public function consultarUsuario($IdUsuario, $dni = null)
+    {
+        $this->intIdUsuario = $IdUsuario;
+        $queryParams = [$this->intIdUsuario];
+
+        if ($dni !== null) {
+            $this->strDNI = $dni;
+            $whereClause = " WHERE u.idusuarios = ? AND p.dni = ?";
+            array_unshift($queryParams, $this->strDNI);
+        } else {
+            $whereClause = " WHERE u.idusuarios = ? ";
         }
 
-        $request = $this->consultar($columnas, $tablas, $condicion . $whereAdmin, $valores);
+        $request = $this->consultar(
+            "u.idusuarios, p.idpersona, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email, nombre, r.idroles, u.estado, u.foto",
+            "usuarios u JOIN persona p ON p.dni = u.dni JOIN roles r ON r.idroles = u.idroles",
+            $whereClause,
+            $queryParams
+        );
+
         return $request;
-    }
-
-    public function consultarUsuarioID($idusu, $dni)
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT u.idusuarios ID1, p.idpersona ID2, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email, nombre, r.idroles IDR, u.estado, u.foto
-        FROM usuarios u
-        INNER JOIN persona p ON p.dni = u.dni
-        INNER JOIN roles r ON r.idroles = u.idroles
-        WHERE u.idusuarios = ? AND p.dni = ?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $idusu);
-        $resultado->bindValue(2, $dni);
-        $resultado->execute();
-
-        return $resultado->fetch(pdo::FETCH_ASSOC);
-    }
-    public function consultarUsuarioxID($idusu)
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT u.idusuarios IDUSU, p.idpersona IDPER, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email
-        FROM usuarios u
-        INNER JOIN persona p ON p.dni = u.dni
-        WHERE u.idusuarios = ?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $idusu);
-        $resultado->execute();
-
-        return $resultado->fetch(pdo::FETCH_ASSOC);
     }
 
     public function validarDuplicidadDatosUsuario($dni,  $email, $celular, $nom_usu)
     {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT count(*) total from usuarios u inner join persona p
-        on u.dni=p.dni where p.dni=? or nombre=? or p.email=? or telefono=?";
-        $resultado = $conectar->prepare($consulta);
-        $valores = array($dni, $nom_usu, $email, $celular);
-        $resultado->execute($valores);
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-        if ($data['total'] == 0) {
-            $data = 0;
+        $this->strDNI = $dni;
+        $this->strEmail = $email;
+        $this->intTelefono = $celular;
+        $this->strNombreUsuario = $nom_usu;
+        $where = " where p.dni=? or nombre=? or p.email=? or telefono=?";
+        $request = $this->consultar(
+            "*",
+            "usuarios u join persona p on u.dni=p.dni",
+            $where,
+            [$this->strDNI, $this->strEmail, $this->intTelefono, $this->strNombreUsuario]
+        );
+        if (empty($request)) {
+            return 1;
         } else {
-            $data = 1;
+            return 0;
         }
-        return $data;
     }
-    public function crearNuevoUsuario($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol)
+
+    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado, $foto = "")
     {
-        $conectar = parent::Conectar();
+        $this->intIdUsuario = $idusu;
+        $this->strNombreUsuario = $nom_usu;
+        $this->intIdPersona = $idper;
+        $this->strNombre = $nombre;
+        $this->strApPaterno = $appat;
+        $this->strApMaterno = $apmat;
+        $this->strEmail = $email;
+        $this->intTelefono = $celular;
+        $this->strDireccion = $direccion;
+        $this->strEstado = $estado;
+        $this->strFoto = $foto;
 
-        $consulta = "SELECT count(*) total from usuarios u inner join persona p
-        on u.dni=p.dni where p.dni=? or nombre=? or p.email=? or telefono=?";
-        $resultado = $conectar->prepare($consulta);
-        $valores = array($dni, $nom_usu, $email, $celular);
-        $resultado->execute($valores);
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $where = " WHERE (nombre=? or p.email=? or telefono=?) AND idusuarios != ? ";
+        $request = $this->consultar(
+            "*",
+            "persona p JOIN usuarios u ON p.dni = u.dni JOIN roles r ON r.idroles = u.idroles",
+            $where,
+            [$this->strNombreUsuario, $this->strEmail, $this->intTelefono, $this->intIdUsuario]
+        );
 
-        if ($data['total'] == 0) {
-            $consulta = "INSERT into persona values (null,?,?,?,?,?,?,?,null,null)";
-            $resultado = $conectar->prepare($consulta);
-            $valores = array($dni, $appat, $apmat, $nombre, $email, $celular, $direccion);
-            $resultado->execute($valores);
-
-            $consulta = "INSERT into usuarios values (null,?,?,?,sysdate(),null,sysdate(),'INACTIVO','files/images/0/persona.png',?)";
-            $resultado = $conectar->prepare($consulta);
-            $valores = array($nom_usu, $dni, $psw, $rol);
-            $resultado->execute($valores);
-
-            $consulta = "SELECT * FROM usuarios ORDER BY idusuarios DESC LIMIT 1";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->execute();
-            $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($request)) {
+            $request = $this->editar(
+                "persona",
+                "ap_paterno = ?, ap_materno = ?, nombres = ?, email = ?, telefono = ?, direccion = ?",
+                "idpersona = ?",
+                [$this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion, $this->intIdPersona]
+            );
+            if ($foto == "") {
+                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?";
+                $arrayData =  [$this->strNombreUsuario, $this->strEstado, $this->intIdUsuario];
+            } else {
+                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, foto = ?";
+                $arrayData = [$this->strNombreUsuario, $this->strEstado, $this->strFoto, $this->intIdUsuario];
+            }
+            $request = $this->editar(
+                "usuarios",
+                $columns,
+                "idusuarios = ?",
+                $arrayData
+            );
         } else {
-            $data = 1;
+            // $request = 'exist';
+            $request = $request;
         }
-        return $data;
+        return $request;
     }
 
-
-    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado)
+    public function editarPswUsuarioID($psw_anterior, $psw_nueva, $idusu)
     {
-        $conectar = parent::Conectar();
+        $this->intIdUsuario = $idusu;
+        $this->strOldPassword = $psw_anterior;
+        $this->strPassword = $psw_nueva;
 
-        $consulta = "SELECT count(*) AS total FROM persona p 
-        INNER JOIN usuarios u ON p.dni = u.dni 
-        INNER JOIN roles r ON r.idroles = u.idroles
-        WHERE (nombre=? or p.email=? or telefono=?) AND idpersona != ?";
-        $resultado = $conectar->prepare($consulta);
-        $valores = array($nom_usu, $email, $celular, $idper);
-        $resultado->execute($valores);
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $where = " WHERE contrasena = ? and idusuarios = ? ";
+        $request = $this->consultar(
+            "*",
+            "usuarios",
+            $where,
+            [$this->strOldPassword, $this->intIdUsuario]
+        );
 
-        if ($data['total'] == 0) {
-
-            $consulta = "UPDATE persona SET  ap_paterno=?, ap_materno=?, nombres=?, email=?, telefono=?, direccion=?
-                WHERE idpersona=?";
-            $resultado = $conectar->prepare($consulta);
-            $valores = array($appat, $apmat, $nombre, $email, $celular, $direccion, $idper);
-            $resultado->execute($valores);
-
-            $consulta = "UPDATE usuarios SET nombre=?, fechaedicion=sysdate(), estado=?
-                WHERE idusuarios=?";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $nom_usu);
-            $resultado->bindValue(2, $estado);
-            $resultado->bindValue(3, $idusu);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        if (empty($request)) {
+            $request = 0;
         } else {
-            $data = 1;
+            $request = $this->editar(
+                "usuarios",
+                "contrasena = ? , fechaedicion = sysdate()",
+                "idusuarios = ?",
+                [$this->strPassword, $this->intIdUsuario]
+            );
         }
-
-        return $data;
+        return $request;
     }
 
-    public function editarFotoUsuarioID($idusu, $nueva_ruta)
+    public function eliminarUsuarioDNI($dni)
     {
-        $conectar = parent::Conectar();
+        $this->strDNI = $dni;
 
-        $consulta = "UPDATE usuarios SET foto=?, fechaedicion=sysdate() where idusuarios=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $nueva_ruta);
-        $resultado->bindValue(2, $idusu);
-        $resultado->execute();
+        $where = " where idpersona=(select idpersona from persona where dni = ?) ";
+        $request = $this->consultar("*", "empleado", $where, [$this->strDNI]);
 
-        return $resultado->fetch(pdo::FETCH_ASSOC);
-    }
-
-    public function cambioContraUsuarioID($psw_anterior, $psw_nueva, $idusu)
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT count(*) total FROM usuarios where contrasena=? and idusuarios=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $psw_anterior);
-        $resultado->bindValue(2, $idusu);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-        if ($data['total'] == 0) {
-            $data = 1;
+        if (empty($request)) {
+            $request = $this->editar(
+                "usuarios",
+                " deleted = 1 ",
+                " dni = ? ",
+                [$this->strDNI]
+            );
+            if ($request) {
+                $request = 1;
+            } else {
+                $request = 'error';
+            }
         } else {
-            $consulta = "UPDATE usuarios SET contrasena=?, fechaedicion=sysdate() where idusuarios=?";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $psw_nueva);
-            $resultado->bindValue(2, $idusu);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
+            $request = 'exist';
         }
-        return $data;
-    }
-
-    public function eliminarUsuarioID($dni)
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT count(*) total from empleado where idpersona=(select idpersona from persona where dni='$dni');";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-        if ($data['total'] == 0) {
-            $consulta = "DELETE FROM usuarios WHERE dni='$dni' ";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->execute();
-
-            $consulta = "DELETE FROM persona WHERE dni='$dni'";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->execute();
-        } else {
-            $data = 1;
-        }
-        return $data;
-    }
-
-    public function consultarRoles()
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT * FROM roles r";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
-
-        return $resultado->fetchAll(pdo::FETCH_ASSOC);
-    }
-
-    public function editarUsuario(string $columnas, array $datos, string $condicion)
-    {
-        $conectar = parent::Conectar();
-
-        $consulta = "UPDATE usuarios SET $columnas WHERE $condicion)";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->execute($datos);
-
-        return $resultado->fetch(pdo::FETCH_ASSOC);
+        return $request;
     }
 }

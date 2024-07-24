@@ -181,13 +181,7 @@
                                         <tbody>
                                             <!-- ESPACIO DE LLENADO AUTOMATICO DE LOS DATOS CORRESPONDIENTES -->
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <?php foreach (rolesColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        </tfoot>
+
                                     </table>
 
                                 </div>

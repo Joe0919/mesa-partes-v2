@@ -63,7 +63,7 @@ class RolesModel extends Mysql
         $this->strDescripcion = $descripcion;
         $this->intEstado = $status;
 
-        $where = " WHERE rol = ? AND idroles != ? ";
+        $where = " WHERE rol = ? AND idroles <> ? ";
         $request = $this->consultar("*", "roles", $where, [$this->strRol, $this->intIdrol]);
 
         if (empty($request)) {

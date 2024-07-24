@@ -175,13 +175,6 @@
                                         <tbody>
                                             <!-- ESPACIO DE LLENADO AUTOMATICO DE LOS DATOS CORRESPONDIENTES -->
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <?php foreach (usuarioColumns as $value) : ?>
-                                                    <th><?php echo $value; ?></th>
-                                                <?php endforeach; ?>
-                                            </tr>
-                                        </tfoot>
                                     </table>
 
                                 </div>

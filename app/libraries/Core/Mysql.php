@@ -45,12 +45,13 @@ class Mysql extends Conexion
         $data = $result->fetchall(PDO::FETCH_ASSOC);
         return $data;
     }
+    //Consultar registro por ID o cualquier otra condicion
     public function consultar(string $columnas = "*", string $tabla, string $condicion = "", array $arrValues = [])
     {
         $this->strquery = "SELECT $columnas FROM $tabla $condicion";
         $result = $this->conexion->prepare($this->strquery);
         $condicion == "" ? $result->execute() : $result->execute($arrValues);
-        $data = $result->fetchall(PDO::FETCH_ASSOC);
+        $data = $result->fetch(PDO::FETCH_ASSOC);
         return $data;
     }
     //Actualiza registros

@@ -1,6 +1,6 @@
 $(document).ready(function () {
   let idrol = 0,
-    rol = "";
+    rol = "", accion = "";
   $("#loader").show();
   /*=============================   MOSTRAR TABLA DE USUARIOS  ================================= */
   tablaRoles = $("#tablaRoles").DataTable({
@@ -9,7 +9,7 @@ $(document).ready(function () {
       url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
     },
     ajax: {
-      url: " " + base_url + "/Roles/getRoles",
+      url: base_url + "/Roles/getRoles",
       dataSrc: "",
     },
     ordering: false,
@@ -22,7 +22,7 @@ $(document).ready(function () {
       { data: "opciones" },
     ],
     initComplete: function () {
-      $("#loader").hide(); 
+      $("#loader").hide();
     },
   });
 
@@ -33,12 +33,12 @@ $(document).ready(function () {
     $("#modal_roles .modal-title").text("REGISTRAR NUEVO ROL");
     $("#idrol").val("0");
     $("#modal_roles").modal({ backdrop: "static", keyboard: false });
+    accion = "guardarán";
   });
 
   //Registrar o Editar los datos del formulario
   $("#form_roles").on("submit", function (e) {
     e.preventDefault();
-    let accion;
     let formulario = $(this);
     if (verificarCampos(formulario)) {
       Swal.fire({
@@ -54,7 +54,7 @@ $(document).ready(function () {
         if (result.isConfirmed) {
           let formData = new FormData(this);
           $.ajax({
-            url: " " + base_url + "/Roles/setRol",
+            url: base_url + "/Roles/setRol",
             type: "POST",
             datatype: "json",
             data: formData,
@@ -65,7 +65,6 @@ $(document).ready(function () {
             },
             success: function (response) {
               data = $.parseJSON(response);
-              console.log(data);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
               } else {
@@ -96,10 +95,11 @@ $(document).ready(function () {
   //Evento al presionar boton de Edición y mostrar los datos
   $(document).on("click", ".btnEditar", function () {
     idrol = parseInt($(this).closest("tr").find("td:eq(0)").text());
+    accion = "editarán";
     $("#form_roles")[0].reset();
     $("#modal_roles .modal-title").text("EDITAR ROL EXISTENTE");
     $.ajax({
-      url: "" + base_url + "/Roles/getRol/" + idrol,
+      url: base_url + "/Roles/getRol/" + idrol,
       type: "GET",
       beforeSend: function () {
         $("#loader").show();
@@ -160,7 +160,7 @@ $(document).ready(function () {
             $("#loader").hide();
           },
           error: function (error) {
-            MostrarAlerta("Error", "Error registrar", "error");
+            MostrarAlerta("Error", "Error al eliminar", "error");
             console.error("Error: " + error);
             $("#loader").hide();
           },

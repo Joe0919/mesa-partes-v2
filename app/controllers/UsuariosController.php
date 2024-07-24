@@ -30,7 +30,7 @@ class UsuariosController extends Controllers
     public function getUsuarios()
     {
         if ($_SESSION['permisosMod']['rea']) {
-            $arrData = $this->model->listarUsuarios();
+            $arrData = $this->model->selectUsuarios();
             for ($i = 0; $i < count($arrData); $i++) {
                 // $btnView = '';
                 $btnEditar = '';
@@ -73,113 +73,224 @@ class UsuariosController extends Controllers
         }
         die();
     }
+
+    public function getUsuario($idusuario)
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $idusuario = intval($idusuario);
+            if ($idusuario > 0) {
+                $arrData = $this->model->consultarUsuario($idusuario);
+                if (empty($arrData)) {
+                    $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
+                } else {
+                    $arrResponse = array('status' => true, 'data' => $arrData);
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            }
+        }
+        die();
+    }
+    public function setUsuario()
+    {
+        if ($_POST) {
+            if (
+                empty($_POST['idni']) || empty($_POST['inombre']) || empty($_POST['iappat']) || empty($_POST['iapmat'])
+                || empty($_POST['iemail']) || empty($_POST['idir']) || empty($_POST['icel'] || empty($_POST['inomusu']))
+                || empty($_POST['irol'])
+            ) {
+                $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+            } else {
+                $idUsuario = intval(limpiarCadena($_POST['idusuario']));
+                $idPersona = intval(limpiarCadena($_POST['idpersona']));
+                $dni = limpiarCadena($_POST['idni']);
+                $nombre = strtoupper(limpiarCadena($_POST['inombre']));
+                $appat = strtoupper(limpiarCadena($_POST['iappat']));
+                $apmat = strtoupper(limpiarCadena($_POST['iapmat']));
+                $celular = limpiarCadena($_POST['icel']);
+                $email = limpiarCadena($_POST['iemail']);
+                $direccion = strtoupper(limpiarCadena($_POST['idir']));
+                $nom_usu = limpiarCadena($_POST['inomusu']);
+                $idrol = limpiarCadena($_POST['irol']);
+                $foto = $_FILES['foto'];
+                $estado = limpiarCadena($_POST['estado']);
+
+                $request_user = "";
+                $ruta_foto = "";
+                $success = false;
+
+                if ($_POST['foto_bdr'] === '1') {
+                    $ruta_aux = UPLOADS_PATH; // RAIZ/public/files/images/
+                    $rutaID = $idUsuario . '/'; // 1/
+                    $file_tmp_name = $foto['tmp_name'];
+                    $file_tmp_type = $foto['type'];
+
+                    $type = array(
+                        'image/jpeg' => 'jpg',
+                        'image/png' => 'png'
+                    );
+
+                    $extension = isset($type[$file_tmp_type]) ? $type[$file_tmp_type] : 'dat';
+
+                    $nuevo_nombre = UPLOADS_PATH . $rutaID . $idUsuario . '_' . date('Y') . '_' . $dni . '.' . $extension;
+
+                    if (!file_exists($ruta_aux)) {
+                        mkdir($ruta_aux, 0777, true);
+                    }
+                    if (!file_exists(UPLOADS_PATH . $idUsuario)) {
+                        mkdir(UPLOADS_PATH . $idUsuario, 0777, true);
+                    }
+
+                    if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
+                        $ruta_foto = 'files/images/' . $idUsuario . '/' . $idUsuario . '_' . date('Y') . '_' . $dni . '.jpg';
+                        $success = true;
+                    } else {
+                        $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar la foto.');
+                    }
+                } else {
+                    $ruta_foto = 'files/images/0/user.png';
+                    $success = true;
+                }
+
+                if ($success) {
+                    if ($idUsuario == 0) {
+                        $option = 1;
+                        $strPassword =  empty($_POST['ipassword']) ?  genContrasena() :  limpiarCadena($_POST['ipassword']);
+                        if ($_SESSION['permisosMod']['cre']) {
+                            $request_user = $this->model->insertUsuario(
+                                $dni,
+                                $appat,
+                                $apmat,
+                                $nombre,
+                                $email,
+                                $celular,
+                                $direccion,
+                                $nom_usu,
+                                $strPassword,
+                                $idrol,
+                                $ruta_foto
+                            );
+                        }
+                    } else {
+                        $option = 2;
+                        if ($_SESSION['permisosMod']['upd']) {
+                            $ruta_foto = ($_POST['foto_bdr'] === '1') ? $ruta_foto : "";
+                            $request_user = $this->model->editarusuarioID(
+                                $idUsuario,
+                                $nom_usu,
+                                $idPersona,
+                                $nombre,
+                                $appat,
+                                $apmat,
+                                $email,
+                                $celular,
+                                $direccion,
+                                $estado,
+                                $ruta_foto
+                            );
+                        }
+                    }
+                    if ($request_user === 'exist') {
+                        $arrResponse = array(
+                            'status' => false, 'title' => 'Datos duplicados', 'msg' => 'Email, telefono o nombre de usuario ya existen.',
+                            'results' =>  $request_user
+                        );
+                    } else if ($request_user > 0) {
+                        if ($option == 1) {
+                            $arrResponse = array(
+                                'status' => true,
+                                'title' => 'Registrado',
+                                'msg' => 'Datos guardados correctamente.',
+                                'results' => ""
+                            );
+                        } else {
+                            $arrResponse = array(
+                                'status' => true,
+                                'title' => 'Actualizado',
+                                'msg' => 'Datos actualizados correctamente.',
+                                'results' => ""
+                            );
+                        }
+                    } else {
+                        $arrResponse = array(
+                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                            'results' => ""
+                        );
+                    }
+                } else {
+                    $arrResponse = array(
+                        'status' => false, 'title' => 'Error', 'msg' => 'No fue posible guardar la imagen.',
+                        'results' => $success
+                    );
+                }
+            }
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        }
+        die();
+    }
+
+    public function putPasswordUser()
+    {
+        if ($_POST) {
+            if (
+                empty($_POST['ioldpassword']) !== empty($_POST['iconfirmpsw'])
+            ) {
+                $arrResponse = array("status" => false, "title" => "No coinciden", "msg" => 'Ingrese contraseñas que coincidan.');
+            } else {
+                $idUsuario = intval(limpiarCadena($_POST['idusuario']));
+                $strOldPsw = $_POST['ioldpassword'];
+                $strNewPsw = $_POST['iconfirmpsw'];
+                $request_user = "";
+
+                if ($idUsuario !== 0) {
+                    if ($_SESSION['permisosMod']['upd']) {
+                        $request_user = $this->model->editarPswUsuarioID(
+                            $strOldPsw,
+                            $strNewPsw,
+                            $idUsuario
+                        );
+                    }
+                    if ($request_user === 0) {
+                        $arrResponse = array(
+                            'status' => false, 'title' => 'Incorrecto', 'msg' => 'La contraseña actual no es correcta.',
+                            'results' =>  $request_user
+                        );
+                    } else if ($request_user > 0) {
+
+                        $arrResponse = array(
+                            'status' => true,
+                            'title' => 'Actualizado',
+                            'msg' => 'La contraseña fue actualizada correctamente.',
+                            'results' =>  $request_user
+                        );
+                    } else {
+                        $arrResponse = array(
+                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                            'results' => ""
+                        );
+                    }
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            }
+            die();
+        }
+    }
+
+    public function delUser()
+    {
+        if ($_POST) {
+            if ($_SESSION['permisosMod']['del']) {
+                $strDNI = limpiarCadena($_POST['dni']);
+                $requestDelete = $this->model->eliminarUsuarioDNI($strDNI);
+                if ($requestDelete == 1) {
+                    $arrResponse = array('status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado al Usuario');
+                } else if ($requestDelete == 'exist') {
+                    $arrResponse = array('status' => false, 'title' => 'Rol asociado', 'msg' => 'No es posible eliminar un al Usuario.');
+                } else {
+                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Error al eliminar al Usuario.');
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            }
+        }
+        die();
+    }
 }
-
-// require_once "../config/conexion.php";
-// require_once "../models/UsuarioModel.php";
-
-// $usuario = new UsuarioModel();
-
-// $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : 0;
-
-// $idper = (isset($_POST['idper'])) ? $_POST['idper'] : '';
-// $idusu = (isset($_POST['idusu'])) ? $_POST['idusu'] : '';
-
-// $dni = (isset($_POST["idni"])) ? $_POST["idni"] : '';
-// $nombre = (isset($_POST['inombre'])) ? strtoupper(trim($_POST['inombre'])) : '';
-// $appat = (isset($_POST['iappat'])) ? strtoupper(trim($_POST['iappat'])) : '';
-// $apmat = (isset($_POST['iapmat'])) ? strtoupper(trim($_POST['iapmat'])) : '';
-// $celular = (isset($_POST['icel'])) ? $_POST['icel'] : '';
-// $direccion = (isset($_POST['idir'])) ? strtoupper(trim($_POST['idir'])) : '';
-// $email = (isset($_POST['iemail'])) ? $_POST['iemail'] : '';
-
-// $nom_usu = (isset($_POST['inomusu'])) ? $_POST['inomusu'] : '';
-// $rol = (isset($_POST['irol'])) ? $_POST['irol'] : '';
-// $estado = (isset($_POST['estado'])) ? $_POST['estado'] : '';
-// $psw = (isset($_POST['ipassco'])) ? $_POST['ipassco'] : '';
-
-// $psw_anterior = (isset($_POST['icontra'])) ? $_POST['icontra'] : '';
-// $psw_nueva = (isset($_POST['inewcontra'])) ? $_POST['inewcontra'] : '';
-
-
-// $foto = (isset($_FILES['idfile'])) ? $_FILES['idfile'] : '';
-
-// switch ($opcion) {
-//     case 1:
-//         // Consultar todos los datos
-//         $data = $usuario->listarUsuarios();
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 2:
-//         // Consultar por ID y DNI para edición
-//         $data = $usuario->consultarUsuarioID($idusu, $dni);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 3:
-//         // Editar datos por ID
-//         $data = $usuario->editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 4:
-//         // ELiminar por ID
-//         $data = $usuario->eliminarUsuarioID($dni);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 5:
-//         // Editar foto por ID
-//         $a = "../../public/";
-//         $ruta_aux = $a . "files/images/";
-//         $ruta = "files/images/" . $idusu . "/";
-//         $file_tmp_name = $foto['tmp_name'];
-//         $file_tmp_type = $foto['type'];
-//         $nuevo_nombre = $a . $ruta . $idusu . '_' . date('Y') . '_' . $dni . '.jpg';
-//         $nueva_ruta = $ruta . $idusu . '_' . date('Y') . '_' . $dni . '.jpg';
-
-//         if (!file_exists($ruta_aux)) {
-//             mkdir($ruta_aux, 0777, true);
-//         }
-//         if (!file_exists($a . $ruta)) {
-//             mkdir($a . $ruta, 0777, true);
-//         }
-
-//         if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
-//             $data = $usuario->editarFotoUsuarioID($idusu, $nueva_ruta);
-//             echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//             $nuevo_nombre = '';
-//             $nueva_ruta = '';
-//         } else {
-//             $data = 'Error';
-//         }
-
-//         break;
-//     case 6:
-//         //Editar contraseña de usuario
-//         $data = $usuario->cambioContraUsuarioID($psw_anterior, $psw_nueva, $idusu);
-//         // $data = $psw_anterior." - ". $psw_nueva. " - ". $idusu;
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 7:
-//         //validar Datos de Usuario
-//         $data = $usuario->validarDuplicidadDatosUsuario($dni, $email, $celular,  $nom_usu);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         // echo $dni, " ",  $appat," ", $apmat," ", $nombre," ", $email," ", $celular," ", $direccion," ", $nom_usu," ", $psw," ", $rol;
-//         break;
-//     case 8:
-//         //Guardar Datos de Usuario
-//         $data = $usuario->crearNuevoUsuario($dni, $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw_nueva, $rol);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         // echo $dni, " ",  $appat," ", $apmat," ", $nombre," ", $email," ", $celular," ", $direccion," ", $nom_usu," ", $psw," ", $rol;
-//         break;
-//     case 10:
-//         //Mostrar roles de usuario
-//         $data = $usuario->consultarRoles();
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     case 11:
-//         // Consultar solo por ID para edición
-//         $data = $usuario->consultarUsuarioxID($idusu);
-//         echo json_encode($data, JSON_UNESCAPED_UNICODE);
-//         break;
-//     default:
-//         break;
-// }

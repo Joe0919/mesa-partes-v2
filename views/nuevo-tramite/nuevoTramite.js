@@ -186,7 +186,6 @@ function llenarSelectTipo() {
       placeholderOption.attr("disabled", true);
       placeholderOption.attr("selected", true);
       select.append(placeholderOption);
-      // Recorre los datos devueltos y crea las opciones del select
       for (let i = 0; i < data.length; i++) {
         let option = $("<option></option>");
         option.val(data[i].idtipodoc);

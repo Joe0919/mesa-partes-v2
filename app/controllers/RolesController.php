@@ -53,7 +53,7 @@ class RolesController extends Controllers
                 }
                 $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnPermisos . ' ' . $btnEditar . ' ' . $btnBorrar . '</div></div>';
 
-                $arrData[$i]['asociados'] = '<h5 title="Número de datos asociados"><span class="badge badge-pill badge-warning">' . $arrData[$i]['asociados'] . '</span></h5>';
+                $arrData[$i]['asociados'] = '<h5 class="mb-0" title="Número de datos asociados"><span class="badge badge-pill badge-warning">' . $arrData[$i]['asociados'] . '</span></h5>';
             }
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         }
@@ -62,16 +62,16 @@ class RolesController extends Controllers
 
     public function getSelectRoles()
     {
-        $htmlOptions = "";
         $arrData = $this->model->selectRoles();
-        if (count($arrData) > 0) {
-            for ($i = 0; $i < count($arrData); $i++) {
-                if ($arrData[$i]['status'] == 1) {
-                    $htmlOptions .= '<option value="' . $arrData[$i]['idrol'] . '">' . $arrData[$i]['nombrerol'] . '</option>';
-                }
-            }
-        }
-        echo $htmlOptions;
+        // $htmlOptions = "";
+        // if (count($arrData) > 0) {
+        //     for ($i = 0; $i < count($arrData); $i++) {
+        //         if ($arrData[$i]['status'] == 1) {
+        //             $htmlOptions .= '<option value="' . $arrData[$i]['idrol'] . '">' . $arrData[$i]['nombrerol'] . '</option>';
+        //         }
+        //     }
+        // }
+        echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         die();
     }
 
@@ -99,13 +99,14 @@ class RolesController extends Controllers
         $strDescipcion = strtoupper(limpiarCadena($_POST['idescripcion']));
         $intEstado = intval(limpiarCadena($_POST['estado']));
         $request_rol = "";
+        
         if ($intIdrol == 0) {
             //Crear
             if ($_SESSION['permisosMod']['cre']) {
                 $request_rol = $this->model->insertRol($strRol, $strDescipcion, $intEstado);
                 $option = 1;
             }
-        } else { 
+        } else {
             //Actualizar
             if ($_SESSION['permisosMod']['upd']) {
                 $request_rol = $this->model->updateRol($intIdrol, $strRol, $strDescipcion, $intEstado);
@@ -124,12 +125,12 @@ class RolesController extends Controllers
                     'status' => true,
                     'title' => 'Registrado',
                     'msg' => 'Datos guardados correctamente.',
-                    'results' => $request_rol
+                    'results' => $intIdrol
                 );
             } else {
                 $arrResponse = array(
                     'status' => true, 'title' => 'Actualizado', 'msg' => 'Datos Actualizados correctamente.',
-                    'results' => $request_rol
+                    'results' => $intIdrol
                 );
             }
         } else {

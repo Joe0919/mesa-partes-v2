@@ -111,7 +111,7 @@ $(document).ready(function () {
     idusu = $("#iduser").val();
     idni = $("#dniuser").val();
     $.ajax({
-      url: "../../app/controllers/UsuarioController.php.php",
+      url: "../../app/controllers/UsuarioController.php",
       type: "POST",
       datatype: "json",
       data: { opcion: opcion, idusu: idusu, idni: idni },
@@ -732,3 +732,9 @@ function mostrarImagen() {
   }
 }
 
+function resetHidden(form) {
+  form[0].reset();
+  form.find("input[type=hidden]").each(function () {
+    $(this).val("0");
+  });
+}
