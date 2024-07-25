@@ -5,8 +5,6 @@ $(document).ready(function () {
     dni = "",
     user = "";
 
-  area = $("#info-area").val();
-
   const defaultImageUrl = base_url + "/public/files/images/0/user.png";
 
   $("#loader").show();
@@ -76,7 +74,6 @@ $(document).ready(function () {
           "Solo se permiten archivos JPG y PNG.",
           "error"
         );
-        alert("Solo se permiten archivos JPG y PNG.");
         $("#input_photo").val("");
       }
     }
@@ -108,7 +105,7 @@ $(document).ready(function () {
             $("#checkEstado").is(":checked")
               ? $("#iestado").val("ACTIVO")
               : $("#iestado").val("INACTIVO");
-            $("#bdr-photo").val() !== "0" ? (foto_bdr = 1) : (fotos_bdr = 0);
+            $("#bdr-photo").val() !== "0" ? (foto_bdr = 1) : (foto_bdr = 0);
             let formData = new FormData(this);
             formData.append("foto_bdr", foto_bdr);
             $.ajax({
@@ -225,7 +222,9 @@ $(document).ready(function () {
         dni +
         "</b></p>"
     );
-    $("#idusuarioP").val(idusuario);
+    $("#idusuarioC").val(idusuario);
+    console.log(idusuario);
+    $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL USUARIO");
     $(".aviso").text("");
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
   });
@@ -259,6 +258,7 @@ $(document).ready(function () {
                 $("#loader").show();
               },
               success: function (response) {
+                console.log(response);
                 data = $.parseJSON(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");
@@ -516,6 +516,7 @@ $(document).ready(function () {
         .css("color", "red");
     }
   });
+
   $("#ipassco").blur(function () {
     //Validacion de contraseña
     if ($("#ipassco").val().length < 8) {
@@ -526,37 +527,6 @@ $(document).ready(function () {
       $("#ErrorContra").text("Las contraseñas coinciden").css("color", "green");
     } else {
       $("#ErrorContra")
-        .text("Las contraseñas no coinciden")
-        .css("color", "red");
-    }
-  });
-  // Validar similitud de ingreso de contraseñas
-  $("#iconfirmpswU").blur(function () {
-    if ($("#inewcontraU").val().length < 8) {
-      $("#ErrorContraU")
-        .text("Debe tener al menos 8 caracteres")
-        .css("color", "red");
-    } else if ($(this).val() === $("#inewcontraU").val()) {
-      $("#ErrorContraU")
-        .text("Las contraseñas coinciden")
-        .css("color", "green");
-    } else {
-      $("#ErrorContraU")
-        .text("Las contraseñas no coinciden")
-        .css("color", "red");
-    }
-  });
-  $("#inewcontraU").blur(function () {
-    if ($("#inewcontraU").val().length < 8) {
-      $("#ErrorContraU")
-        .text("Debe tener al menos 8 caracteres")
-        .css("color", "red");
-    } else if ($(this).val() === $("#iconfirmpswU").val()) {
-      $("#ErrorContraU")
-        .text("Las contraseñas coinciden")
-        .css("color", "green");
-    } else {
-      $("#ErrorContraU")
         .text("Las contraseñas no coinciden")
         .css("color", "red");
     }

@@ -54,12 +54,18 @@
                     <div class="demo-navbar-user nav-item dropdown">
                         <a class="nav-link dropdown-toggle m-0 py-0 d-flex align-items-center" href="#" data-toggle="dropdown">
                             <span class="d-inline-flex flex-lg-row-reverse align-items-center align-middle">
-                                <img src="<?php echo media() . "/" . $_SESSION['userData']['foto']; ?>" alt class="d-block rounded-circle" style="max-width: 35px;">
-                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name"><?php
-                                                                                    $utf8_string = $_SESSION['userData']['nomusu'];
-                                                                                    $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
-                                                                                    echo $iso8859_1_string
-                                                                                    ?></span>
+                                <?php
+                                $foto = $_SESSION['userData']['foto'];
+                                $timestamp = time();
+                                ?>
+                                <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" alt="Foto perfil" class="d-block rounded-circle" style="max-width: 35px;">
+                                <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name">
+                                    <?php
+                                    $utf8_string = $_SESSION['userData']['nomusu'];
+                                    $iso8859_1_string = mb_convert_encoding($utf8_string, 'ISO-8859-1', 'UTF-8');
+                                    echo $iso8859_1_string
+                                    ?>
+                                </span>
                             </span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
@@ -68,8 +74,6 @@
                                 <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span></a>
                             <a class="dropdown-item btn-general" id="conf-perfil" data-toggle="modal">
                                 <i class="feather icon-settings text-muted"></i><span class="ml-1">Datos del Perfil</span></a>
-                            <a class="dropdown-item btn-general" id="conf-foto" data-toggle="modal">
-                                <i class="feather icon-user text-muted"></i><span class="ml-1">Cambiar Foto</span></a>
                             <a class="dropdown-item btn-general" id="conf-psw" data-toggle="modal">
                                 <i class="feather icon-settings text-muted"></i><span class="ml-1">Cambiar Contraseña</span></a>
                             <div class="dropdown-divider"></div>

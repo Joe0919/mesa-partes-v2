@@ -24,7 +24,7 @@
                                     <span class="text ml-1">Elegir foto</span>
                                 </div>
                             </figure>
-                            <input type="file" id="input_photo" name="foto" accept="image/jpeg, image/png">
+                            <input type="file" class="input_foto" id="input_photo" name="foto" accept="image/jpeg, image/png">
                             <input type="hidden" name="bdr-photo" id="bdr-photo" value="0">
                         </div>
                         <div class="col-sm-9">
@@ -139,44 +139,3 @@
     <!-- /.modal-dialog -->
 </div>
 
-<!-- MODAL CAMBIO DE CONTRASEÑA-->
-<div class="modal fade" id="modal_edit_psw">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form id="form_edit_psw" method="post">
-                <div class="modal-header">
-                    <h4 class="modal-title modal-title-weight">CAMBIO DE CONTRASEÑA:</h4>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="description"></div>
-                        <p class="span-gray font-italic">IMPORTANTE: La nueva contraseña debe tener mas de 8 caracteres. Entre mayúsculas, minusculas, números y caracteres especiales (=?/&%$_)</p>
-                        <input type="hidden" class="form-control" name="idusuario" id="idusuarioP">
-                    </div>
-                    <div class="form-group">
-                        <label>Contraseña Actual<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="ioldpassword" id="icontraU" required minlength="8" />
-                    </div>
-                    <div class="form-group">
-                        <label>Contraseña Nueva<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="ipassword" id="inewcontraU" required minlength="8" />
-                    </div>
-                    <div class="form-group">
-                        <label>Confirmar nueva contraseña<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="iconfirmpsw" id="iconfirmpswU" required minlength="8" />
-                        <p id="ErrorContraU" class="m-0 p-0 aviso"></p>
-                    </div>
-                    <span class="span-red span-required-description"> Obligatorio </span>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="SalirC">Cancelar </button>
-                    <button type="submit" class="btn btn-primary">Actualizar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>

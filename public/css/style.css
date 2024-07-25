@@ -203,7 +203,8 @@ body {
   transition: opacity 0.3s ease;
   border-radius: 50%;
 }
-#input_photo {
+
+.input_foto {
   display: none;
 }
 
@@ -247,16 +248,18 @@ body {
   content: "(*)";
   color: red;
   margin-left: 2px;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 .span-red {
   color: red;
+  font-weight: normal;
 }
 
 .span-gray {
   line-height: normal;
   font-size: 0.9rem;
   color: gray;
+  font-weight: normal;
 }
 
 .nav-text-h3 {
@@ -515,7 +518,7 @@ body {
 }
 
 .aviso {
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 .aviso-span {

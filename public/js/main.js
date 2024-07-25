@@ -1,48 +1,88 @@
 $(document).ready(function () {
-  let idusu, idni, opcion;
+  let idinst,
+    idusu,
+    idni,
+    logo_bdr = 0;
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
 
-  $("#loader").hide(); // Ocultar DIv de carga
+  $("#loader").hide();
 
   // contarDocsGeneral(); //Muestra la cantidad de docs pendientes, aceptados y rechazados
 
   // contarDocsxArea();
 
   // ********************** ACCIONES GENERALES **********************
+  // # DATOS INSTITUCION
   //Boton mostrar datos de Institucion general
   $("#conf-inst").click(function () {
-    opcion = 1;
+    idinst = 1;
+    $("#form_institucion")[0].reset();
     $.ajax({
-      url: "../../app/controllers/InstitucionController.php.php",
-      type: "POST",
-      datatype: "json",
-      data: { opcion: opcion },
+      url: base_url + "/Institucion/getInstitucion/" + idinst,
+      type: "GET",
       beforeSend: function () {
-        /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
-        data = $.parseJSON(response);
+        objData = $.parseJSON(response);
+        if (objData.status) {
+          $("#idinstitucion").val(objData.data.idinstitucion);
+          $("#ruc").val(objData.data.ruc);
+          $("#razon").val(objData.data.razon);
+          $("#instdirec").val(objData.data.direccion);
+          $("#logo").css(
+            "background-image",
+            "url(" + base_url + "/public/" + objData.data.logo + ")"
+          );
+
+          $("#modal_inst").modal({ backdrop: "static", keyboard: false });
+        } else {
+          MostrarAlerta(objData.title, objData.msg, "error");
+        }
         $("#loader").hide();
-        $("#idinst").val(data["idinstitucion"]);
-        $("#iruci").val(data["ruc"]);
-        $("#irazoni").val(data["razon"]);
-        $("#idirei").val(data["dirección"]);
-        $("#modalinstitu").modal({ backdrop: "static", keyboard: false });
       },
-      error: function (xhr, status, error) {
-        // Manejar errores de la petición AJAX
+      error: function (error) {
+        MostrarAlerta("Error", "Error al cargar los datos", "error");
         console.error("Error: " + error);
+        $("#loader").hide();
       },
     });
   });
 
+  //VISUALIZAR LOGO SELECCIONADO
+  $("#input_logo").change(function (e) {
+    let archivo = e.target.files[0];
+    // Validamos si se seleccionó un archivo
+    if (archivo) {
+      const allowedTypes = ["image/jpeg", "image/png"];
+      if (allowedTypes.includes(archivo.type)) {
+        let lector = new FileReader();
+        lector.onload = function (e) {
+          let urlImagen = e.target.result;
+          $("#logo").css("background-image", "url(" + urlImagen + ")");
+          $("#bdr_logo").val("1");
+        };
+        lector.readAsDataURL(archivo);
+      } else {
+        MostrarAlerta(
+          "Archivo no permitido",
+          "Solo se permiten archivos JPG y PNG.",
+          "error"
+        );
+        $("#input_logo").val("");
+      }
+    }
+  });
+
+  $("#logo").on("click", function () {
+    $("#input_logo").click();
+  });
+
   //Editar datos Institucion general
-  $("#form-institucion").on("submit", function (e) {
+  $("#form_institucion").on("submit", function (e) {
     e.preventDefault();
-    let opcion = 2; // Opcion para el switch del controlador
     let formulario = $(this);
     if (verificarCampos(formulario)) {
       Swal.fire({
@@ -56,43 +96,36 @@ $(document).ready(function () {
         confirmButtonText: "Si, editar",
       }).then((result) => {
         if (result.isConfirmed) {
+          $("#bdr_logo").val() !== "0" ? (logo_bdr = 1) : (logo_bdr = 0);
           var formData = new FormData(this);
-          formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
+          formData.append("logo_bdr", logo_bdr);
           $.ajax({
-            url: "../../app/controllers/InstitucionController.php.php",
+            url: base_url + "/Institucion/setInstitucion",
             type: "POST",
             datatype: "json",
             data: formData,
+            processData: false,
+            contentType: false,
             beforeSend: function () {
-              /* * Se ejecuta al inicio de la petición* */
               $("#loader").show();
             },
             success: function (response) {
-              // Manejar la respuesta del servidor
+              console.log(response);
               data = $.parseJSON(response);
-              if (data == 1) {
-                MostrarAlerta(
-                  "Advertencia",
-                  "El RUC y/o Razon ya están registrados",
-                  "error"
-                );
+              if (!data.status) {
+                MostrarAlerta(data.title, data.msg, "error");
               } else {
-                $("#loader").hide();
-                ResetForm("formperfil");
-                MostrarAlertaxTiempo(
-                  "Hecho",
-                  "Se actualizaron sus datos.",
-                  "success"
-                );
-                $("#modalinstitu").modal("hide");
+                $("#form_institucion")[0].reset();
+                MostrarAlertaxTiempo(data.title, data.msg, "success");
+                $("#modal_inst").modal("hide");
               }
+              $("#loader").hide();
             },
-            error: function (xhr, status, error) {
-              // Manejar errores de la petición AJAX
+            error: function (error) {
+              MostrarAlerta("Error", "Error al cargar los datos", "error");
               console.error("Error: " + error);
+              $("#loader").hide();
             },
-            processData: false, // Evita que jQuery procese los datos del formulario
-            contentType: false, // Evita que jQuery establezca el encabezado Content-Type
           });
         }
       });
@@ -105,99 +138,128 @@ $(document).ready(function () {
     }
   });
 
+  // # DATOS DEL PERFIL
   //Mostrar modal con datos de usuario logeado
   $("#conf-perfil").click(function () {
-    opcion = 2;
-    idusu = $("#iduser").val();
-    idni = $("#dniuser").val();
     $.ajax({
-      url: "../../app/controllers/UsuarioController.php",
-      type: "POST",
-      datatype: "json",
-      data: { opcion: opcion, idusu: idusu, idni: idni },
+      url: base_url + "/Usuarios/getUsuario/" + idusu,
+      type: "GET",
       beforeSend: function () {
-        /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
-        data = $.parseJSON(response);
-        $("#idusup").val(data["ID1"]);
-        $("#idperp").val(data["ID2"]);
-        $("#idnip").val(data["dni"]);
-        $("#idnip").prop("readonly", true);
-        $("#inombrep").val(data["nombres"]);
-        $("#iappatp").val(data["ap"]);
-        $("#iapmatp").val(data["am"]);
-        $("#icelp").val(data["telefono"]);
-        $("#idirp").val(data["direccion"]);
-        $("#iemailp").val(data["email"]);
-        $("#inomusup").val(data["nombre"]);
-        $("#estadop").val(data["estado"]);
-        $("#loader").hide();
+        console.log(response);
+        objData = $.parseJSON(response);
+        if (objData.status) {
+          $("#idusuarioP").val(objData.data.idusuarios);
+          $("#idpersonaP").val(objData.data.idpersona);
+          $("#foto_perfilP").css(
+            "background-image",
+            "url(" + base_url + "/public/" + objData.data.foto + ")"
+          );
+          $("#idniP").val(objData.data.dni);
+          $("#idniP").prop("readonly", true);
 
-        $("#modalUsu").modal({ backdrop: "static", keyboard: false });
+          $("#inombreP").val(objData.data.nombres);
+          $("#iappatP").val(objData.data.ap);
+          $("#iapmatP").val(objData.data.am);
+          $("#icelP").val(objData.data.telefono);
+          $("#idirP").val(objData.data.direccion);
+          $("#iemailP").val(objData.data.email);
+          $("#inomusuP").val(objData.data.nombre);
+          $("#rolP").val(objData.data.rol);
+          $("#bdr-photoP").val("0");
+          $("#loader").hide();
+
+          $("#modal_EditUser").modal({ backdrop: "static", keyboard: false });
+        } else {
+          MostrarAlerta(objData.title, objData.msg, "error");
+        }
+        $("#loader").hide();
       },
-      error: function (xhr, status, error) {
-        // Manejar errores de la petición AJAX
+      error: function (error) {
+        MostrarAlerta("Error", "Error al cargar los datos", "error");
         console.error("Error: " + error);
+        $("#loader").hide();
       },
     });
   });
 
+  //VISUALIZAR LOGO SELECCIONADO
+  $("#input_photoP").change(function (e) {
+    let archivo = e.target.files[0];
+    // Validamos si se seleccionó un archivo
+    if (archivo) {
+      const allowedTypes = ["image/jpeg", "image/png"];
+      if (allowedTypes.includes(archivo.type)) {
+        let lector = new FileReader();
+        lector.onload = function (e) {
+          let urlImagen = e.target.result;
+          $("#foto_perfilP").css("background-image", "url(" + urlImagen + ")");
+          $("#bdr-photoP").val("1");
+        };
+        lector.readAsDataURL(archivo);
+      } else {
+        MostrarAlerta(
+          "Archivo no permitido",
+          "Solo se permiten archivos JPG y PNG.",
+          "error"
+        );
+        $("#input_photoP").val("");
+      }
+    }
+  });
+
+  $("#foto_perfilP").on("click", function () {
+    $("#input_photoP").click();
+  });
+
   //Editar los datos de usuario logeado
-  $("#formperfil").on("submit", function (e) {
+  $("#form_EditUser").on("submit", function (e) {
     e.preventDefault();
-    let opcion = 3; // Opcion para el switch del controlador
     let formulario = $(this);
     if (verificarCampos(formulario)) {
       Swal.fire({
         title: "¿Estás seguro?",
-        text: "Editar los datos del usuario",
+        text: "Editar sus datos de usuario",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
-        confirmButtonText: "Si, editar",
+        confirmButtonText: "Si, Editar",
       }).then((result) => {
         if (result.isConfirmed) {
-          var formData = new FormData(this);
-          formData.append("opcion", opcion); // Agrega la variable "opcion" al objeto FormData
+          $("#bdr-photoP").val() !== "0" ? (foto_bdr = 1) : (foto_bdr = 0);
+          console.log(foto_bdr);
+          let formData = new FormData(this);
+          formData.append("foto_bdr", foto_bdr);
           $.ajax({
-            url: "../../app/controllers/UsuarioController.php.php",
+            url: base_url + "/Usuarios/setPerfil",
             type: "POST",
             datatype: "json",
             data: formData,
-            processData: false, // Evita que jQuery procese los datos del formulario
-            contentType: false, // Evita que jQuery establezca el encabezado Content-Type
+            processData: false,
+            contentType: false,
             beforeSend: function () {
-              /* * Se ejecuta al inicio de la petición* */
               $("#loader").show();
             },
             success: function (response) {
-              // Manejar la respuesta del servidor
+              console.log(response);
               data = $.parseJSON(response);
-              if (data == 1) {
-                MostrarAlerta(
-                  "Advertencia",
-                  "El correo y/o email ya están registrados",
-                  "error"
-                );
-                $("#loader").hide();
+              if (!data.status) {
+                MostrarAlerta(data.title, data.msg, "error");
               } else {
-                $("#loader").hide();
-                ResetForm("formperfil");
-                MostrarAlertaxTiempo(
-                  "Hecho",
-                  "Se actualizaron sus datos.",
-                  "success"
-                );
-                $("#modalUsu").modal("hide");
+                $("#form_EditUser")[0].reset();
+                MostrarAlertaxTiempo(data.title, data.msg, "success");
+                $("#modal_EditUser").modal("hide");
               }
+              $("#loader").hide();
             },
-            error: function (xhr, status, error) {
-              // Manejar errores de la petición AJAX
+            error: function (error) {
+              MostrarAlerta("Error", "Error al editar los datos", "error");
               console.error("Error: " + error);
+              $("#loader").hide();
             },
           });
         }
@@ -211,130 +273,54 @@ $(document).ready(function () {
     }
   });
 
-  //Mostrar modal de cambio de foto de perfil
-  $("#conf-foto").click(function () {
-    $("#foto_perfil").css(
-      "background-image",
-      "url(../../public/" + $("#foto_user").val() + ")"
-    );
-    $("#modalfotop").modal({ backdrop: "static", keyboard: false });
-  });
-
-  //VISUALIZAR FOTO SELECCIONADA
-  $("#idfilep").change(function (e) {
-    // Obtenemos el archivo seleccionado
-    let archivo = e.target.files[0];
-    // Validamos si se seleccionó un archivo
-    if (archivo) {
-      // Validamos si el archivo es una imagen
-      if (archivo.type.startsWith("image/")) {
-        // Creamos un objeto FileReader para leer el archivo
-        let lector = new FileReader();
-        // Cuando se termina de leer el archivo
-        lector.onload = function (e) {
-          // Obtenemos la URL de la imagen
-          let urlImagen = e.target.result;
-          // Mostramos la imagen en el div de vista previa
-          $("#foto_perfil").css("background-image", "url(" + urlImagen + ")");
-        };
-        // Leemos el archivo como una URL
-        lector.readAsDataURL(archivo);
-      } else {
-        // El archivo seleccionado no es una imagen
-        MostrarAlerta(
-          "Advertencia",
-          "Por favor, selecciona un archivo de imagen.",
-          "error"
-        );
-      }
-    }
-  });
-
-  //Accion para cambiar foto del usuario logeado
-  $("#FormFotop").on("submit", function (e) {
-    e.preventDefault();
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Cambiar la foto de su perfil",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, Actualizar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          type: "POST",
-          url: "../../app/controllers/UsuarioController.php.php",
-          data: new FormData(this),
-          contentType: false,
-          processData: false,
-          beforeSend: function () {
-            /* * Se ejecuta al inicio de la petición* */
-            $("#loader").show();
-          },
-          success: function (msg) {
-            $("#loader").hide();
-            MostrarAlertaxTiempo(
-              "Hecho",
-              "Se hizo el cambio de la foto de perfil",
-              "success"
-            );
-            $("#idfilep").val("");
-            $("#modalfotop").modal("hide");
-          },
-          error: function (xhr, status, error) {
-            // Manejar errores de la petición AJAX
-            console.error("Error: " + error);
-          },
-        });
-      }
-    });
-  });
-
   //Mostrar modal general de cambio de contraseña
   $("#conf-psw").click(function () {
-    $("#modaleditpswG").modal({ backdrop: "static", keyboard: false });
+    $("#idusuarioC").val(idusu);
+    $(".aviso").text("");
+    $(".description").empty();
+    $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL PERFIL");
+    $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
   });
 
-  $("#iconfirmpsw").blur(function () {
-    //Validacion de contraseña
-    if ($("#iconfirmpsw").val().length < 8) {
-      $("#ErrorContraG").text("").css("color", "red");
-    } else if ($(this).val() === $("#inewcontra").val()) {
-      $("#ErrorContraG")
+  // Validar similitud de ingreso de contraseñas
+  $("#iconfirmpswU").blur(function () {
+    if ($("#inewcontraU").val().length < 8) {
+      $("#ErrorContraU")
+        .text("Debe tener al menos 8 caracteres")
+        .css("color", "red");
+    } else if ($(this).val() === $("#inewcontraU").val()) {
+      $("#ErrorContraU")
         .text("Las contraseñas coinciden")
         .css("color", "green");
     } else {
-      $("#ErrorContraG")
+      $("#ErrorContraU")
         .text("Las contraseñas no coinciden")
         .css("color", "red");
     }
   });
 
-  $("#inewcontra").blur(function () {
-    //Validacion de contraseña
-    if ($("#iconfirmpsw").val().length < 8) {
-      $("#ErrorContraG").text("").css("color", "red");
-    } else if ($(this).val() === $("#iconfirmpsw").val()) {
-      $("#ErrorContraG")
+  $("#inewcontraU").blur(function () {
+    if ($("#inewcontraU").val().length < 8) {
+      $("#ErrorContraU")
+        .text("Debe tener al menos 8 caracteres")
+        .css("color", "red");
+    } else if ($(this).val() === $("#iconfirmpswU").val()) {
+      $("#ErrorContraU")
         .text("Las contraseñas coinciden")
         .css("color", "green");
     } else {
-      $("#ErrorContraG")
+      $("#ErrorContraU")
         .text("Las contraseñas no coinciden")
         .css("color", "red");
     }
   });
 
   //Enviar para cambiar contraseña del usuario logeado
-  $("#form-psw").on("submit", function (e) {
+  $("#form_edit_psw").on("submit", function (e) {
     e.preventDefault();
-    opcion = 6;
     let formulario = $(this);
     if (verificarCampos(formulario)) {
-      if ($("#inewcontra").val() === $("#iconfirmpsw").val()) {
+      if ($("#inewcontraU").val() === $("#iconfirmpswU").val()) {
         Swal.fire({
           title: "¿Estás seguro?",
           text: "Se hará el cambio de contraseña",
@@ -347,40 +333,31 @@ $(document).ready(function () {
         }).then((result) => {
           if (result.isConfirmed) {
             let formData = new FormData(this);
-            formData.append("opcion", opcion); // Agrega la variable  al objeto FormData
-            formData.append("idusu", idusu); //
             $.ajax({
-              url: "../../app/controllers/UsuarioController.php.php",
+              url: base_url + "/Usuarios/putPasswordUser",
               type: "POST",
               datatype: "json",
               data: formData,
-              processData: false, // Evita que jQuery procese los datos del formulario
-              contentType: false, // Evita que jQuery establezca el encabezado Content-Type
+              processData: false,
+              contentType: false,
               beforeSend: function () {
-                /* * Se ejecuta al inicio de la petición* */
                 $("#loader").show();
               },
               success: function (response) {
+                console.log(response);
                 data = $.parseJSON(response);
-                if (data == 1) {
-                  MostrarAlerta(
-                    "Incorrecto",
-                    "La contraseña actual ingresada es incorrecta",
-                    "error"
-                  );
-                  $("#loader").hide();
-                  $("#icontra").select();
+                if (!data.status) {
+                  MostrarAlerta(data.title, data.msg, "error");
                 } else {
-                  $("#modaleditpswG").modal("hide");
-                  ResetForm("form-psw");
-                  $("#error3").text("");
-                  $("#loader").hide();
-                  MostrarAlertaxTiempo(
-                    "Éxito",
-                    "Se hizo el cambio de contraseña",
-                    "success"
-                  );
+                  $("#form_edit_psw")[0].reset();
+                  $("#modal_edit_psw").modal("hide");
                 }
+                $("#loader").hide();
+              },
+              error: function (error) {
+                MostrarAlerta("Error", "Error al cargar los datos", "error");
+                console.error("Error: " + error);
+                $("#loader").hide();
               },
             });
           }
@@ -391,7 +368,7 @@ $(document).ready(function () {
           "No ingreso contraseñas que coincidan.",
           "error"
         );
-        $("#iconfirmpsw").select();
+        $("#iconfirmpswU").select();
       }
     } else {
       MostrarAlerta(

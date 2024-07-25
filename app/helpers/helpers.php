@@ -110,3 +110,18 @@ function genContrasena($length = 8)
     }
     return $pass;
 }
+
+function eliminarArchivos($dir)
+{
+    if (is_dir($dir)) {
+        $files = array_diff(scandir($dir), array('.', '..'));
+        foreach ($files as $file) {
+            $path = $dir . $file;
+            if (is_dir($path)) {
+                eliminarArchivos($path); // Recursivamente elimina subdirectorios
+            } else {
+                unlink($path); // Elimina archivo
+            }
+        }
+    }
+}

@@ -85,7 +85,7 @@ class UsuarioModel extends Mysql
         }
 
         $request = $this->consultar(
-            "u.idusuarios, p.idpersona, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email, nombre, r.idroles, u.estado, u.foto",
+            "u.idusuarios, p.idpersona, p.dni, p.nombres, p.ap_paterno ap, p.ap_materno am, p.telefono, p.direccion, p.email, nombre, r.idroles,r.rol, u.estado, u.foto",
             "usuarios u JOIN persona p ON p.dni = u.dni JOIN roles r ON r.idroles = u.idroles",
             $whereClause,
             $queryParams
@@ -114,7 +114,7 @@ class UsuarioModel extends Mysql
         }
     }
 
-    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado, $foto = "")
+    public function editarPerfil($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $foto = "")
     {
         $this->intIdUsuario = $idusu;
         $this->strNombreUsuario = $nom_usu;
@@ -125,7 +125,6 @@ class UsuarioModel extends Mysql
         $this->strEmail = $email;
         $this->intTelefono = $celular;
         $this->strDireccion = $direccion;
-        $this->strEstado = $estado;
         $this->strFoto = $foto;
 
         $where = " WHERE (nombre=? or p.email=? or telefono=?) AND idusuarios != ? ";
@@ -144,11 +143,60 @@ class UsuarioModel extends Mysql
                 [$this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion, $this->intIdPersona]
             );
             if ($foto == "") {
-                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?";
-                $arrayData =  [$this->strNombreUsuario, $this->strEstado, $this->intIdUsuario];
+                $columns = "nombre = ?, fechaedicion = sysdate()";
+                $arrayData =  [$this->strNombreUsuario, $this->intIdUsuario];
             } else {
-                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, foto = ?";
-                $arrayData = [$this->strNombreUsuario, $this->strEstado, $this->strFoto, $this->intIdUsuario];
+                $columns = "nombre = ?, fechaedicion = sysdate(), foto = ?";
+                $arrayData = [$this->strNombreUsuario,  $this->strFoto, $this->intIdUsuario];
+            }
+            $request = $this->editar(
+                "usuarios",
+                $columns,
+                "idusuarios = ?",
+                $arrayData
+            );
+        } else {
+            // $request = 'exist';
+            $request = $request;
+        }
+        return $request;
+    }
+    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado, $Idrol, $foto = "")
+    {
+        $this->intIdUsuario = $idusu;
+        $this->strNombreUsuario = $nom_usu;
+        $this->intIdPersona = $idper;
+        $this->strNombre = $nombre;
+        $this->strApPaterno = $appat;
+        $this->strApMaterno = $apmat;
+        $this->strEmail = $email;
+        $this->intTelefono = $celular;
+        $this->strDireccion = $direccion;
+        $this->strEstado = $estado;
+        $this->intIdRol = $Idrol;
+        $this->strFoto = $foto;
+
+        $where = " WHERE (nombre=? or p.email=? or telefono=?) AND idusuarios != ? ";
+        $request = $this->consultar(
+            "*",
+            "persona p JOIN usuarios u ON p.dni = u.dni JOIN roles r ON r.idroles = u.idroles",
+            $where,
+            [$this->strNombreUsuario, $this->strEmail, $this->intTelefono, $this->intIdUsuario]
+        );
+
+        if (empty($request)) {
+            $request = $this->editar(
+                "persona",
+                "ap_paterno = ?, ap_materno = ?, nombres = ?, email = ?, telefono = ?, direccion = ?",
+                "idpersona = ?",
+                [$this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion, $this->intIdPersona]
+            );
+            if ($foto == "") {
+                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?";
+                $arrayData =  [$this->strNombreUsuario, $this->strEstado,$this->intIdRol, $this->intIdUsuario];
+            } else {
+                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?, foto = ?";
+                $arrayData = [$this->strNombreUsuario, $this->strEstado,$this->intIdRol, $this->strFoto, $this->intIdUsuario];
             }
             $request = $this->editar(
                 "usuarios",

@@ -122,26 +122,26 @@ class UsuariosController extends Controllers
                     $ruta_aux = UPLOADS_PATH; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
-                    $file_tmp_type = $foto['type'];
 
-                    $type = array(
-                        'image/jpeg' => 'jpg',
-                        'image/png' => 'png'
-                    );
+                    $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
+                    $date = date("Ymd");
 
-                    $extension = isset($type[$file_tmp_type]) ? $type[$file_tmp_type] : 'dat';
-
-                    $nuevo_nombre = UPLOADS_PATH . $rutaID . $idUsuario . '_' . date('Y') . '_' . $dni . '.' . $extension;
+                    $nuevo_nombre = UPLOADS_PATH . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
 
                     if (!file_exists($ruta_aux)) {
                         mkdir($ruta_aux, 0777, true);
                     }
-                    if (!file_exists(UPLOADS_PATH . $idUsuario)) {
-                        mkdir(UPLOADS_PATH . $idUsuario, 0777, true);
+                    if (file_exists(UPLOADS_PATH . $rutaID)) {
+                        $files = array_diff(scandir(UPLOADS_PATH . $rutaID), array('.', '..'));
+                        if (count($files) > 0) {
+                            eliminarArchivos(UPLOADS_PATH . $rutaID);
+                        }
+                    } else {
+                        mkdir(UPLOADS_PATH . $rutaID, 0777, true);
                     }
 
                     if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
-                        $ruta_foto = 'files/images/' . $idUsuario . '/' . $idUsuario . '_' . date('Y') . '_' . $dni . '.jpg';
+                        $ruta_foto = 'files/images/' . $idUsuario . '/profile_' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
                         $success = true;
                     } else {
                         $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar la foto.');
@@ -185,6 +185,7 @@ class UsuariosController extends Controllers
                                 $celular,
                                 $direccion,
                                 $estado,
+                                $idrol,
                                 $ruta_foto
                             );
                         }
@@ -214,6 +215,116 @@ class UsuariosController extends Controllers
                         $arrResponse = array(
                             "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
                             'results' => ""
+                        );
+                    }
+                } else {
+                    $arrResponse = array(
+                        'status' => false, 'title' => 'Error', 'msg' => 'No fue posible guardar la imagen.',
+                        'results' => $success
+                    );
+                }
+            }
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        }
+        die();
+    }
+
+    public function setPerfil()
+    {
+        if ($_POST) {
+            if (
+                empty($_POST['idni']) || empty($_POST['inombre']) || empty($_POST['iappat']) || empty($_POST['iapmat'])
+                || empty($_POST['iemail']) || empty($_POST['idir']) || empty($_POST['icel'] || empty($_POST['inomusu']))
+            ) {
+                $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos obligatorios.');
+            } else {
+                $idUsuario = intval(limpiarCadena($_POST['idusuario']));
+                $idPersona = intval(limpiarCadena($_POST['idpersona']));
+                $dni = limpiarCadena($_POST['idni']);
+                $nombre = strtoupper(limpiarCadena($_POST['inombre']));
+                $appat = strtoupper(limpiarCadena($_POST['iappat']));
+                $apmat = strtoupper(limpiarCadena($_POST['iapmat']));
+                $celular = limpiarCadena($_POST['icel']);
+                $email = limpiarCadena($_POST['iemail']);
+                $direccion = strtoupper(limpiarCadena($_POST['idir']));
+                $nom_usu = limpiarCadena($_POST['inomusu']);
+                $foto = $_FILES['foto'];
+
+                $request_user = "";
+                $ruta_foto = "";
+                $success = false;
+
+                if ($_POST['foto_bdr'] === '1') {
+                    $ruta_aux = UPLOADS_PATH; // RAIZ/public/files/images/
+                    $rutaID = $idUsuario . '/'; // 1/
+                    $file_tmp_name = $foto['tmp_name'];
+
+                    $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
+                    $date = date("Ymd");
+
+                    $nuevo_nombre = UPLOADS_PATH . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+
+                    if (!file_exists($ruta_aux)) {
+                        mkdir($ruta_aux, 0777, true);
+                    }
+
+                    if (file_exists(UPLOADS_PATH . $rutaID)) {
+                        $files = array_diff(scandir(UPLOADS_PATH . $rutaID), array('.', '..'));
+                        if (count($files) > 0) {
+                            eliminarArchivos(UPLOADS_PATH . $rutaID);
+                        }
+                    } else {
+                        mkdir(UPLOADS_PATH . $rutaID, 0777, true);
+                    }
+
+                    if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
+                        $ruta_foto = 'files/images/' . $idUsuario . '/profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+                        $success = true;
+                    } else {
+                        $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar la foto.');
+                    }
+                } else {
+
+                    $success = true;
+                }
+
+                if ($success) {
+                    if ($idUsuario <= 0) {
+                        $request_user = 'El ID es 0';
+                    } else {
+                        if ($_SESSION['permisosMod']['upd']) {
+                            $ruta_foto = ($_POST['foto_bdr'] === '1') ? $ruta_foto : "";
+                            $request_user = $this->model->editarPerfil(
+                                $idUsuario,
+                                $nom_usu,
+                                $idPersona,
+                                $nombre,
+                                $appat,
+                                $apmat,
+                                $email,
+                                $celular,
+                                $direccion,
+                                $ruta_foto
+                            );
+                        }
+                    }
+                    if ($request_user === 'exist') {
+                        $arrResponse = array(
+                            'status' => false, 'title' => 'Datos duplicados', 'msg' => 'Email, telefono o nombre de usuario ya existen.',
+                            'results' =>  $request_user
+                        );
+                    } else if ($request_user > 0) {
+
+                        $arrResponse = array(
+                            'status' => true,
+                            'title' => 'Actualizado',
+                            'msg' => 'Datos actualizados correctamente.',
+                            'results' => $request_user
+                        );
+                    } else {
+                        $arrResponse = array(
+                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                            'results' => $request_user
                         );
                     }
                 } else {
