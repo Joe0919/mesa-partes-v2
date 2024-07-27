@@ -25,7 +25,7 @@ function footerAdmin($data = "")
 
 function getModal(string $folder, string $file, $data)
 {
-    $view_modal = "Views/{$folder}/Modals-{$file}.php";
+    $view_modal = "views/{$folder}/Modals-{$file}.php";
     require_once $view_modal;
 }
 

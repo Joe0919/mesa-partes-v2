@@ -12,6 +12,8 @@ class UsuariosController extends Controllers
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/dashboard');
         }
+
+        getPermisos(2);
     }
 
     public function index()

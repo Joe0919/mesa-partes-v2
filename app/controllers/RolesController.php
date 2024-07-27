@@ -12,7 +12,7 @@ class RolesController extends Controllers
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
         }
-        getPermisos(2);
+        getPermisos(3);
     }
 
     public function index()
@@ -75,23 +75,6 @@ class RolesController extends Controllers
         die();
     }
 
-    public function getRol(int $idrol)
-    {
-        if ($_SESSION['permisosMod']['rea']) {
-            $intIdrol = intval(limpiarCadena($idrol));
-            if ($intIdrol > 0) {
-                $arrData = $this->model->selectRol($intIdrol);
-                if (empty($arrData)) {
-                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.');
-                } else {
-                    $arrResponse = array('status' => true, 'title' => 'ok', 'data' => $arrData);
-                }
-                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-            }
-        }
-        die();
-    }
-
     public function setRol()
     {
         $intIdrol = intval(limpiarCadena($_POST['idrol']));
@@ -99,18 +82,22 @@ class RolesController extends Controllers
         $strDescipcion = strtoupper(limpiarCadena($_POST['idescripcion']));
         $intEstado = intval(limpiarCadena($_POST['estado']));
         $request_rol = "";
-        
+
         if ($intIdrol == 0) {
             //Crear
             if ($_SESSION['permisosMod']['cre']) {
                 $request_rol = $this->model->insertRol($strRol, $strDescipcion, $intEstado);
                 $option = 1;
+            } else {
+                $request_rol = "denegado";
             }
         } else {
             //Actualizar
             if ($_SESSION['permisosMod']['upd']) {
                 $request_rol = $this->model->updateRol($intIdrol, $strRol, $strDescipcion, $intEstado);
                 $option = 2;
+            } else {
+                $request_rol = "denegado";
             }
         }
 
@@ -125,14 +112,19 @@ class RolesController extends Controllers
                     'status' => true,
                     'title' => 'Registrado',
                     'msg' => 'Datos guardados correctamente.',
-                    'results' => $intIdrol
+                    'results' => $request_rol
                 );
             } else {
                 $arrResponse = array(
                     'status' => true, 'title' => 'Actualizado', 'msg' => 'Datos Actualizados correctamente.',
-                    'results' => $intIdrol
+                    'results' => $request_rol
                 );
             }
+        } else if ($request_rol == 'denegado') {
+            $arrResponse = array(
+                "status" => false, 'title' => 'No permitido', "msg" => 'No tiene permisos para realizar esta acción.',
+                'results' => $request_rol
+            );
         } else {
             $arrResponse = array(
                 "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
@@ -140,6 +132,26 @@ class RolesController extends Controllers
             );
         }
         echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+
+    public function getRol(int $idrol)
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $intIdrol = intval(limpiarCadena($idrol));
+            if ($intIdrol > 0) {
+                $arrData = $this->model->selectRol($intIdrol);
+                if (empty($arrData)) {
+                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.');
+                } else {
+                    $arrResponse = array('status' => true, 'title' => 'ok', 'data' => $arrData);
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción.');
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        }
         die();
     }
 
@@ -158,6 +170,9 @@ class RolesController extends Controllers
                 }
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
+        } else {
+            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción.');
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
         die();
     }

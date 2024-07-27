@@ -1,168 +1,142 @@
 <?php
 
-class AreaModel extends Conexion
+class AreaModel extends Mysql
 {
 
+    private $intIdArea;
+    private $strCodArea;
+    private $strArea;
+    private $intIdInstitucion;
 
-    public function listarAreas(
-        string $columnas = "a.idarea ID, cod_area, area, ae.idareainstitu IdAInst",
-        string $tablas = "institucion i
-        inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
-        inner join area a on a.idarea=ae.idarea",
-        string $condicion = "",
-        array $valores = []
-    ) {
-        $conectar = parent::Conectar();
 
-        $consulta = "SELECT $columnas from $tablas $condicion";
-        $consulta = $conectar->prepare($consulta);
-        ($condicion != "") ? $consulta->execute($valores) : $consulta->execute();
-        $consulta->execute();
-        return $consulta->fetchall(pdo::FETCH_ASSOC);
+    public function __construct()
+    {
+        parent::__construct();
     }
 
-    public function consultarAreaID($id_area)
-    {
-        $conectar = parent::Conectar();
 
-        $consulta = "SELECT a.idarea ID, cod_area, area,  i.idinstitucion
+    public function selectAreas()
+    {
+        $whereAdmin = "";
+        if ($_SESSION['idUsuario'] != 1) {
+            $whereAdmin = " and a.idareas != 1 ";
+        }
+        $sql = "SELECT a.idarea ID, cod_area, area, ai.idareainstitu IdAInst, COUNT(e.idareainstitu) asociados
+        FROM areainstitu ai LEFT JOIN derivacion e on ai.idareainstitu=e.idareainstitu
+        JOIN institucion i on ai.idinstitucion=i.idinstitucion
+        JOIN area a on a.idarea=ai.idarea WHERE ai.deleted != 1" . $whereAdmin . " GROUP BY a.idarea, cod_area, area, ai.idareainstitu;";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
+    public function selectArea(int $idArea)
+    {
+        //BUSCAR ROL
+        $this->intIdArea = $idArea;
+        $sql = "SELECT a.idarea, cod_area, area,  i.idinstitucion
         from institucion i
         inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
         inner join area a on a.idarea=ae.idarea
-        where a.idarea=?";
-        $consulta = $conectar->prepare($consulta);
-        $consulta->bindValue(1, $id_area);
-        $consulta->execute();
-
-        return $consulta->fetch(pdo::FETCH_ASSOC);
+        where a.idarea= ? ";
+        $request = $this->selectOne($sql, [$this->intIdArea]);
+        return $request;
     }
 
-
-    public function crearNuevaArea($codigo, $area, $idinst)
+    public function crearArea($codigo, $area, $idinst)
     {
-        $conectar = parent::Conectar();
-        // VERFICAR DUPLICIDAD DE CODIGO Y NOMBRE DE AREA
-        $consulta = "SELECT count(*) total from area where cod_area=? or area=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $codigo);
-        $resultado->bindValue(2, $area);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $this->strCodArea = $codigo;
+        $this->strArea = $area;
+        $this->intIdInstitucion = $idinst;
 
-        if ($data['total'] == 0) {
-            // INGRESO DEL AREA
-            $consulta = "INSERT into area values (null,?,?)";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $codigo);
-            $resultado->bindValue(2, $area);
-            $resultado->execute();
+        $where = " WHERE cod_area= ? or area= ? ";
+        $request = $this->consultar(
+            "*",
+            "area",
+            $where,
+            [$this->strCodArea, $this->strArea]
+        );
 
-            // INGRESO DE AREAINSTITUCION
-            $consulta = "INSERT into areainstitu values (null,?,(select idarea from area where cod_area=?))";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $idinst);
-            $resultado->bindValue(2, $codigo);
-            $resultado->execute();
+        if (empty($request)) {
+            $arrData = array($this->strCodArea, $this->strArea);
+            $request_insert = $this->registrar("area", "(null,?,?,0)", $arrData);
 
-            //CONSULTAR EL ULTIMO REGISTRO INGRESADO
-            $consulta = "SELECT a.idarea ID, cod_area, area
-            from institucion i
-            inner join areainstitu ae on ae.idinstitucion=i.idinstitucion
-            inner join area a on a.idarea=ae.idarea
-            ORDER BY ID DESC LIMIT 1";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
+            $arrData = array($this->intIdInstitucion, $this->strCodArea);
+            $request_insert = $this->registrar("areainstitu", " (null,?,(select idarea from area where cod_area = ?),0)", $arrData);
+
+            $return = $request_insert;
         } else {
-            $data = 1; //SI HAY DUPLICIDAD
+            $return = "exist";
         }
-        return $data;
+        return $return;
     }
 
 
     public function editarAreaID($id_area, $codigo, $area)
     {
-        $conectar = parent::Conectar();
+        $this->intIdArea = $id_area;
+        $this->strCodArea = $codigo;
+        $this->strArea = $area;
 
-        // VALIDAR DUPLICIDAD DE CODIGO Y NOMBRE DE AREA
-        $consulta = "SELECT count(*) total from area where (cod_area=? or area=?) and idarea != ?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $codigo);
-        $resultado->bindValue(2, $area);
-        $resultado->bindValue(3, $id_area);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $where = " WHERE area = ? and idarea != ? ";
+        $request = $this->consultar(
+            "*",
+            "area",
+            $where,
+            [$this->strArea, $this->intIdArea]
+        );
 
-        if ($data['total'] == 0) {
-            $data = '';
-            //VALIDAR SI SE MODIFICARON LOS DATOS O SON LOS MISMOS
-            $consulta = "SELECT count(*) total from area where (cod_area=? and area=?) and idarea = ?";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $codigo);
-            $resultado->bindValue(2, $area);
-            $resultado->bindValue(3, $id_area);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-            if ($data['total'] == 0) {
-
-                $consulta = "UPDATE area SET cod_area=?, area=? WHERE idarea=?";
-                $resultado = $conectar->prepare($consulta);
-                $resultado->bindValue(1, $codigo);
-                $resultado->bindValue(2, $area);
-                $resultado->bindValue(3, $id_area);
-                $resultado->execute();
-                $data = $resultado->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                $data = 2; //SI NO SE MODIFICO NADA
-            }
+        if (empty($request)) {
+            $request = $this->editar(
+                "area",
+                "area = ?",
+                "idarea = ?",
+                [$this->strArea, $this->intIdArea]
+            );
         } else {
-            $data = 1; //SI HAY DUPLICIDAD
+            $request = 'exist';
         }
-
-        return $data;
+        return $request;
     }
 
     public function eliminarAreaID($id_area)
     {
-        $conectar = parent::Conectar();
+        $this->intIdArea = $id_area;
 
-        //VALIDAR SI EXISTEN REGISTROS EN DERIVACION DE ESTA AREA
-        $consulta = "SELECT count(*) total from derivacion d
-        inner join areainstitu ae on ae.idareainstitu=d.idareainstitu
-        inner join area a on a.idarea=ae.idarea
-        where a.idarea=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $id_area);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $where = " WHERE a.idarea=? ";
+        $request = $this->consultar(
+            "*",
+            "derivacion d JOIN areainstitu ae ON ae.idareainstitu=d.idareainstitu
+            JOIN area a ON a.idarea=ae.idarea",
+            $where,
+            [$this->intIdArea]
+        );
 
-        if ($data['total'] == 0) {
-            //VALIDAR SI EXISTEN REGISTROS EN EMPLEADOS DE ESTA AREA
-            $consulta = "SELECT count(*) total from empleado 
-            where idareainstitu=(select idareainstitu from areainstitu where idarea=?);";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $id_area);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-            if ($data['total'] == 0) {
-                //ELIMINAR AREA EN CASCADA
-                $consulta = "DELETE FROM areainstitu WHERE idarea=? ";
-                $resultado = $conectar->prepare($consulta);
-                $resultado->bindValue(1, $id_area);
-                $resultado->execute();
-
-                $consulta = "DELETE FROM area WHERE idarea=?";
-                $resultado = $conectar->prepare($consulta);
-                $resultado->bindValue(1, $id_area);
-                return $resultado->execute();
+        if (empty($request)) {
+            $where = " WHERE idareainstitu=(select idareainstitu from areainstitu where idarea=?) ";
+            $request = $this->consultar(
+                "*",
+                "empleado",
+                $where,
+                [$this->intIdArea]
+            );
+            if (empty($request)) {
+                $request = $this->editar(
+                    " areainstitu",
+                    " deleted = 1 ",
+                    " idarea = ? ",
+                    [$this->intIdArea]
+                );
+                if ($request) {
+                    $request = 1;
+                } else {
+                    $request = 'error';
+                }
             } else {
-                $data = 2; //SI HAY EMPLEADOS CON ESTA AREA
+                $request = 'existE';
             }
         } else {
-            $data = 1; //SI HAY DOCUMENTOS con esta area        
+            $request = 'existD';
         }
-        return $data;
+        return $request;
     }
 }

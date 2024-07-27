@@ -13,6 +13,8 @@ class InstitucionController extends Controllers
             header('Location: ' . base_url() . '/dashboard');
         }
     }
+
+
     public function getInstitucion(int $idinstitucion)
     {
         if ($_SESSION['permisosMod']['rea']) {
@@ -115,6 +117,13 @@ class InstitucionController extends Controllers
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
+        die();
+    }
+
+    public function getSelectInst()
+    {
+        $arrData = $this->model->selectInst();
+        echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         die();
     }
 }

@@ -14,6 +14,15 @@ class InstitucionModel extends Mysql
         parent::__construct();
     }
 
+
+    public function selectInst()
+    {
+        //EXTRAE ROLES
+        $sql = "SELECT * FROM institucion where deleted != 1 ";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
     public function consultarInst($idinstitucion)
     {
         $this->intIdInst = $idinstitucion;

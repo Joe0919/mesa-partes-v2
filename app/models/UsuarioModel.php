@@ -156,8 +156,7 @@ class UsuarioModel extends Mysql
                 $arrayData
             );
         } else {
-            // $request = 'exist';
-            $request = $request;
+            $request = 'exist';
         }
         return $request;
     }
@@ -193,10 +192,10 @@ class UsuarioModel extends Mysql
             );
             if ($foto == "") {
                 $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?";
-                $arrayData =  [$this->strNombreUsuario, $this->strEstado,$this->intIdRol, $this->intIdUsuario];
+                $arrayData =  [$this->strNombreUsuario, $this->strEstado, $this->intIdRol, $this->intIdUsuario];
             } else {
                 $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?, foto = ?";
-                $arrayData = [$this->strNombreUsuario, $this->strEstado,$this->intIdRol, $this->strFoto, $this->intIdUsuario];
+                $arrayData = [$this->strNombreUsuario, $this->strEstado, $this->intIdRol, $this->strFoto, $this->intIdUsuario];
             }
             $request = $this->editar(
                 "usuarios",
@@ -205,8 +204,7 @@ class UsuarioModel extends Mysql
                 $arrayData
             );
         } else {
-            // $request = 'exist';
-            $request = $request;
+            $request = 'exist';
         }
         return $request;
     }

@@ -3,10 +3,10 @@
 class RolesModel extends Mysql
 {
 
-    public $intIdrol;
-    public $strRol;
-    public $strDescripcion;
-    public $intEstado;
+    private $intIdrol;
+    private $strRol;
+    private $strDescripcion;
+    private $intEstado;
 
     public function __construct()
     {

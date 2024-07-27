@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <input type="hidden" class="form-control" name="idrol" id="idrol" value="0">
                     <div class="form-group">
-                        <label>Rol</label><span class="span-red"> (*)</span>
+                        <label>Rol</label><span class="span-required"></span>
                         <input type="text" class="form-control text-uppercase" name="irol" id="irol" placeholder="Ingrese el nombre del rol" required>
                     </div>
                     <div class="form-group">
@@ -20,13 +20,13 @@
                         <textarea class="form-control text-uppercase" style="resize: none" rows="3" id="idescripcion" name="idescripcion" placeholder="Ingrese una descripcion"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="inst">Estado</label><span class="span-red"> (*)</span>
+                        <label for="inst">Estado</label><span class="span-required"></span>
                         <select class="form-control" name="estado" id="estado" required>
                             <option value="1">ACTIVO</option>
                             <option value="0">INACTIVO</option>
                         </select>
                     </div>
-                    <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
+                    <span class="span-red span-required-description"> Obligatorio </span>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn1 btn-danger" data-dismiss="modal">Cancelar</button>
@@ -34,8 +34,5 @@
                 </div>
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
-
