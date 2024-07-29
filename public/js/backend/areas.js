@@ -1,6 +1,5 @@
 $(document).ready(function () {
   let idarea = 0,
-    area = "",
     accion = "";
 
   $("#loader").show();
@@ -36,7 +35,6 @@ $(document).ready(function () {
     $("#idarea").val("0");
     $("#modal_area").modal({ backdrop: "static", keyboard: false });
     accion = "guardarán";
-    $("#icodarea").val(generarCodigo("tablaAreas", 0, "A")); //Sugerimos un codigo
   });
 
   //Registrar o Editar los datos del formulario
@@ -67,6 +65,7 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
+              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
@@ -111,7 +110,6 @@ $(document).ready(function () {
         if (objData.status) {
           $("#idarea").val(objData.data.idarea);
           $("#icodarea").val(objData.data.cod_area);
-          $("#icodarea").prop("readonly", true);
           $("#iarea").val(objData.data.area);
           $("#select_inst").val(objData.data.idinstitucion);
 
@@ -195,17 +193,5 @@ $(document).ready(function () {
         console.error("Error: " + error);
       },
     });
-  }
-  function generarCodigo(idtabla, posicion, caracter) {
-    let table = $("#" + idtabla).DataTable();
-    let columnData = table.column(posicion).data();
-    let ultimoDato = columnData[columnData.length - 1];
-    //   let Cod =
-    //     caracter +
-    //     ("000" + (parseInt(ultimoDato.substring(ultimoDato.length - 4)) + 1)).slice(
-    //       -4
-    //     );
-    let Cod = caracter + ("000" + parseInt(ultimoDato + 1)).slice(-4);
-    return Cod;
   }
 });

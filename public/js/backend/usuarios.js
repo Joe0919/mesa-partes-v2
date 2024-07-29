@@ -161,7 +161,6 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
         objData = $.parseJSON(response);
         if (objData.status) {
           openModal("edit");
@@ -258,7 +257,6 @@ $(document).ready(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                console.log(response);
                 data = $.parseJSON(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");

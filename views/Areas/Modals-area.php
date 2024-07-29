@@ -14,7 +14,7 @@
 
                     <div class="form-group">
                         <label for="inputName">Código</label><span class="span-required"></span>
-                        <input type="text" class="form-control" name="icodigo" id="icodarea" onkeypress="return validaNumericos(event)" required>
+                        <input type="text" class="form-control" name="icodigo" id="icodarea" readonly value="AUTOGENERADO">
                     </div>
 
                     <div class="form-group">
@@ -34,7 +34,5 @@
                 </div>
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>

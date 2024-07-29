@@ -94,7 +94,7 @@ class RolesController extends Controllers
         } else {
             //Actualizar
             if ($_SESSION['permisosMod']['upd']) {
-                $request_rol = $this->model->updateRol($intIdrol, $strRol, $strDescipcion, $intEstado);
+                $request_rol = $this->model->editarRol($intIdrol, $strRol, $strDescipcion, $intEstado);
                 $option = 2;
             } else {
                 $request_rol = "denegado";
@@ -160,7 +160,7 @@ class RolesController extends Controllers
         if ($_POST) {
             if ($_SESSION['permisosMod']['del']) {
                 $intIdrol = intval(limpiarCadena($_POST['idrol']));
-                $requestDelete = $this->model->deleteRol($intIdrol);
+                $requestDelete = $this->model->eliminarRol($intIdrol);
                 if ($requestDelete == 1) {
                     $arrResponse = array('status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado el Rol');
                 } else if ($requestDelete == 'exist') {

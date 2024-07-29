@@ -23,7 +23,7 @@ class UsuarioModel extends Mysql
     public function selectUsuarios(
         string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
         string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
-        string $condicion = "where u.deleted != 1 ",
+        string $condicion = "where u.deleted = 0 ",
         array $valores = []
     ) {
         $whereAdmin = "";
@@ -136,6 +136,7 @@ class UsuarioModel extends Mysql
         );
 
         if (empty($request)) {
+
             $request = $this->editar(
                 "persona",
                 "ap_paterno = ?, ap_materno = ?, nombres = ?, email = ?, telefono = ?, direccion = ?",
@@ -160,7 +161,7 @@ class UsuarioModel extends Mysql
         }
         return $request;
     }
-    public function editarusuarioID($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado, $Idrol, $foto = "")
+    public function editarUsuario($idusu, $nom_usu, $idper, $nombre, $appat, $apmat, $email, $celular, $direccion, $estado, $Idrol, $foto = "")
     {
         $this->intIdUsuario = $idusu;
         $this->strNombreUsuario = $nom_usu;
@@ -175,6 +176,9 @@ class UsuarioModel extends Mysql
         $this->intIdRol = $Idrol;
         $this->strFoto = $foto;
 
+        $opcion = 1;
+        $columns = '';
+
         $where = " WHERE (nombre=? or p.email=? or telefono=?) AND idusuarios != ? ";
         $request = $this->consultar(
             "*",
@@ -184,32 +188,69 @@ class UsuarioModel extends Mysql
         );
 
         if (empty($request)) {
+
             $request = $this->editar(
                 "persona",
                 "ap_paterno = ?, ap_materno = ?, nombres = ?, email = ?, telefono = ?, direccion = ?",
                 "idpersona = ?",
                 [$this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion, $this->intIdPersona]
             );
-            if ($foto == "") {
-                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?";
-                $arrayData =  [$this->strNombreUsuario, $this->strEstado, $this->intIdRol, $this->intIdUsuario];
+
+            $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?";
+            $arrayData =  [$this->strNombreUsuario, $this->strEstado];
+
+            $where = " WHERE idusuarios = ? ";
+            $request = $this->consultar(
+                " idroles IDROL ",
+                "usuarios",
+                $where,
+                [$this->intIdUsuario]
+            );
+
+            if ($request['IDROL'] == 1) {
+
+                $where = " WHERE idroles = 1 and deleted = 0";
+                $request = $this->consultar(
+                    " count(*) num_admins ",
+                    "usuarios",
+                    $where
+                );
+
+                if ($request['num_admins'] >= 2) {
+                    $columns .= ", idroles = ?";
+                    $arrayData[] =   $this->intIdRol;
+                } else {
+                    $opcion = 2;
+                }
             } else {
-                $columns = "nombre = ?, fechaedicion = sysdate(), estado = ?, idroles = ?, foto = ?";
-                $arrayData = [$this->strNombreUsuario, $this->strEstado, $this->intIdRol, $this->strFoto, $this->intIdUsuario];
+                $columns .= ", idroles = ?";
+                $arrayData[] =   $this->intIdRol;
             }
+
+            if ($foto != "") {
+                $columns .= ", foto = ?";
+                $arrayData[] =  $this->strFoto;
+            }
+
+            $arrayData[] =  $this->intIdUsuario;
+
+            $request = $arrayData;
+
             $request = $this->editar(
                 "usuarios",
                 $columns,
                 "idusuarios = ?",
                 $arrayData
             );
+
+            $opcion == 2 ? $request = 'admin' :  $request = $request;
         } else {
             $request = 'exist';
         }
         return $request;
     }
 
-    public function editarPswUsuarioID($psw_anterior, $psw_nueva, $idusu)
+    public function editarPswUsuario($psw_anterior, $psw_nueva, $idusu)
     {
         $this->intIdUsuario = $idusu;
         $this->strOldPassword = $psw_anterior;
@@ -236,7 +277,7 @@ class UsuarioModel extends Mysql
         return $request;
     }
 
-    public function eliminarUsuarioDNI($dni)
+    public function eliminarUsuario($dni)
     {
         $this->strDNI = $dni;
 

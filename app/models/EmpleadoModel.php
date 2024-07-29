@@ -1,8 +1,30 @@
 <?php
 
-class EmpleadoModel extends Conexion
+class EmpleadoModel extends Mysql
 {
+    private $intIdEmpleado;
+    private $strCod_empleado;
+    private $intIdPersona;
+    private $intIdArea;
 
+    function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function selectEmpleados()
+    {
+        $whereAdmin = "";
+        if ($_SESSION['idUsuario'] != 1) {
+            $whereAdmin = " and e.idempleado != 1 ";
+        }
+        $sql = "SELECT idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area
+        FROM empleado e join persona p on e.idpersona=p.idpersona
+        join areainstitu a on e.idareainstitu=a.idareainstitu
+        join area ae on ae.idarea=a.idarea WHERE e.deleted = 0" . $whereAdmin;
+        $request = $this->select_all($sql);
+        return $request;
+    }
 
     function listarEmpleados(
         string $columnas = "idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area",
@@ -19,120 +41,121 @@ class EmpleadoModel extends Conexion
         return $resultado->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function listarUsuariosPendientes()
+    public function selectEmpleado(int $idempleado)
     {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT u.idusuarios ID,  concat('DNI : ',p.dni,' : ',ap_paterno,' ', ap_materno,' ',nombres) Datos
-        from (usuarios u inner join persona p on u.dni=p.dni) left join empleado e on p.idpersona = e.idpersona
-        where e.idpersona is null";
-        $consulta = $conectar->prepare($consulta);
-        $consulta->execute();
-        return $consulta->fetchall(pdo::FETCH_ASSOC);
+        $this->intIdEmpleado = $idempleado;
+        $sql = "SELECT e.idempleado,p.idpersona, p.dni dni, p.nombres, p.ap_paterno ap, p.ap_materno am, 
+                p.telefono, p.direccion, e.cod_empleado, e.idareainstitu,ar.idarea,
+                ar.area Area, a.idinstitucion IDInst
+                from empleado e
+                JOIN persona p ON e.idpersona = p.idpersona
+                JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
+                JOIN area ar ON a.idarea = ar.idarea
+                where e.idempleado = ? ";
+        $request = $this->selectOne($sql, [$this->intIdEmpleado]);
+        return $request;
     }
 
-
-    function consultarEmpleadoDNI($dni)
+    public function selectUsuariosPendientes()
     {
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT e.idempleado ID, p.dni dni, p.nombres, p.ap_paterno ap, p.ap_materno am, 
-        p.telefono, p.direccion, e.cod_empleado cod, e.idareainstitu ID2,ar.idarea IDArea, ar.area Area, a.idinstitucion IDInst
-        FROM empleado e
-        INNER JOIN persona p ON e.idpersona = p.idpersona
-        INNER JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
-        INNER JOIN area ar ON a.idarea = ar.idarea
-        WHERE p.dni = ?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $dni);
-        $resultado->execute();
-        return $resultado->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT u.idusuarios,
+                CONCAT('DNI : ', p.dni, ' : ', p.ap_paterno, ' ', p.ap_materno, ' ', p.nombres) AS Datos
+                FROM usuarios u JOIN persona p ON u.dni = p.dni
+                LEFT JOIN empleado e ON p.idpersona = e.idpersona
+                WHERE u.deleted = 0
+                    AND (e.idpersona IS NULL OR e.deleted = 1)";
+        $request = $this->select_all($sql);
+        return $request;
     }
 
-    function crearNuevoEmpleado($dni, $codigo, $idpersona, $idareainst)
+    public function crearEmpleado($codigo, $idpersona, $idArea)
     {
-        $conectar = parent::Conectar();
+        $this->strCod_empleado = $codigo;
+        $this->intIdPersona = $idpersona;
+        $this->intIdArea = $idArea;
 
-        //VALIDAR SI EXISTE MISMO CODIGO REGISTRADO
-        $consulta = "SELECT count(*) total FROM empleado where cod_empleado=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $codigo);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
+        $where = " WHERE idpersona = ? and deleted = 1 ";
+        $request = $this->consultar(
+            "*",
+            "empleado",
+            $where,
+            [$this->intIdPersona]
+        );
 
-        if ($data['total'] == 0) {
-            $consulta = "INSERT INTO empleado VALUES(null,?,?,?)";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $codigo);
-            $resultado->bindValue(2, $idpersona);
-            $resultado->bindValue(3, $idareainst);
-            $resultado->execute();
+        if (empty($request)) {
 
-            $consulta = "UPDATE usuarios SET estado='ACTIVO' where dni=?";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $dni);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
+            $arrData = array($this->intIdPersona, $this->intIdArea);
+            $request_insert = $this->registrar("empleado", "(null,(gen_cod_empleado('E', 5)),?,
+                (SELECT idareainstitu FROM areainstitu WHERE idarea = ?),0)", $arrData);
+
+            $request = $this->editar(
+                "usuarios",
+                "estado = 'ACTIVO'",
+                "dni = (SELECT dni FROM persona WHERE idpersona = ?)",
+                [$this->intIdPersona]
+            );
+
+            $return = $request_insert;
         } else {
-            $data = 1; //EN EL CASO DE QUE EXISTA DUPLICIDAD
+
+            $request = $this->editar(
+                " empleado",
+                " deleted = 2",
+                " idpersona = ?",
+                [$this->intIdPersona]
+            );
+
+            $arrData = array($this->intIdPersona, $this->intIdArea);
+            $request_insert = $this->registrar("empleado", "(null,(gen_cod_empleado('E', 5)),?,
+                (SELECT idareainstitu FROM areainstitu WHERE idarea = ?),0)", $arrData);
+
+            $request = $this->editar(
+                "usuarios",
+                "estado = 'ACTIVO'",
+                "dni = (SELECT dni FROM persona WHERE idpersona = ?)",
+                [$this->intIdPersona]
+            );
+
+            return $request;
         }
 
-        return $data;
+        return $return;
     }
 
-    function editarEmpleadoID($id, $codigo, $idareainst)
+    public function editarEmpleado($idempleado, $idArea)
     {
+        $this->intIdEmpleado = $idempleado;
+        $this->intIdArea = $idArea;
 
-        $conectar = parent::Conectar();
+        $request = $this->editar(
+            " empleado",
+            " idareainstitu = (SELECT idareainstitu FROM areainstitu WHERE idarea = ?) ",
+            " idempleado = ? ",
+            [$this->intIdArea, $this->intIdEmpleado]
+        );
 
-        //CONSULTAMOS SI EXISTE MISMO CODIGO REGISTRADO
-        $consulta = "SELECT count(*) total FROM empleado where cod_empleado=? and idempleado != ?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $codigo);
-        $resultado->bindValue(2, $id);
-        $resultado->execute();
-        $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-        if ($data['total'] == 0) {
-            //CONSULTAMOS SI SE HICIERON CAMBIOS O NO
-            $consulta = "SELECT count(*) total FROM empleado where cod_empleado=? and idareainstitu=? and idempleado = ?";
-            $resultado = $conectar->prepare($consulta);
-            $resultado->bindValue(1, $codigo);
-            $resultado->bindValue(2, $idareainst);
-            $resultado->bindValue(3, $id);
-            $resultado->execute();
-            $data = $resultado->fetch(PDO::FETCH_ASSOC);
-
-            if ($data['total'] == 0) {
-
-                $consulta = "UPDATE empleado SET cod_empleado=?,idareainstitu=? where idempleado = ?";
-                $resultado = $conectar->prepare($consulta);
-                $resultado->bindValue(1, $codigo);
-                $resultado->bindValue(2, $idareainst);
-                $resultado->bindValue(3, $id);
-                $resultado->execute();
-                $data = $resultado->fetch(PDO::FETCH_ASSOC);
-            } else {
-                $data = 2; //EN EL CASO DE QUE NO SE HAYA REALIZADO CAMBIOS
-            }
-        } else {
-            $data = 1; //EN EL CASO DE EXISTIR DUPLICIDAD
-        }
-        return $data;
+        return $request;
     }
 
-    function eliminarEmpleado($id, $dni)
+    public function eliminarEmpleado($idempleado)
     {
-        $conectar = parent::Conectar();
+        $this->intIdEmpleado = $idempleado;
 
-        $consulta = "DELETE FROM empleado WHERE idempleado=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $id);
-        $resultado->execute();
+        $request = $this->editar(
+            " empleado",
+            " deleted = 1 ",
+            " idempleado = ? ",
+            [$this->intIdEmpleado]
+        );
 
-        $consulta = "UPDATE usuarios SET estado='INACTIVO' where dni=?";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->bindValue(1, $dni);
-        return $resultado->execute();
+        $request = $this->editar(
+            "usuarios",
+            "estado = 'INACTIVO'",
+            "dni = (SELECT dni FROM persona WHERE idpersona = 
+            (SELECT idpersona FROM empleado WHERE idempleado = ?))",
+            [$this->intIdEmpleado]
+        );
+
+        return $request;
     }
 }

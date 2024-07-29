@@ -131,16 +131,15 @@
                     <div class="row mb-2">
                         <div class="col-sm-10 d-flex justify-content-center">
                             <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div><!-- /.col -->
+                        </div>
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-door-closed"></i>Áreas</li>
                             </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.content-header -->
 
             <!-- Main content -->
             <main class="content">
@@ -150,7 +149,7 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Áreas Registradas</h3>
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Áreas</h3>
                                         <div>
                                             <?php if ($_SESSION['permisosMod']['cre']) { ?>
                                                 <button type="button" class="btn btn-success" data-toggle="modal" id="nueva_area" title="Agregar nuevo registro">

@@ -17,7 +17,7 @@ class PermisosModel extends Mysql
 
     public function selectModulos()
     {
-        $sql = "SELECT * FROM modulo WHERE estado != 0";
+        $sql = "SELECT * FROM modulo WHERE estado = 1";
         $request = $this->select_all($sql);
         return $request;
     }

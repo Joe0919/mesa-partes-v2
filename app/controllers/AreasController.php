@@ -8,7 +8,7 @@ class AreasController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        session_regenerate_id(true);
+        // session_regenerate_id(true); //# MEJORAR EL USO
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
         }
@@ -55,7 +55,6 @@ class AreasController extends Controllers
     {
         $arrData = $this->model->selectAreas();
         echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     public function setArea()
@@ -77,7 +76,7 @@ class AreasController extends Controllers
         } else {
             //Actualizar
             if ($_SESSION['permisosMod']['upd']) {
-                $request_area = $this->model->editarAreaID($intIdArea, $strCodigo, $strArea);
+                $request_area = $this->model->editarArea($intIdArea, $strCodigo, $strArea);
                 $option = 2;
             } else {
                 $request_area = "denegado";
@@ -141,7 +140,7 @@ class AreasController extends Controllers
         if ($_POST) {
             if ($_SESSION['permisosMod']['del']) {
                 $intIdArea = intval(limpiarCadena($_POST['idarea']));
-                $requestDelete = $this->model->eliminarAreaID($intIdArea);
+                $requestDelete = $this->model->eliminarArea($intIdArea);
                 if ($requestDelete == 1) {
                     $arrResponse = array('status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado el Área');
                 } else if ($requestDelete == 'existD') {

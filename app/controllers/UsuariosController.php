@@ -9,6 +9,7 @@ class UsuariosController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
+        session_regenerate_id(true);
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/dashboard');
         }
@@ -23,9 +24,9 @@ class UsuariosController extends Controllers
         }
         $data['page_id'] = 3;
         $data['page_tag'] = "Usuarios";
-        $data['page_name'] = "usuario";
+        $data['page_name'] = "usuarios";
         $data['page_title'] = "Usuarios";
-        $data['file_js'] = "usuario.js";
+        $data['file_js'] = "usuarios.js";
         $this->views->getView("Usuarios", "index", $data);
     }
 
@@ -112,7 +113,7 @@ class UsuariosController extends Controllers
                 $email = limpiarCadena($_POST['iemail']);
                 $direccion = strtoupper(limpiarCadena($_POST['idir']));
                 $nom_usu = limpiarCadena($_POST['inomusu']);
-                $idrol = limpiarCadena($_POST['irol']);
+                $idrol = intval(limpiarCadena($_POST['irol']));
                 $foto = $_FILES['foto'];
                 $estado = limpiarCadena($_POST['estado']);
 
@@ -176,7 +177,7 @@ class UsuariosController extends Controllers
                         $option = 2;
                         if ($_SESSION['permisosMod']['upd']) {
                             $ruta_foto = ($_POST['foto_bdr'] === '1') ? $ruta_foto : "";
-                            $request_user = $this->model->editarusuarioID(
+                            $request_user = $this->model->editarUsuario(
                                 $idUsuario,
                                 $nom_usu,
                                 $idPersona,
@@ -197,20 +198,27 @@ class UsuariosController extends Controllers
                             'status' => false, 'title' => 'Datos duplicados', 'msg' => 'Email, telefono o nombre de usuario ya existen.',
                             'results' =>  $request_user
                         );
+                    } else if ($request_user === 'admin') {
+                        $arrResponse = array(
+                            'status' => true,
+                            'title' => 'Datos cambiados',
+                            'msg' => 'ADVERTENCIA: NO se pudo CAMBIAR el rol del ADMINISTRADOR.',
+                            'results' => $request_user
+                        );
                     } else if ($request_user > 0) {
                         if ($option == 1) {
                             $arrResponse = array(
                                 'status' => true,
                                 'title' => 'Registrado',
                                 'msg' => 'Datos guardados correctamente.',
-                                'results' => ""
+                                'results' => $request_user
                             );
                         } else {
                             $arrResponse = array(
                                 'status' => true,
                                 'title' => 'Actualizado',
                                 'msg' => 'Datos actualizados correctamente.',
-                                'results' => ""
+                                'results' => $request_user
                             );
                         }
                     } else {
@@ -356,7 +364,7 @@ class UsuariosController extends Controllers
 
                 if ($idUsuario !== 0) {
                     if ($_SESSION['permisosMod']['upd']) {
-                        $request_user = $this->model->editarPswUsuarioID(
+                        $request_user = $this->model->editarPswUsuario(
                             $strOldPsw,
                             $strNewPsw,
                             $idUsuario
@@ -393,7 +401,7 @@ class UsuariosController extends Controllers
         if ($_POST) {
             if ($_SESSION['permisosMod']['del']) {
                 $strDNI = limpiarCadena($_POST['dni']);
-                $requestDelete = $this->model->eliminarUsuarioDNI($strDNI);
+                $requestDelete = $this->model->eliminarUsuario($strDNI);
                 if ($requestDelete == 1) {
                     $arrResponse = array('status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado al Usuario');
                 } else if ($requestDelete == 'exist') {

@@ -548,6 +548,8 @@ $(document).ready(function () {
   });
 });
 
+//******************** FUNCIONES *******************
+
 function datosUsuarioLogeado(callback) {
   let opcion = 3;
   let idni = $("#dniuser").val();
@@ -714,4 +716,14 @@ function resetHidden(form) {
   form.find("input[type=hidden]").each(function () {
     $(this).val("0");
   });
+}
+function generarCodigo(idtabla, posicion, caracter, numCeros) {
+  let table = $("#" + idtabla).DataTable();
+  let columnData = table.column(posicion).data();
+  let ultimoDato = columnData[columnData.length - 1];
+  let numero = parseInt(ultimoDato) + 1;
+  let ceros = "0".repeat(numCeros);
+  let Cod = caracter + (ceros + numero).slice(-numCeros);
+
+  return Cod;
 }

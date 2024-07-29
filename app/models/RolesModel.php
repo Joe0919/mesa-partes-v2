@@ -22,7 +22,7 @@ class RolesModel extends Mysql
         //EXTRAE ROLES
         $sql = "SELECT r.*, COUNT(u.idroles) asociados FROM 
             roles r LEFT JOIN usuarios u ON r.idroles = u.idroles
-            WHERE r.deleted != 1 " . $whereAdmin . " GROUP BY r.idroles";
+            WHERE r.deleted = 0 " . $whereAdmin . " GROUP BY r.idroles";
         $request = $this->select_all($sql);
         return $request;
     }
@@ -56,7 +56,7 @@ class RolesModel extends Mysql
         return $return;
     }
 
-    public function updateRol(int $idrol, string $rol, string $descripcion, int $status)
+    public function editarRol(int $idrol, string $rol, string $descripcion, int $status)
     {
         $this->intIdrol = $idrol;
         $this->strRol = $rol;
@@ -80,7 +80,7 @@ class RolesModel extends Mysql
         return $request;
     }
 
-    public function deleteRol(int $idrol)
+    public function eliminarRol(int $idrol)
     {
         $this->intIdrol = $idrol;
 
