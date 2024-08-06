@@ -2,7 +2,8 @@ $(document).ready(function () {
   let idinst,
     idusu,
     idni,
-    logo_bdr = 0;
+    logo_bdr = 0,
+    expediente = "";
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
@@ -383,41 +384,37 @@ $(document).ready(function () {
 
   //Mostrar mas informacion del tramite
   $(document).on("click", ".btnMas", function () {
-    opcion = 3;
     expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
-    console.log("Presionaste esto");
+    $("#n_tramite").text("TRÁMITE N° " + expediente);
     $.ajax({
-      url: "../../app/controllers/TramiteController.php.php",
-      type: "POST",
-      datatype: "json",
-      data: { opcion: opcion, expediente: expediente },
+      url: base_url + "/Tramites/getTramite/" + expediente,
+      type: "GET",
       beforeSend: function () {
-        /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
-        data = $.parseJSON(response);
-        if (data.length > 0) {
-          // $("#div_iframePDF").show();
-          // $("#loaderPDF").hide();
-          // $("#error-message").hide();
+        objData = $.parseJSON(response);
+        if (objData.status) {
+          $("#div_iframePDF").show();
+          $("#loaderPDF").hide();
+          $("#error-message").hide();
 
-          $("#iddoc").val(data[0]["iddocumento"]);
-          $("#inrodoc").val(data[0]["nro_doc"]);
-          $("#ifolio").val(data[0]["folios"]);
-          $("#iexpediente").val(data[0]["nro_expediente"]);
-          $("#iestad").val(data[0]["estado"]);
-          $("#itipodoc").val(data[0]["tipodoc"]);
-          $("#iasunt").val(data[0]["asunto"]);
-          $("#iddni1").val(data[0]["dni"]);
-          $("#idremi").val(data[0]["Datos"]);
+          $("#iddoc").val(objData.data.iddocumento);
+          $("#inrodoc").val(objData.data.nro_doc);
+          $("#ifolio").val(objData.data.folios);
+          $("#iexpediente").val(objData.data.nro_expediente);
+          $("#iestad").val(objData.data.estado);
+          $("#itipodoc").val(objData.data.tipodoc);
+          $("#iasunt").val(objData.data.asunto);
+          $("#iddni1").val(objData.data.dni);
+          $("#idremi").val(objData.data.Datos);
 
-          $("#iruc").val(data[0]["ruc_institu"]);
-          $("#iinsti").val(data[0]["institucion"]);
+          $("#iruc").val(objData.data.ruc_institu);
+          $("#iinsti").val(objData.data.institucion);
 
-          archivo = data[0]["archivo"];
+          archivo = objData.data.archivo;
 
-          $("#iframePDF").attr("src", "../../public/" + archivo);
+          $("#iframePDF").attr("src", base_url + "/public/" + archivo);
 
           // $("#iframePDF").on("load", function () {
           //   $("#div_iframePDF").hide();
@@ -431,7 +428,7 @@ $(document).ready(function () {
           //   $("#error-message").show();
           // });
 
-          ruc = data[0]["ruc_institu"];
+          ruc = objData.data.ruc_institu;
 
           if (ruc == null || ruc == "" || ruc == " " || ruc == "  ") {
             $("#radio_natural").prop("checked", true);
@@ -443,19 +440,22 @@ $(document).ready(function () {
 
           $("#modalmas").modal({ backdrop: "static", keyboard: false });
           $("#loader").hide();
+        } else {
+          MostrarAlerta(objData.title, objData.msg, "error");
         }
+        $("#loader").hide();
       },
-      error: function (xhr, status, error) {
-        // Manejar errores de la petición AJAX
+      error: function (error) {
+        MostrarAlerta("Error", "Error al cargar los datos", "error");
         console.error("Error: " + error);
+        $("#loader").hide();
       },
     });
   });
 
   //Redirige a una nueva pestaña para ver el PDF
   $("#btn_NuevoPDF").click(function () {
-    $(this).attr("href", "../../public/" + archivo);
-    $(this).find("img").attr("src", "../images/inst/logo.png");
+    $(this).attr("href", base_url + "/public/" + archivo);
   });
 
   //CERRAR MODAL y resetear valores
@@ -522,10 +522,8 @@ $(document).ready(function () {
   //*************** ACCIONES PARA MOSTRAR TABLA SEGUIMIENTO DEL TRAMITE ***************
   //Mostrar tabla de seguimienton del tramite
   $(document).on("click", ".btnSeguimiento", function () {
-    opcion = 3;
-    expediente = $(this).closest("tr").find("td:eq(0)").text(); //capturo el Nro expediente
-    $("#p_expediente").text(expediente);
-    $("#modal_historial").modal("show");
+    expediente = $(this).closest("tr").find("td:eq(0)").text();
+    $("#title_historial").text("HISTORIAL DEL TRAMITE N° " + expediente);
 
     tablaSeguimiento = $("#tablaSeguimiento").DataTable({
       destroy: true,
@@ -533,18 +531,19 @@ $(document).ready(function () {
         url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
       },
       ajax: {
-        url: "../../app/controllers/TramiteController.php.php",
-        method: "POST", //usamos el metodo POST
-        data: { opcion: opcion, expediente: expediente },
-        dataSrc: "",
+        url: base_url + "/Tramites/getHistorial/" + expediente,
+        method: "GET",
+        dataSrc: "" 
       },
       columns: [
-        { data: "ID" },
-        { data: "Fecha" },
+        { data: "fecha" },
+        { data: "accion" },
         { data: "area" },
-        { data: "descripcion" },
+        { data: "descrip" },
       ],
     });
+
+    $("#modal_historial").modal("show");
   });
 });
 

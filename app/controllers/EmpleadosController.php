@@ -137,6 +137,7 @@ class EmpleadosController extends Controllers
         }
         die();
     }
+    
     public function delEmpleado()
     {
         if ($_POST) {

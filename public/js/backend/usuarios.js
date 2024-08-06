@@ -31,8 +31,7 @@ $(document).ready(function () {
       { data: "opciones" },
     ],
     initComplete: function () {
-      // Oculta el loader una vez que los datos se hayan cargado
-      $("#loader").hide(); // Mostrar DIv de carga
+      $("#loader").hide();
     },
   });
 

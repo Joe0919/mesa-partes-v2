@@ -63,7 +63,7 @@ class Mysql extends Conexion
         $resExecute = $update->execute($this->arrValues);
         return $resExecute;
     }
-    //Eliminar un registros
+    //Eliminar un registro
     public function delete(string $query)
     {
         $this->strquery = $query;

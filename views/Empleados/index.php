@@ -187,7 +187,7 @@
         <div id="contentAjax"></div>
         <?php
 
-        getModal('empleados', 'empleado', $data);
+        getModal('empleados', 'empleados', $data);
 
         require_once "views/inc/Modals/Modals.php";
 
