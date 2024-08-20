@@ -1,9 +1,9 @@
 $(document).ready(function () {
-  $("#loader").show(); // Mostrar DIv de carga
+  $("#loader").show(); 
 
-  $("#nom_pdf").hide(); // Ocultar seccion del pdf
+  $("#nom_pdf").hide(); 
 
-  //Inhabilitamos campos hasta que se valide el DNI
+  
   $("#idnombre").prop("readonly", true);
   $("#idap").prop("readonly", true);
   $("#idam").prop("readonly", true);
@@ -12,11 +12,10 @@ $(document).ready(function () {
   $("#idcorre").prop("readonly", true);
   $("#idni").focus();
 
-  llenarSelectTipo(); //Llenar select
+  llenarSelectTipo(); 
 
-  $("#div_juridica").hide(); // Mostrar DIv de carga
-
-  //   Mostrar inputs de persona juridica
+  $("#div_juridica").hide(); 
+  
   $("input[name='customRadio']").change(function () {
     if ($(this).val() == "juridica") {
       $("#div_juridica").show();
@@ -29,8 +28,7 @@ $(document).ready(function () {
     $("#nom_pdf").show();
     $("#alias").text($(this).prop("files")[0].name);
   });
-
-  //   Accion para validar si se encuentra registrado o es nuevo usuario
+  
   $("#btn_validar").click(function () {
     opcion = 1;
     let idni = $("#idni").val();
@@ -98,7 +96,7 @@ $(document).ready(function () {
       });
     }
   });
-  //Accion al enviar los datos del tramite
+  
   $("#form_tramite").on("submit", function (e) {
     e.preventDefault();
     opcion = 2;
@@ -122,10 +120,10 @@ $(document).ready(function () {
             type: "POST",
             datatype: "json",
             data: formData,
-            processData: false, // Evita que jQuery procese los datos del formulario
-            contentType: false, // Evita que jQuery establezca el encabezado Content-Type
+            processData: false, 
+            contentType: false, 
             beforesend: function () {
-              $("#loader").show(); // Mostrar DIv de carga
+              $("#loader").show(); 
             },
             success: function (response) {
               Swal.fire({
@@ -138,11 +136,11 @@ $(document).ready(function () {
               $("#loader").hide();
             },
             error: function (xhr, status, error) {
-              // Manejar errores de la petición AJAX
+              
               console.error("Error: " + error);
             },
             complete: function () {
-              $("#loader").hide(); // Ocultar Div de carga al completar la solicitud
+              $("#loader").hide(); 
             },
           });
         }
@@ -166,7 +164,7 @@ $(document).ready(function () {
 });
 
 function llenarSelectTipo() {
-  // LLenar el select con opciones de tipos de documentos
+  
   let opcion = 4;
   $.ajax({
     url: "../../app/controllers/tramite-controller.php",
@@ -174,7 +172,6 @@ function llenarSelectTipo() {
     datatype: "json",
     data: { opcion: opcion },
     beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
       $("#loader").show();
     },
     success: function (response) {
@@ -195,7 +192,7 @@ function llenarSelectTipo() {
       $("#loader").hide();
     },
     error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
+      
       console.error("Error: " + error);
     },
   });

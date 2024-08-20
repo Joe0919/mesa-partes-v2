@@ -79,7 +79,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../nuevo-tramite/" class="nav-link">
+                            <a href="<?= base_url(); ?>/nuevo-tramite" class="nav-link">
                                 <i class="nav-icon fas fa-file-upload"></i>
                                 <p>
                                     Nuevo Trámite
@@ -87,7 +87,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-recibidos/" class="nav-link">
+                            <a href="<?= base_url(); ?>/tramites-recibidos" class="nav-link">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos
@@ -95,7 +95,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-enviados/" class="nav-link">
+                            <a href="<?= base_url(); ?>/tramites-enviados" class="nav-link">
                                 <i class="nav-icon fas fa-file-export"></i>
                                 <p>
                                     Trámites Enviados
@@ -103,7 +103,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../busqueda/" class="nav-link">
+                            <a href="<?= base_url(); ?>/busqueda" class="nav-link">
                                 <i class="nav-icon fas fa-search-minus"></i>
                                 <p>
                                     Búsqueda de Trámites
@@ -111,7 +111,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../informes/" class="nav-link">
+                            <a href="<?= base_url(); ?>/informes" class="nav-link">
                                 <i class="nav-icon fas fa-file-contract"></i>
                                 <p>
                                     Informes

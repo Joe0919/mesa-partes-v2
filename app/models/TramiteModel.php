@@ -5,6 +5,14 @@ class TramiteModel extends Mysql
     private $intIdTramite;
     private $strExpediente;
     private $strFecha;
+    private $strNroDoc;
+    private $intFolios;
+    private $strAsunto;
+    private $strRuta;
+    private $intIdPersona;
+    private $strDNI;
+    private $intIdTipo;
+    private $intIdDoc;
 
 
     public function __construct()
@@ -58,7 +66,7 @@ class TramiteModel extends Mysql
     public function selectTramite(string $expediente, string $limit = "LIMIT 1")
     {
         $this->strExpediente = $expediente;
-        $sql = "SELECT idderivacion, nro_expediente,dc.iddocumento, nro_doc,folios, estado, tipodoc, asunto, dni,
+        $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado, tipodoc, asunto, dni,
                     concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, ruc_institu, institucion, archivo, area,
                     date_format(fechad, '%d/%m/%Y') Fecha, descripcion  
                 FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
@@ -81,5 +89,100 @@ class TramiteModel extends Mysql
             [$this->strExpediente]
         );
         return $request;
+    }
+
+    public function selectTipo()
+    {
+        $sql = "SELECT * FROM tipodoc WHERE deleted = 0";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
+    public function genExpediente()
+    {
+        $sql = "SELECT gen_nroexpediente() Expediente";
+        $request = $this->selectOne($sql, []);
+        return $request;
+    }
+
+    public function insertTramite($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol, $Foto) {}
+
+    public function registrarDocumento($expediente, $nrodoc, $folios, $asunto, $ruta, $idpersona, $tipo)
+    {
+        $this->strExpediente = $expediente;
+        $this->strNroDoc = $nrodoc;
+        $this->intFolios = $folios;
+        $this->strAsunto = $asunto;
+        $this->strRuta = $ruta;
+        $this->intIdPersona = $idpersona;
+        $this->intIdTipo = $tipo;
+
+        $where = " WHERE nro_expediente = ? and archivo = ? ";
+        $request = $this->consultar(
+            "*",
+            "documento",
+            $where,
+            [$this->strExpediente, $this->strRuta]
+        );
+
+        if (empty($request)) {
+            $arrData = array(
+                $this->strExpediente,
+                $this->strNroDoc,
+                $this->intFolios,
+                $this->strAsunto,
+                $this->strRuta,
+                $this->intIdPersona,
+                $this->intIdTipo
+            );
+            $request_insert = $this->registrar(
+                "documento",
+                "(null,?,?,?,?,'PENDIENTE',?,?,?,
+                (SELECT idareainstitu 
+                FROM areainstitu ai JOIN area a ON ai.idarea = a.idarea 
+                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'), 0)",
+                $arrData
+            );
+            $return = $request_insert;
+        } else {
+            $return = "exist";
+        }
+        return $return;
+    }
+    public function registrarHistorial($expediente, $dni)
+    {
+        $this->strExpediente = $expediente;
+        $this->strDNI = $dni;
+
+        $arrData = array(
+            $this->strExpediente,
+            $this->strDNI
+        );
+        $request_insert = $this->registrar(
+            "historial",
+            "(null, sysdate(), ?, ?, 'DERIVADO', 'SECRETARÍA', 'INGRESO DE NUEVO TRÁMITE', 0)",
+            $arrData
+        );
+        $return = $request_insert;
+
+        return $return;
+    }
+    public function registrarDerivacion($idDoc)
+    {
+        $this->intIdDoc = $idDoc;
+
+        $arrData = array(
+            $this->intIdDoc
+        );
+        $request_insert = $this->registrar(
+            "derivacion",
+            "(null, sysdate(),'EXTERIOR',
+            (SELECT idareainstitu FROM areainstitu ai JOIN area a ON ai.idarea = a.idarea 
+                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'),?,'DERIVANDO A SECRETARIA',0)",
+            $arrData
+        );
+        $return = $request_insert;
+
+        return $return;
     }
 }

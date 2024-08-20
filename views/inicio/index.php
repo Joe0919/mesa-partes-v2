@@ -164,7 +164,7 @@
                                                 <span class="info-box-icon bg-primary"><img src="../../public/images/pendiente.png"></span>
                                                 <div class="info-box-content content-lh">
                                                     <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
+                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes">45</span>
                                                     <span class="progress-description info-box-desc">Total de Documentos</span>
                                                 </div>
                                             </div>

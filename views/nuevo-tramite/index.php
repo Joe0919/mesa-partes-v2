@@ -1,38 +1,35 @@
-<?php require_once "../inc/Validacion/Validacion.php" ?>
-
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
 
-    <?php require_once "../inc/MainHead/MainHead.php" ?>
+    <?php require_once "views/inc/MainHead/MainHead.php" ?>
 
-    <title>Nuevo Trámite | Mesa de Partes Virtual</title>
+    <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-    <?php require_once "../inc/Loader/Loader.php" ?>
 
-    <div class="wrapper">
+    <?php require_once "views/inc/Loader/Loader.php" ?>
 
-        <?php require_once "../inc/MainHeader/MainHeader.php" ?>
+    <div class="wrapper" id="wrapper_content">
 
-        <!-- Main Sidebar Container | Seccion de Links  -->
+        <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
+
+        <!-- Seccion de Links  -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
             <a class="brand-link navbar-lightblue">
-                <img id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+                <img src="<?php echo media() . "/" . $_SESSION['userData']['logo']; ?>" id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text span-logo" id="inst_desc">HACDP</span>
             </a>
 
-            <!-- Sidebar -->
+            <!-- Menu de Navegacion -->
             <div class="sidebar">
-                <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item menu-open">
-                            <a href="../inicio/" class="nav-link">
+                            <a href="<?= base_url(); ?>/dashboard" class="nav-link">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Inicio
@@ -40,7 +37,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../usuarios/" class="nav-link">
+                            <a href="<?= base_url(); ?>/usuarios" class="nav-link">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Usuarios
@@ -48,7 +45,15 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../areas/" class="nav-link">
+                            <a href="<?= base_url(); ?>/roles" class="nav-link">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>
+                                    Roles
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= base_url(); ?>/areas" class="nav-link">
                                 <i class="nav-icon fas fa-door-closed"></i>
                                 <p>
                                     Áreas
@@ -56,7 +61,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../empleados/" class="nav-link">
+                            <a href="<?= base_url(); ?>/empleados" class="nav-link">
                                 <i class="nav-icon fas fa-user-friends"></i>
                                 <p>
                                     Empleados
@@ -64,7 +69,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites/" class="nav-link">
+                            <a href="<?= base_url(); ?>/tramites" class="nav-link">
                                 <i class="nav-icon fas fa-file-pdf"></i>
                                 <p>
                                     Trámites
@@ -72,7 +77,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link active">
+                            <a class="nav-link active">
                                 <i class="nav-icon fas fa-file-upload"></i>
                                 <p>
                                     Nuevo Trámite
@@ -80,7 +85,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../tramites-recibidos/" class="nav-link">
+                            <a href="<?= base_url(); ?>/tramites-recibidos" class="nav-link">
                                 <i class="nav-icon fas fa-file-archive"></i>
                                 <p>
                                     Trámites Recibidos
@@ -113,12 +118,12 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- /.sidebar-menu -->
+
             </div>
-            <!-- /.sidebar -->
+            <!-- /.Menu de Navegacion -->
         </aside>
 
-        <!-- Content Wrapper. Contains page content -->
+        <!-- CONTENIDO PRINCIPAL -->
         <div class="content-wrapper">
             <!-- Contenido del Encabezado del Cuerpo -->
             <div class="content-header">
@@ -126,16 +131,16 @@
                     <div class="row mb-2">
                         <div class="col-sm-10 d-flex justify-content-center">
                             <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div><!-- /.col -->
+                        </div>
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i>Nuevo Trámite</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-upload"></i>Nuevo Trámite</li>
                             </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.content-header -->
+
             <!-- Main content -->
             <main class="content">
 
@@ -188,9 +193,9 @@
                                                         </div>
                                                         <div id="div_juridica">
                                                             <div class="form-group">
-                                                                <input type="hidden" class="form-control" id="idpersona" name="idpersona" readonly value="0">
+                                                                <input type="hidden" class="form-control" id="idpersona" name="idpersona" value="0">
                                                                 <label>RUC </label><span class="span-red"> (*)</span>
-                                                                <input type="text" class="form-control" id="iruc" name="iruc" onkeypress="return validaNumericos(event)" maxlength="11" minlength="11">
+                                                                <input type="text" class="form-control" id="idruc" name="iruc" onkeypress="return validaNumericos(event)" maxlength="11" minlength="11">
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Entidad </label><span class="span-red"> (*)</span>
@@ -201,11 +206,10 @@
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
                                                                     <label>DNI</label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" name="idni" id="idni" required title="Valide su DNI">
+                                                                    <input type="text" class="form-control" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required title="Valide su DNI">
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-2">
-                                                                <label>dfhsdh</label>
+                                                            <div class="col-sm-2 form-group d-flex align-items-end mb-3">
                                                                 <input id="btn_validar" type="button" class="btn btn-success" value="Validar">
                                                             </div>
                                                             <div class="col-sm-6">
@@ -232,7 +236,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>N° Celular </label><span class="span-red"> (*)</span>
-                                                            <input type="text" class="form-control" id="idcel" onkeypress='return validaNumericos(event)' minlength="9" maxlength="9" required name="icel">
+                                                            <input type="text" class="form-control" id="idcel" name="icel" onkeypress='return validaNumericos(event)' minlength="9" maxlength="9" required>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Dirección </label><span class="span-red"> (*)</span>
@@ -256,37 +260,37 @@
                                                     <div class="card-body">
                                                         <div class="form-group">
                                                             <label>Tipo</label><span class="span-red"> (*)</span>
-                                                            <select class="form-control select-tipo" name="itipo" id="select-tipo" required></select>
+                                                            <select class="form-control select-tipo" name="itipo" id="select_tipo" required></select>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>N° Documento </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idnrodoc" onkeypress='return validaNumericos(event)' required name="n_doc">
+                                                                    <input type="text" class="form-control" id="idnrodoc" name="n_doc" onkeypress='return validaNumericos(event)' required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>N° Folios </label><span class="span-red"> (*)</span>
-                                                                    <input type="number" class="form-control" id="idfolios" required name="ifolios">
+                                                                    <input type="number" class="form-control" id="idfolios" name="ifolios" required>
                                                                 </div>
                                                             </div>
 
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Asunto </label><span class="span-red"> (*)</span>
-                                                            <textarea class="form-control" rows="3" id="idasunto" placeholder="Ingrese el asunto del documento" required name="iasunto"></textarea>
+                                                            <textarea class="form-control" rows="3" id="idasunto" name="iasunto" placeholder="Ingrese el asunto del documento" required></textarea>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label>Adjuntar archivo (pdf.)</label><span class="span-red"> (*)</span>
                                                             <div class="file">
                                                                 <p id="nom_pdf">
-                                                                    <img src="../../public/images/pdf.png" width="25px">
+                                                                    <img src="<?= media() ?>/images/pdf.png" width="25px">
                                                                     <span id="alias"></span>
                                                                 </p>
                                                                 <label for="idfile" id="archivo"><i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...</label>
-                                                                <input type="file" id="idfile" name="idfile" accept="application/pdf">
+                                                                <input type="file" id="idfile" name="ifile" accept="application/pdf">
                                                             </div>
                                                         </div>
                                                         <div class="custom-control custom-checkbox div-check">
@@ -315,25 +319,22 @@
                     </div>
                 </div>
             </main>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
+        <!-- /CONTENIDO PRINCIPAL -->
 
         <?php
 
-        require_once "../inc/Modals/Modals.php";
+        require_once "views/inc/Modals/Modals.php";
 
-        require_once "../inc/MainFooter/MainFooter.php";
-
+        require_once "views/inc/MainFooter/MainFooter.php";
 
         ?>
 
     </div>
-    <!-- ./wrapper -->
 
-    <?php require_once "../inc/MainJS/MainJS.php" ?>
+    <?php require_once "views/inc/MainJS/MainJS.php" ?>
 
-    <script src="nuevoTramite.js"></script>
+    <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
 
 </body>
 

@@ -533,7 +533,7 @@ $(document).ready(function () {
       ajax: {
         url: base_url + "/Tramites/getHistorial/" + expediente,
         method: "GET",
-        dataSrc: "" 
+        dataSrc: "",
       },
       columns: [
         { data: "fecha" },
@@ -669,6 +669,14 @@ function MostrarAlertaxTiempo(titulo, descripcion, tipoalerta) {
     icon: tipoalerta,
     showConfirmButton: false,
     timer: 2000,
+  });
+}
+function MostrarAlertaHtml(titulo, html, tipoalerta) {
+  Swal.fire({
+    title: titulo,
+    html: html,
+    icon: tipoalerta,
+    showConfirmButton: true,
   });
 }
 

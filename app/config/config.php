@@ -12,4 +12,4 @@ const URL = 'http://localhost/MesaPartesVirtual';
 define('BASE_PATH', dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
 
 // Definir UPLOADS_PATH para la ruta pública donde se almacenan los archivos subidos
-define('UPLOADS_PATH', BASE_PATH . 'public/files/images/');
+define('UPLOADS_PATH', BASE_PATH . 'public/files/');

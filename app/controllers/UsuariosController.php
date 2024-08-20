@@ -122,7 +122,7 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH; // RAIZ/public/files/images/
+                    $ruta_aux = UPLOADS_PATH.'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 
@@ -265,7 +265,7 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH; // RAIZ/public/files/images/
+                    $ruta_aux = UPLOADS_PATH.'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 

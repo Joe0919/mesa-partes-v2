@@ -59,7 +59,7 @@ class UsuarioModel extends Mysql
 
         if (empty($request)) {
             $arrData = array($this->strDNI, $this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion);
-            $request_insert = $this->registrar("persona", "(null,?,?,?,?,?,?,?,null,null)", $arrData);
+            $request_insert = $this->registrar("persona", "(null,?,?,?,?,?,?,?,null,null,0)", $arrData);
 
             $arrData = array($this->strNombreUsuario, $this->strDNI, $this->strPassword, $this->strFoto, $this->intIdRol);
             $request_insert = $this->registrar("usuarios", " (null,?,?,?,sysdate(),null,sysdate(),'INACTIVO',?,?,0)", $arrData);

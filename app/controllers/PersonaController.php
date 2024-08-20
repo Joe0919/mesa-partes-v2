@@ -1,21 +1,35 @@
 <?php
 
-require_once "../config/conexion.php";
-require_once "../models/PersonaModel.php";
+class PersonaController extends Controllers
+{
+    public function __construct()
+    {
+        parent::__construct("Persona");
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (empty($_SESSION['login'])) {
+            header('Location: ' . base_url() . '/dashboard');
+        }
+    }
 
-$persona = new PersonaModel();
-
-$opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : 0;
-
-$dni = (isset($_POST["idni"])) ? $_POST["idni"] : '';
-
-
-switch ($opcion) {
-    case 1:
-        // Consultar registro por DNI
-        $data = $persona->consultarPersonaDNI($dni);
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
-        break;
-    default:
-        break;
+    public function getPersona(string $dni)
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $DNI = limpiarCadena($dni);
+            if ($DNI != '') {
+                $arrData = $this->model->selectPersona($DNI);
+                if (empty($arrData)) {
+                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.');
+                } else {
+                    $arrResponse = array('status' => true, 'title' => 'ok', 'data' => $arrData);
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            }
+        } else {
+            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción..');
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        }
+        die();
+    }
 }

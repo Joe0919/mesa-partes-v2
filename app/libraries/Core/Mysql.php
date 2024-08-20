@@ -32,6 +32,7 @@ class Mysql extends Conexion
         $this->strquery = $query;
         $this->arrValues = $arrValues;
         $result = $this->conexion->prepare($this->strquery);
+        empty($arrValues) ? $result->execute() : $result->execute($arrValues);
         $result->execute($this->arrValues);
         $data = $result->fetch(PDO::FETCH_ASSOC);
         return $data;
