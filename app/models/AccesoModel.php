@@ -32,7 +32,7 @@ class AccesoModel extends Mysql
 		//BUSCAR ROLE 
 		$sql = "SELECT idusuarios, u.dni dni, nombre nomusu, 
 				concat(p.nombres,' ', p.ap_paterno,' ', p.ap_materno) datos, foto, 
-						u.estado, area, razon, logo, u.idroles, rol
+						u.estado,a.idareainstitu, area, razon, logo, u.idroles, rol
 				FROM usuarios u 
 				INNER JOIN persona p ON p.dni=u.dni 
 				INNER JOIN empleado e ON e.idpersona=p.idpersona 

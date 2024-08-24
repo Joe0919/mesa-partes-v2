@@ -22,9 +22,8 @@ class AreasController extends Controllers
         }
 
         $data['page_id'] = 5;
-        $data['page_tag'] = "Areas";
-        $data['page_name'] = "areas";
-        $data['page_title'] = "Areas";
+        $data['page_tag'] = "Áreas";
+        $data['page_title'] = "Áreas";
         $data['file_js'] = "areas.js";
         $this->views->getView("Areas", "index", $data);
     }

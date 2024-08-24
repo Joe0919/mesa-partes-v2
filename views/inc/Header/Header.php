@@ -5,7 +5,7 @@
 
 <head>
 
-    <?php require_once "../inc/MainHead/MainHead.php" ?>
+    <?php require_once "../inc/MainHeadLink/MainHeadLink.php" ?>
 
     <title>Inicio | Mesa de Partes Virtual</title>
 </head>

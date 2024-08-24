@@ -9,8 +9,8 @@
                     <h3 class="font-weight-bold h6 m-0">
                         USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['datos'] ?></span>
                     </h3>
-                    <input id="id_areaid" type="hidden" value="0">
-                    <input id="info-area" type="hidden" value="">
+                    <input id="id_areaid" type="hidden" value="<?= $_SESSION['userData']['idareainstitu'] ?>">
+                    <input id="info-area" type="hidden" value="<?= $_SESSION['userData']['area'] ?>">
                     <input id="idinstitu" name="idinstitu" type="hidden">
                     <input id="iduser" name="iduser" type="hidden" value="<?= $_SESSION['userData']['idusuarios'] ?>">
                     <input id="dniuser" name="dniuser" type="hidden" value="<?= $_SESSION['userData']['dni'] ?>">

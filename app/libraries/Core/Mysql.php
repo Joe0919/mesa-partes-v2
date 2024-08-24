@@ -55,6 +55,14 @@ class Mysql extends Conexion
         $data = $result->fetch(PDO::FETCH_ASSOC);
         return $data;
     }
+    public function consultarVarios(string $columnas = "*", string $tabla, string $condicion = "", array $arrValues = [])
+    {
+        $this->strquery = "SELECT $columnas FROM $tabla $condicion";
+        $result = $this->conexion->prepare($this->strquery);
+        $condicion == "" ? $result->execute() : $result->execute($arrValues);
+        $data = $result->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
+    }
     //Actualiza registros
     public function update(string $query, array $arrValues)
     {

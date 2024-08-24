@@ -9,12 +9,11 @@ class UsuariosController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        session_regenerate_id(true);
+        // session_regenerate_id(true); //# MEJORAR EL USO
         if (empty($_SESSION['login'])) {
-            header('Location: ' . base_url() . '/dashboard');
+            header('Location: ' . base_url() . '/acceso');
         }
-
-        getPermisos(2);
+        getPermisos(4);
     }
 
     public function index()

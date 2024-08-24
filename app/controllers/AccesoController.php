@@ -18,7 +18,6 @@ class AccesoController extends Controllers
     {
         $data['page_tag'] = "Acceso";
         $data['page_title'] = "Acceso al Sistema";
-        $data['page_name'] = "acceso";
         $data['page_content'] = "Contenido";
 
         $this->views->getView("Acceso", "index", $data);

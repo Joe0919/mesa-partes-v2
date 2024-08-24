@@ -1,16 +1,24 @@
 <?php
 $controller = $controller . "Controller";
 $controllerFile = "app/controllers/" . $controller . ".php";
+
 if (file_exists($controllerFile)) {
     require_once($controllerFile);
-    $controller = new $controller();
-    if (method_exists($controller, $method)) {
-        $controller->{$method}($params);
+    $controllerInstance = new $controller();
+
+    if (method_exists($controllerInstance, $method)) {
+        // Si los parámetros son un array, usa call_user_func_array para pasarlos al método
+        if (is_array($params)) {
+            call_user_func_array([$controllerInstance, $method], $params);
+        } else {
+            // Si no hay parámetros, llama al método sin parámetros
+            $controllerInstance->{$method}();
+        }
     } else {
-        // require_once("Controllers/Error.php");
-        print_r("No existe el método => " . $method . " en el controlador => " . var_dump($controller));
+        // Manejo de error si el método no existe
+        echo "No existe el método '{$method}' en el controlador '{$controller}'.";
     }
 } else {
-    // require_once("Controllers/Error.php");
-    print_r("No existe el controlador => " . $controller);
+    // Manejo de error si el controlador no existe
+    echo "No existe el controlador '{$controller}'.";
 }

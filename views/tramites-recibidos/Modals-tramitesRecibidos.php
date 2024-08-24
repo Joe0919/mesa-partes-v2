@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header" id="modal-header">
-                <h4 class="modal-title modal-title-h4" id="modal-title">ACEPTAR/RECHAZAR TRÁMITE</h4>
+                <h4 class="modal-title modal-title-h4" id="modal-title"></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
@@ -17,13 +17,13 @@
                                 <input type="hidden" class="form-control" name="iddocumento" id="iddocumento">
                                 <input type="hidden" class="form-control" name="idni" id="idnir">
                                 <label>N° Documento </label>
-                                <input type="text" class="form-control input-form" id="inrodoc_1" readonly name="inrodoc">
+                                <input type="text" class="form-control" id="inrodoc_1" readonly name="inrodoc">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>N° Folios </label>
-                                <input type="number" class="form-control input-form" id="ifolio_1" readonly name="ifolio">
+                                <input type="number" class="form-control" id="ifolio_1" readonly name="ifolio">
                             </div>
                         </div>
                     </div>
@@ -31,13 +31,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>N° Expediente </label>
-                                <input type="text" class="form-control input-form" id="iexpediente_1" readonly name="iexpediente">
+                                <input type="text" class="form-control" id="iexpediente_1" readonly name="iexpediente">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Estado </label>
-                                <input type="text" class="form-control input-form" id="iestado_1" readonly name="iestado">
+                                <input type="text" class="form-control" id="iestado_1" readonly name="iestado">
                             </div>
                         </div>
                     </div>
@@ -45,13 +45,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Tipo</label>
-                                <input type="text" class="form-control input-form" id="itipodoc_1" readonly name="itipodoc">
+                                <input type="text" class="form-control" id="itipodoc_1" readonly name="itipodoc">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Asunto </label>
-                                <textarea readonly class="form-control input-form" rows="3" id="iasunto_1" name="iasunto" style=" resize: none;"></textarea>
+                                <textarea readonly class="form-control" rows="3" id="iasunto_1" name="iasunto" style=" resize: none;"></textarea>
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
         <div class="modal-content">
             <div class="modal-header" id="modal-header">
                 <div class="d-flex align-items-center">
-                    <h4 class="modal-title modal-title-h4 mr-2" id="modal-title">Derivar/Archivar: Expediente
+                    <h4 class="modal-title modal-title-h4 mr-2" id="modal-title">Derivar o Archivar Trámite N°:
                     </h4>
                     <p id="p_expediente_d" class="p-descrip mb-0"></p>
                 </div>
@@ -100,8 +100,6 @@
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="expediente" id="expediente_d">
                                 <input type="hidden" class="form-control" name="idni" id="dni_d">
-                                <input type="hidden" class="form-control" name="id" id="iddoc_d">
-
                                 <label>Fecha: </label><span class="span-red"> (*)</span>
                                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                     <input class="form-control input-date" readonly type="text" id="datepicker1" value="<?php echo date('d/m/Y') ?>">
@@ -127,13 +125,13 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Área Origen: </label><span class="span-red"> (*)</span>
-                                <input type="text" class="form-control input-form text-center" id="idorigen" readonly name="iorigen">
+                                <input type="text" class="form-control text-center" id="idorigen" readonly name="origen">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Área Destino: </label><span class="span-red"> (*)</span>
-                                <select class="form-control select-tipo text-bold text-center" name="idestino" id="select-destino"></select>
+                                <select class="form-control select-tipo text-bold text-center" name="iddestino" id="select-destino"></select>
                             </div>
                         </div>
                     </div>
@@ -141,7 +139,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Descripción: </label><span class="span-gray">(Opcional)</span>
-                                <textarea class="form-control text-uppercase" rows="3" id="iddescripcion" name="idescripcion" placeholder="Ingrese la descripción..." style="resize: none;"></textarea>
+                                <textarea class="form-control text-uppercase" rows="3" id="iddescripcion" name="descripcion" placeholder="Ingrese la descripción..." style="resize: none;"></textarea>
                             </div>
                         </div>
                     </div>

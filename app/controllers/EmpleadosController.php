@@ -23,7 +23,6 @@ class EmpleadosController extends Controllers
 
         $data['page_id'] = 6;
         $data['page_tag'] = "Empleados";
-        $data['page_name'] = "empleados";
         $data['page_title'] = "Empleados";
         $data['file_js'] = "empleados.js";
         $this->views->getView("Empleados", "index", $data);

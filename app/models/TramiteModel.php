@@ -2,7 +2,7 @@
 
 class TramiteModel extends Mysql
 {
-    private $intIdTramite;
+    private $intIdDerivacion;
     private $strExpediente;
     private $strFecha;
     private $strNroDoc;
@@ -13,6 +13,13 @@ class TramiteModel extends Mysql
     private $strDNI;
     private $intIdTipo;
     private $intIdDoc;
+    private $strEstado;
+    private $strArea;
+    private $strOrigen;
+    private $strIdDestino;
+    private $strDescripcion;
+    private $strAccion;
+    private $intIdUbicacion;
 
 
     public function __construct()
@@ -43,26 +50,28 @@ class TramiteModel extends Mysql
         $request = $this->select_all($sql);
         return $request;
     }
+    public function selectTramitesRecibidos($area, $estado, $ubicacion)
+    {
+        $this->strArea = $area;
+        $this->strEstado = $estado;
+        $this->intIdUbicacion = $ubicacion;
 
-    // public function listarTramites(string $condicion = "", array $valores = [])
-    // {
-    //     $conectar = parent::conexion();
+        $request = $this->consultarVarios(
+            "dc.nro_expediente expediente, DATE_FORMAT(d.fechad, '%d/%m/%Y') Fecha,
+                tipodoc, dni, CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) Datos,
+                origen, area, estado",
+            "derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
+                JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
+                JOIN area ae ON a.idarea=ae.idarea
+                JOIN persona p ON dc.idpersona=p.idpersona
+                JOIN tipodoc t ON dc.idtipodoc=t.idtipodoc",
+            "WHERE area = ? AND estado = ? AND idubicacion = ? ORDER BY idderivacion ASC",
+            [$this->strArea, $this->strEstado, $this->intIdUbicacion]
+        );
+        // $request = $this->strArea . ' ' . $this->strEstado . ' ' . $this->intIdUbicacion;
 
-    //     $consulta = "SELECT nro_expediente expediente,  date_format(fechad, '%d/%m/%Y') Fecha, tipodoc, dni, concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, origen, area, estado
-    //     from derivacion d join documento dc on d.iddocumento=dc.iddocumento
-    //     join areainstitu a on d.idareainstitu=a.idareainstitu
-    //     join area ae on a.idarea=ae.idarea
-    //     join persona p on dc.idpersona=p.idpersona 
-    //     join tipodoc t on dc.idtipodoc=t.idtipodoc 
-    //     $condicion order by fechad desc;";
-    //     $resultado = $conectar->prepare($consulta);
-
-    //     // Validamos si hay valores de condicion o no
-    //     $condicion == "" ? $resultado->execute() : $resultado->execute($valores);
-
-    //     return $resultado->fetchAll(pdo::FETCH_ASSOC);
-    // }
-
+        return $request;
+    }
     public function selectTramite(string $expediente, string $limit = "LIMIT 1")
     {
         $this->strExpediente = $expediente;
@@ -78,7 +87,6 @@ class TramiteModel extends Mysql
         $request = $this->selectOne($sql, [$this->strExpediente]);
         return $request;
     }
-
     public function selectHistorial(string $expediente)
     {
         $this->strExpediente = $expediente;
@@ -90,23 +98,31 @@ class TramiteModel extends Mysql
         );
         return $request;
     }
-
     public function selectTipo()
     {
         $sql = "SELECT * FROM tipodoc WHERE deleted = 0";
         $request = $this->select_all($sql);
         return $request;
     }
+    public function selectAreaDestino($area)
+    {
+        $this->strArea = $area;
 
+        $request = $this->consultarVarios(
+            "ae.idareainstitu ID, cod_area, area",
+            "institucion i JOIN areainstitu ae ON ae.idinstitucion = i.idinstitucion JOIN area a ON a.idarea=ae.idarea",
+            "WHERE area != ? and ae.deleted = 0",
+            [$this->strArea]
+        );
+
+        return $request;
+    }
     public function genExpediente()
     {
         $sql = "SELECT gen_nroexpediente() Expediente";
         $request = $this->selectOne($sql, []);
         return $request;
     }
-
-    public function insertTramite($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol, $Foto) {}
-
     public function registrarDocumento($expediente, $nrodoc, $folios, $asunto, $ruta, $idpersona, $tipo)
     {
         $this->strExpediente = $expediente;
@@ -149,40 +165,95 @@ class TramiteModel extends Mysql
         }
         return $return;
     }
-    public function registrarHistorial($expediente, $dni)
+    public function editarDocumento($expediente, $estado, $ubicacion = '')
+    {
+        $this->strExpediente = $expediente;
+        $this->strEstado = $estado;
+        $this->intIdUbicacion = $ubicacion;
+
+        $paramIdUbi = $this->intIdUbicacion === '' ? '' : ', idubicacion = ?';
+
+        $arrayData = $this->intIdUbicacion === '' ?
+            [$this->strEstado, $this->strExpediente] :
+            [$this->strEstado,  $this->intIdUbicacion, $this->strExpediente];
+
+        $request = $this->editar(
+            "documento",
+            "estado = ?" . $paramIdUbi,
+            "nro_expediente = ?",
+            $arrayData
+        );
+
+        $request = $this->strEstado . ' ' . $this->intIdDoc;
+
+        return $request;
+    }
+    public function registrarHistorial($expediente, $dni, $desc, $accion = 'DERIVADO', $area = 'SECRETARÍA')
     {
         $this->strExpediente = $expediente;
         $this->strDNI = $dni;
+        $this->strDescripcion = $desc;
+        $this->strAccion = $accion;
+        $this->strArea = $area;
 
         $arrData = array(
             $this->strExpediente,
-            $this->strDNI
+            $this->strDNI,
+            $this->strAccion,
+            $this->strArea,
+            $this->strDescripcion
         );
         $request_insert = $this->registrar(
             "historial",
-            "(null, sysdate(), ?, ?, 'DERIVADO', 'SECRETARÍA', 'INGRESO DE NUEVO TRÁMITE', 0)",
+            "(null, sysdate(), ?, ?, ?, ?, ?, 0)",
             $arrData
         );
         $return = $request_insert;
 
         return $return;
     }
-    public function registrarDerivacion($idDoc)
+    public function registrarDerivacion($idDoc, $expediente = '', $origen = 'EXTERIOR', $iddestino, $descripcion = 'DERIVANDO A SECRETARIA')
     {
         $this->intIdDoc = $idDoc;
+        $this->strOrigen = $origen;
+        $this->strIdDestino = $iddestino;
+        $this->strDescripcion = $descripcion;
+        $this->strExpediente = $expediente;
 
-        $arrData = array(
-            $this->intIdDoc
+        $iddoc = $this->strExpediente !== '' ? '(SELECT iddocumento FROM documento WHERE nro_expediente = ?)' : '?';
+
+        $arrData = $this->strExpediente !== '' ? array(
+            $this->strOrigen,
+            $this->strIdDestino,
+            $this->strExpediente,
+            $this->strDescripcion
+        ) : array(
+            $this->strOrigen,
+            $this->strIdDestino,
+            $this->intIdDoc,
+            $this->strDescripcion
         );
         $request_insert = $this->registrar(
             "derivacion",
-            "(null, sysdate(),'EXTERIOR',
-            (SELECT idareainstitu FROM areainstitu ai JOIN area a ON ai.idarea = a.idarea 
-                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'),?,'DERIVANDO A SECRETARIA',0)",
+            "(null, sysdate(), ?, ? ,$iddoc, ?, 0)",
             $arrData
         );
         $return = $request_insert;
 
         return $return;
+    }
+    public function editarDerivacion($idderivacion, $descripcion)
+    {
+        $this->intIdDerivacion = $idderivacion;
+        $this->strDescripcion = $descripcion;
+
+        $request = $this->editar(
+            "derivacion",
+            "descripcion = ?",
+            "idderivacion = ?",
+            [$this->strDescripcion, $this->intIdDerivacion]
+        );
+
+        return $request;
     }
 }

@@ -24,10 +24,8 @@ class NuevoTramiteController extends Controllers
 
         $data['page_id'] = 8;
         $data['page_tag'] = "Nuevo Tramite";
-        $data['page_name'] = "nuevo Tramite";
         $data['page_title'] = "Nuevo Tramite";
         $data['file_js'] = "nuevoTramite.js";
         $this->views->getView("nuevo-tramite", "index", $data);
     }
-
 }

@@ -1,5 +1,4 @@
 $(document).ready(function () {
-  let idtramite = 0;
 
   $("#loader").show();
 

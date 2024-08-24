@@ -3,7 +3,7 @@
 
 <head>
 
-    <?php require_once "views/inc/MainHead/MainHead.php" ?>
+    <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
 
     <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
@@ -17,111 +17,8 @@
 
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 
-        <!-- Seccion de Links  -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <a class="brand-link navbar-lightblue">
-                <img src="<?php echo media() . "/" . $_SESSION['userData']['logo']; ?>" id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text span-logo" id="inst_desc">HACDP</span>
-            </a>
-
-            <!-- Menu de Navegacion -->
-            <div class="sidebar">
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li class="nav-item menu-open">
-                            <a href="<?= base_url(); ?>/dashboard" class="nav-link">
-                                <i class="nav-icon fas fa-home"></i>
-                                <p>
-                                    Inicio
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/usuarios" class="nav-link">
-                                <i class="nav-icon fas fa-user"></i>
-                                <p>
-                                    Usuarios
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/roles" class="nav-link">
-                                <i class="nav-icon fas fa-list"></i>
-                                <p>
-                                    Roles
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/areas" class="nav-link">
-                                <i class="nav-icon fas fa-door-closed"></i>
-                                <p>
-                                    Áreas
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/empleados" class="nav-link">
-                                <i class="nav-icon fas fa-user-friends"></i>
-                                <p>
-                                    Empleados
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/tramites" class="nav-link">
-                                <i class="nav-icon fas fa-file-pdf"></i>
-                                <p>
-                                    Trámites
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active">
-                                <i class="nav-icon fas fa-file-upload"></i>
-                                <p>
-                                    Nuevo Trámite
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?= base_url(); ?>/tramites-recibidos" class="nav-link">
-                                <i class="nav-icon fas fa-file-archive"></i>
-                                <p>
-                                    Trámites Recibidos
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../tramites-enviados/" class="nav-link">
-                                <i class="nav-icon fas fa-file-export"></i>
-                                <p>
-                                    Trámites Enviados
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../busqueda/" class="nav-link">
-                                <i class="nav-icon fas fa-search-minus"></i>
-                                <p>
-                                    Búsqueda de Trámites
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../informes/" class="nav-link">
-                                <i class="nav-icon fas fa-file-contract"></i>
-                                <p>
-                                    Informes
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-
-            </div>
-            <!-- /.Menu de Navegacion -->
-        </aside>
+        <!-- Menu de Navegacion  -->
+        <?php require_once "views/inc/MainSidebar/MainSidebar.php" ?>   
 
         <!-- CONTENIDO PRINCIPAL -->
         <div class="content-wrapper">
@@ -134,7 +31,7 @@
                         </div>
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-upload"></i>Nuevo Trámite</li>
+                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-upload"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>
@@ -199,7 +96,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Entidad </label><span class="span-red"> (*)</span>
-                                                                <input type="text" class="form-control" id="identidad" name="ientidad">
+                                                                <input type="text" class="form-control text-uppercase" id="identidad" name="ientidad">
                                                             </div>
                                                         </div>
                                                         <div class="row">
@@ -215,7 +112,7 @@
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Nombres </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idnombre" name="inombre" required>
+                                                                    <input type="text" class="form-control text-uppercase" id="idnombre" name="inombre" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -224,13 +121,13 @@
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Apellido Paterno </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idap" name="iappat" required>
+                                                                    <input type="text" class="form-control text-uppercase" id="idap" name="iappat" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
                                                                     <label>Apellido Materno </label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" id="idam" name="iapmat" required>
+                                                                    <input type="text" class="form-control text-uppercase" id="idam" name="iapmat" required>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -240,7 +137,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Dirección </label><span class="span-red"> (*)</span>
-                                                            <input type="text" class="form-control" id="iddirec" required name="idir">
+                                                            <input type="text" class="form-control text-uppercase" id="iddirec" required name="idir">
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Correo</label><span class="span-red"> (*)</span>
@@ -279,7 +176,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label>Asunto </label><span class="span-red"> (*)</span>
-                                                            <textarea class="form-control" rows="3" id="idasunto" name="iasunto" placeholder="Ingrese el asunto del documento" required></textarea>
+                                                            <textarea class="form-control text-uppercase" rows="3" id="idasunto" name="iasunto" placeholder="Ingrese el asunto del documento" required></textarea>
                                                         </div>
 
                                                         <div class="form-group">
