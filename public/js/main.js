@@ -536,8 +536,8 @@ $(document).ready(function () {
         dataSrc: "",
       },
       columns: [
-        { data: "fecha" },
         { data: "accion" },
+        { data: "fecha" },
         { data: "area" },
         { data: "descrip" },
       ],

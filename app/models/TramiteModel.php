@@ -72,6 +72,34 @@ class TramiteModel extends Mysql
 
         return $request;
     }
+    public function selectTramitesEnviados($area)
+    {
+        $this->strArea = $area;
+
+        $request = $this->consultarVarios(
+            "idderivacion, dc.nro_expediente expediente, DATE_FORMAT(d.fechad, '%d/%m/%Y') Fecha,
+                tipodoc, dni, CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) Datos,
+                origen, area, estado ",
+            "derivacion d   
+                JOIN documento dc ON d.iddocumento = dc.iddocumento
+                JOIN areainstitu a ON d.idareainstitu = a.idareainstitu
+                JOIN area ae ON a.idarea = ae.idarea
+                JOIN persona p ON dc.idpersona = p.idpersona
+                JOIN tipodoc t ON dc.idtipodoc = t.idtipodoc 
+                JOIN 
+                    (SELECT dc.nro_expediente, MAX(d.idderivacion) max_idderivacion
+                    FROM derivacion d
+                    JOIN documento dc ON d.iddocumento = dc.iddocumento
+                    WHERE d.deleted = 0
+                    GROUP BY dc.nro_expediente) sub_d
+                    ON d.idderivacion = sub_d.max_idderivacion",
+            "WHERE d.deleted = 0 and origen = ?
+                ORDER BY dc.nro_expediente DESC",
+            [$this->strArea]
+        );
+
+        return $request;
+    }
     public function selectTramite(string $expediente, string $limit = "LIMIT 1")
     {
         $this->strExpediente = $expediente;
@@ -91,7 +119,7 @@ class TramiteModel extends Mysql
     {
         $this->strExpediente = $expediente;
         $request = $this->consultarTabla(
-            "*",
+            "accion, DATE_FORMAT(fecha, '%d/%m/%Y %h:%i %p') fecha, area, descrip ",
             "historial",
             "WHERE expediente = ? AND deleted = 0",
             [$this->strExpediente]

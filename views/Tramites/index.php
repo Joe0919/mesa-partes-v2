@@ -47,16 +47,6 @@
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
                                         <h3 class="card-title font-weight-bold card-header-title">Tabla General de Trámites</h3>
-                                        <div>
-                                            <?php if ($_SESSION['permisosMod']['cre']) { ?>
-                                                <button type="button" class="btn btn-success" data-toggle="modal" id="nuevo_empleado" title="Agregar nuevo registro">
-                                                    <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                                </button>
-                                                <button type="button" class="btn btn-dark" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
-                                                    <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                                </button>
-                                            <?php } ?>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
