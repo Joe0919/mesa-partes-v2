@@ -154,7 +154,7 @@
                 <table id="tablaSeguimiento" class="table table-hover table-data">
                     <thead>
                         <tr>
-                            <th>Áccion</th>
+                            <th>Acción</th>
                             <th>Fecha</th>
                             <th>Área</th>
                             <th>Descripción</th>
@@ -167,7 +167,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>Áccion</th>
+                            <th>Acción</th>
                             <th>Fecha</th>
                             <th>Área</th>
                             <th>Descripción</th>

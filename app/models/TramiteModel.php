@@ -115,14 +115,43 @@ class TramiteModel extends Mysql
         $request = $this->selectOne($sql, [$this->strExpediente]);
         return $request;
     }
-    public function selectHistorial(string $expediente)
+    public function selectTramitexAnio(string $expediente, string $dni, string $anio)
     {
         $this->strExpediente = $expediente;
+        $this->strDNI = $dni;
+        $this->strFecha = $anio;
+
+        $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado, tipodoc, asunto, dni,
+                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, ruc_institu, institucion, archivo, area,
+                    date_format(fechad , '%d/%m/%Y') Fecha, descripcion  
+                FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
+                JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
+                JOIN area ae ON a.idarea=ae.idarea
+                JOIN persona p ON dc.idpersona=p.idpersona
+                JOIN tipodoc t ON dc.idtipodoc=t.idtipodoc
+                WHERE nro_expediente = ? AND dni = ? AND YEAR(fechad) = ? AND d.deleted = 0 LIMIT 1";
+        $request = $this->selectOne($sql, [$this->strExpediente, $this->strDNI, $this->strFecha]);
+        return $request;
+    }
+
+    public function selectHistorial(string $expediente, string $dni = '', string $anio = '')
+    {
+        $this->strExpediente = $expediente;
+        $this->strDNI = $dni;
+        $this->strFecha = $anio;
+
+        $where = $this->strDNI == '' ? 'WHERE expediente = ? AND deleted = 0' :
+            'WHERE expediente = ? AND dni = ? AND YEAR(fecha) = ? AND deleted = 0';
+
+        $arrayValues =  $this->strDNI == '' ? [$this->strExpediente] :
+            [$this->strExpediente, $this->strDNI, $this->strFecha];
+
         $request = $this->consultarTabla(
-            "accion, DATE_FORMAT(fecha, '%d/%m/%Y %h:%i %p') fecha, area, descrip ",
+            "accion, DATE_FORMAT(fecha, '%d/%m/%Y %h:%i %p') fecha, DATE_FORMAT(fecha, '%d/%m/%Y') fecha1,
+            DATE_FORMAT(fecha, '%h:%i %p') hora, area, descrip ",
             "historial",
-            "WHERE expediente = ? AND deleted = 0",
-            [$this->strExpediente]
+            $where,
+            $arrayValues
         );
         return $request;
     }
