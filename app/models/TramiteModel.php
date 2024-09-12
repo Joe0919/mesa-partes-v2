@@ -174,6 +174,22 @@ class TramiteModel extends Mysql
 
         return $request;
     }
+
+    public function selectAnios(string $column, string $condicion = '', array $arrValues = [])
+    {
+
+        $where = $condicion == '' ? '' : "WHERE $condicion";
+
+        $arrayValues = $condicion == '' ? [] : $arrValues;
+
+            $request = $this->consultarTabla(
+                "distinct $column dato",
+                "derivacion",
+                $where,
+                $arrayValues
+            );
+        return $request;
+    }
     public function genExpediente()
     {
         $sql = "SELECT gen_nroexpediente() Expediente";

@@ -77,6 +77,7 @@ $(document).ready(function () {
     }
   });
 
+  //Accion al presionar el logo
   $("#logo").on("click", function () {
     $("#input_logo").click();
   });
@@ -142,8 +143,9 @@ $(document).ready(function () {
   // # DATOS DEL PERFIL
   //Mostrar modal con datos de usuario logeado
   $("#conf-perfil").click(function () {
+    console.log(idusu);
     $.ajax({
-      url: base_url + "/Usuarios/getUsuario/" + idusu,
+      url: base_url + "/Usuarios/getUsuarioPerfil/" + idusu,
       type: "GET",
       beforeSend: function () {
         $("#loader").show();
@@ -232,7 +234,6 @@ $(document).ready(function () {
       }).then((result) => {
         if (result.isConfirmed) {
           $("#bdr-photoP").val() !== "0" ? (foto_bdr = 1) : (foto_bdr = 0);
-          console.log(foto_bdr);
           let formData = new FormData(this);
           formData.append("foto_bdr", foto_bdr);
           $.ajax({

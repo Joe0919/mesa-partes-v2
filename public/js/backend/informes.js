@@ -4,7 +4,7 @@ $(document).ready(function () {
   //LLenamos el select de fechas
   llenarSelect(
     "#select_fechas",
-    ["TODOS", "POR AÑO", "POR MES Y AÑO", "POR RANGO DE FECHAS"],
+    ["TODOS", "POR AÑO", "POR AÑO Y MES", "POR RANGO DE FECHAS"],
     true
   );
 
@@ -14,50 +14,50 @@ $(document).ready(function () {
     switch (sel) {
       case "1":
         contenidoHTML = `
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Año</label><span class="span-red"> (*)</span>
-                            <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
-                        </div>
-                    </div>
-                </div>
-            `;
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <div class="form-group">
+                              <label>Año</label><span class="span-red"> (*)</span>
+                              <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
+                          </div>
+                      </div>
+                  </div>
+              `;
         break;
       case "2":
         contenidoHTML = `
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Año</label><span class="span-red"> (*)</span>
-                            <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Mes</label><span class="span-red"> (*)</span>
-                            <select class="form-control text-center font-w-600" name="mes" id="select_mes" required></select>
-                        </div>
-                    </div>
-                </div>
-            `;
+                  <div class="row">
+                      <div class="col-sm-6">
+                          <div class="form-group">
+                              <label>Año</label><span class="span-red"> (*)</span>
+                              <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
+                          </div>
+                      </div>
+                      <div class="col-sm-6">
+                          <div class="form-group">
+                              <label>Mes</label><span class="span-red"> (*)</span>
+                              <select class="form-control text-center font-w-600" name="mes" id="select_mes" required></select>
+                          </div>
+                      </div>
+                  </div>
+              `;
         break;
       case "3":
         contenidoHTML = `
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="form-group" id="sandbox-container">
-                            <label>Rango de fechas</label><span class="span-red"> (*)</span>
-                            <div class="input-daterange input-group" id="datepicker">
-                                <span class="input-group-addon mr-2">Desde: </span>
-                                <input type="text" class="input-sm form-control font-w-600" name="desde" id="desde" required/>
-                                <span class="input-group-addon mx-2"> hasta </span>
-                                <input type="text" class="input-sm form-control font-w-600" name="hasta" id="hasta" required/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
+                  <div class="row">
+                      <div class="col-sm-12">
+                          <div class="form-group" id="sandbox-container">
+                              <label>Rango de fechas</label><span class="span-red"> (*)</span>
+                              <div class="input-daterange input-group" id="datepicker">
+                                  <span class="input-group-addon mr-2">Desde: </span>
+                                  <input type="text" class="input-sm form-control font-w-600" name="desde" id="desde" required/>
+                                  <span class="input-group-addon mx-2"> hasta </span>
+                                  <input type="text" class="input-sm form-control font-w-600" name="hasta" id="hasta" required/>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              `;
         break;
     }
     $(".div_informes .div_principal").next().remove();
@@ -65,11 +65,11 @@ $(document).ready(function () {
 
     switch (sel) {
       case "1":
-        llenarSelectAjax(12, "#select_anio");
+        llenarSelectAjax(1, "#select_anio");
         bdr = false;
         break;
       case "2":
-        llenarSelectAjax(12, "#select_anio");
+        llenarSelectAjax(1, "#select_anio");
         $("#select_mes").prop("disabled", true);
         bdr = true;
         break;
@@ -85,7 +85,7 @@ $(document).ready(function () {
   $(document).on("change", "#select_anio", function () {
     if (bdr) {
       $("#select_mes").empty();
-      llenarSelectAjax(13, "#select_mes", $("#select_anio").val());
+      llenarSelectAjax(2, "#select_mes", $("#select_anio").val());
       $("#select_mes").prop("disabled", false);
     }
   });
@@ -125,15 +125,15 @@ $(document).ready(function () {
       dataToSend.anio = anio;
     }
     $.ajax({
-      url: "../../app/controllers/tramite-controller.php",
+      url: base_url + "/Tramites/getFechas",
       type: "POST",
       datatype: "json",
       data: dataToSend,
       beforeSend: function () {
-        /* * Se ejecuta al inicio de la petición* */
         $("#loader").show();
       },
       success: function (response) {
+        console.log(response);
         data = $.parseJSON(response);
         let placeholderOption = $("<option></option>");
         placeholderOption.val("");
@@ -147,7 +147,7 @@ $(document).ready(function () {
 
           option.val(data[i].dato);
 
-          if (opcion == 13) {
+          if (opcion == 2) {
             let mes = darNombreMes(data[i].dato);
             option.text(mes);
           } else {
@@ -165,18 +165,18 @@ $(document).ready(function () {
 
   function darNombreMes(numeroMes) {
     const meses = [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
+      "ENERO",
+      "FEBRERO",
+      "MARZO",
+      "ABRIL",
+      "MAYO",
+      "JUNIO",
+      "JULIO",
+      "AGOSTO",
+      "SETIEMBRE",
+      "OCTUBRE",
+      "NOVIEMBRE",
+      "DICIEMBRE",
     ];
     return meses[numeroMes - 1];
   }

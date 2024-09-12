@@ -16,17 +16,17 @@ class AccesoController extends Controllers
 
     public function index()
     {
+        $data['page_id'] = 1;
         $data['page_tag'] = "Acceso";
-        $data['page_title'] = "Acceso al Sistema";
-        $data['page_content'] = "Contenido";
+        $data['page_title'] = "Acceso";
+        $data['file_js'] = "acceso.js";
 
         $this->views->getView("Acceso", "index", $data);
     }
 
     public function login()
     {
-
-        if (isset($_POST["enviar"])) {
+        if ($_POST) {
 
             $usuario = $_POST["usuario"];
             $password = $_POST["password"];
@@ -34,26 +34,47 @@ class AccesoController extends Controllers
             $requestUser = $this->model->loginUser($usuario, $password);
 
             if (!empty($requestUser)) {
-                $arrData = $requestUser;
-                print_r($arrData);
-                if ($arrData["estado"] === 'ACTIVO') {
-                    $_SESSION["idUsuario"] = $arrData["idusuarios"];
-                    $_SESSION["login"] = true;
+                if ($requestUser != 1) {
+                    $arrData = $requestUser;
+                    if ($arrData["estado"] === 'ACTIVO') {
 
-                    $arrData = $this->model->sessionLogin($_SESSION['idUsuario']);
-                    sessionUser($_SESSION['idUsuario']);
+                        $_SESSION["idUsuario"] = $arrData["idusuarios"];
+                        $_SESSION["login"] = true;
 
-                    header("Location:" . base_url()  . "/dashboard");
-                    exit();
+                        $arrData = $this->model->sessionLogin($_SESSION['idUsuario']);
+                        sessionUser($_SESSION['idUsuario']);
+
+                        $arrResponse = array(
+                            'status' => true,
+                            'title' => 'OK',
+                            'msg' => 'Ingresando.',
+                            'results' => $requestUser
+                        );
+                    } else {
+                        $arrResponse = array(
+                            'status' => false,
+                            'title' => 'Usuario Inactivo',
+                            'msg' => 'Comuniquese con el administrador para activar su cuenta.',
+                            'results' => $requestUser
+                        );
+                    }
                 } else {
-                    // header("Location:" . URL  . "/views/acceso/index.php?m=2");
-                    echo "El usuario no esta activo";
+                    $arrResponse = array(
+                        'status' => false,
+                        'title' => 'Datos Incorrectos',
+                        'msg' => 'Usuario y/o contraseña incorrectos.',
+                        'results' => $requestUser
+                    );
                 }
             } else {
-                // header("Location:" . URL  . "/views/acceso/index.php?m=1");
-                echo "El usuario no existe";
-                exit();
+                $arrResponse = array(
+                    'status' => false,
+                    'title' => 'Usuario Inexistente',
+                    'msg' => 'No se encuentra registrado en el sistema.',
+                    'results' => $requestUser
+                );
             }
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
         die();
     }

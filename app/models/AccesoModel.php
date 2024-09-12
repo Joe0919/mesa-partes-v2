@@ -17,13 +17,23 @@ class AccesoModel extends Mysql
 	{
 		$this->strUsuario = $usuario;
 		$this->strPassword = $password;
-		$sql = "SELECT idusuarios,  u.estado
-                from usuarios u 
-                inner join persona p on p.dni=u.dni 
-                where u.dni=? and contrasena=? and u.estado='ACTIVO'";
-		$request = $this->selectOne($sql, [$this->strUsuario, $this->strPassword]);
+		$sql = "SELECT u.idusuarios, u.contrasena, u.estado
+            FROM usuarios u 
+            INNER JOIN persona p ON p.dni = u.dni
+			INNER JOIN empleado e ON e.idpersona = p.idpersona
+            WHERE u.dni = ?";
+		$request = $this->selectOne($sql, [$this->strUsuario]);
 
-		return $request;
+		if (!empty($request)) {
+			$pswGuardado = $request['contrasena'];
+			if (password_verify($this->strPassword, $pswGuardado)) {
+				return $request;
+			} else {
+				return 1; //contraseña incorrecta
+			}
+		} else {
+			return $request; //No existe el Usuario
+		}
 	}
 
 	public function sessionLogin(int $iduser)

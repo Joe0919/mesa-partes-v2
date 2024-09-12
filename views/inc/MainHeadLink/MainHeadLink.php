@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="<?= media() ?>/icons/ionicons.css">
 <!-- Feather Icons -->
 <link rel="stylesheet" href="<?= media() ?>/icons/feather.css">
+<!-- Boostrap 4 -->
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <!-- Date Picker -->
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">

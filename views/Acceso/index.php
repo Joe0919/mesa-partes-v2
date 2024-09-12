@@ -1,17 +1,3 @@
-<?php
-
-if (isset($_SESSION["idusuarios"])) {
-    // header("Location:" . URL . "/views/dashboard/");
-    echo $_SESSION["idusuarios"];
-}
-
-if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
-    require_once("app/controllers/AccesoController.php");
-    (new AccesoController())->login();
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -20,8 +6,10 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="icon" type="image/png" href="<?= media() ?>/files/images/inst/logo.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Boostrap 4 -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/bootstrap5/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= media() ?>/css/style.css">
+    <link rel="icon" type="image/png" href="<?php echo media() ?>/images/logo.wepb">
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
@@ -35,32 +23,38 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         <img src="<?= media() ?>/images/logo.png " class="logo" />
                     </div>
 
-                    <div class="py-3 px-5">
+                    <div class="py-3 px-5 alerta">
                         <?php
                         if (isset($_GET["m"])) {
                             switch ($_GET["m"]) {
                                 case "1";
                         ?>
-                                    <div class="alert alert-danger" role="alert">
-                                        Datos Incorrectos. Intente de nuevo!
+                                    <div class="alert alert-danger py-2" role="alert">
+                                        Usuario no activo.
                                     </div>
                                 <?php
                                     break;
                                 case "2";
                                 ?>
-                                    <div class="alert alert-danger" role="alert">
-                                        El usuario Ingresado esta inactivo!
+                                    <div class="alert alert-danger py-2" role="alert">
+                                        <strong>¡Datos Incorrectos!</strong> Inténtelo nuevamente.
+                                    </div>
+                                <?php
+                                    break;
+                                case "3":
+                                ?>
+                                    <div class="alert alert-danger py-2" role="alert">
+                                        <strong>¡Error!</strong> No existen registros con los datos ingresados.
                                     </div>
                         <?php
-                                    break;
                             }
                         }
                         ?>
-                        <form class="form-signin d-flex" method="post">
-                            <h3>INICIO DE SESIÓN</h3>
+
+                        <form class="form-signin d-flex" method="post" id="form_acceso">
+                            <h3 class="title">Acceso al Sistema de Mesa de Partes Virtual</h3>
                             <input type="text" name="usuario" id="inputEmail" class="form-control" placeholder="Usuario" required autofocus>
                             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
-                            <input type="hidden" name="enviar" class="form-control" value="si">
                             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Ingresar</button>
                         </form>
 
@@ -69,13 +63,21 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                     </div>
 
                 </div>
-                <div class="col-sm-6 px-0d-none d-sm-block">
-                    <?php debug($data) ?>
+                <div class="col-sm-6" id="fondo">
                 </div>
             </div>
         </div>
     </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/bootstrap5/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const base_url = "<?= base_url(); ?>";
+    </script>
+    <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

@@ -33,9 +33,32 @@ body {
   width: 90px;
 }
 
+#fondo {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; 
+}
+
+#fondo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+
+.title{
+  font-size: 1.5rem;
+}
+
 .form-login {
   position: absolute;
-  max-width: 900px;
+  max-width: 1050px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -71,7 +94,7 @@ body {
 
 .btn.btn-signin {
   /*background-color: #4d90fe; */
-  background-color: rgb(104, 145, 162);
+  background-color: var(--main-color);
   /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
   padding: 0px;
   font-weight: 700;
@@ -90,17 +113,17 @@ body {
 .btn.btn-signin:hover,
 .btn.btn-signin:active,
 .btn.btn-signin:focus {
-  background-color: rgb(12, 97, 33);
+  background-color: var(--color1);
 }
 
 .forgot-password {
-  color: rgb(104, 145, 162);
+  color: var(--color1);
 }
 
 .forgot-password:hover,
 .forgot-password:active,
 .forgot-password:focus {
-  color: rgb(12, 97, 33);
+  color: var(--main-color);
 }
 
 .btn1 {

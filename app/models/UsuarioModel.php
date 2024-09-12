@@ -45,7 +45,7 @@ class UsuarioModel extends Mysql
         $this->intTelefono = $celular;
         $this->strDireccion = $direccion;
         $this->strNombreUsuario = $nom_usu;
-        $this->strPassword = $psw;
+        $this->strPassword = password_hash($psw, PASSWORD_BCRYPT);
         $this->strFoto = $Foto;
         $this->intIdRol = $rol;
 
@@ -71,12 +71,12 @@ class UsuarioModel extends Mysql
         return $return;
     }
 
-    public function consultarUsuario($IdUsuario, $dni = null)
+    public function consultarUsuario($IdUsuario, $dni = '')
     {
         $this->intIdUsuario = $IdUsuario;
         $queryParams = [$this->intIdUsuario];
 
-        if ($dni !== null) {
+        if ($dni !== '') {
             $this->strDNI = $dni;
             $whereClause = " WHERE u.idusuarios = ? AND p.dni = ?";
             array_unshift($queryParams, $this->strDNI);
@@ -90,7 +90,6 @@ class UsuarioModel extends Mysql
             $whereClause,
             $queryParams
         );
-
         return $request;
     }
 
@@ -254,25 +253,30 @@ class UsuarioModel extends Mysql
     {
         $this->intIdUsuario = $idusu;
         $this->strOldPassword = $psw_anterior;
-        $this->strPassword = $psw_nueva;
+        $this->strPassword = password_hash($psw_nueva, PASSWORD_BCRYPT);
 
-        $where = " WHERE contrasena = ? and idusuarios = ? ";
+        $where = " WHERE idusuarios = ? ";
         $request = $this->consultar(
             "*",
             "usuarios",
             $where,
-            [$this->strOldPassword, $this->intIdUsuario]
+            [$this->intIdUsuario]
         );
 
-        if (empty($request)) {
-            $request = 0;
+        if (!empty($request)) {
+            $pswGuardado = $request['contrasena'];
+            if (password_verify($this->strOldPassword, $pswGuardado)) {
+                $request = $this->editar(
+                    "usuarios",
+                    "contrasena = ? , fechaedicion = sysdate()",
+                    "idusuarios = ?",
+                    [$this->strPassword, $this->intIdUsuario]
+                );
+            } else {
+                $request = 0;
+            }
         } else {
-            $request = $this->editar(
-                "usuarios",
-                "contrasena = ? , fechaedicion = sysdate()",
-                "idusuarios = ?",
-                [$this->strPassword, $this->intIdUsuario]
-            );
+            $request = 'no hay';
         }
         return $request;
     }

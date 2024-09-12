@@ -128,6 +128,36 @@ class TramitesController extends Controllers
             die();
         }
     }
+    public function getFechas()
+    {
+        if ($_POST) {
+
+            $opcion = limpiarCadena($_POST['opcion']);
+
+            $anio =  isset($_POST['anio']) ? limpiarCadena($_POST['anio']) : '';
+
+
+            switch ($opcion) {
+
+                case 1:
+                    $arrData = $this->model->selectAnios("date_format(fechad,'%Y')");
+                    break;
+                case 2:
+                    if ($anio === '') {
+                        $arrData = $this->model->selectAnios("date_format(fechad,'%m')");
+                    } else {
+                        $arrData = $this->model->selectAnios(
+                            "date_format(fechad,'%m')",
+                            "date_format(fechad,'%Y') = ?",
+                            [$anio]
+                        );
+                    }
+                    break;
+            }
+            echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+            die();
+        }
+    }
     public function setTramite()
     {
         if ($_POST) {

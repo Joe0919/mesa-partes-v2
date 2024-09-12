@@ -81,7 +81,7 @@ class UsuariosController extends Controllers
         if ($_SESSION['permisosMod']['rea']) {
             $idusuario = intval($idusuario);
             if ($idusuario > 0) {
-                $arrData = $this->model->consultarUsuario($idusuario);
+                $arrData = $this->model->consultarUsuario($idusuario, '');
                 if (empty($arrData)) {
                     $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
                 } else {
@@ -89,6 +89,23 @@ class UsuariosController extends Controllers
                 }
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
+        } else {
+            $arrResponse = array('status' => false, 'msg' => 'No tiene permisos para realizar esta acción.');
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        }
+        die();
+    }
+    public function getUsuarioPerfil($idusuario)
+    {
+        $idusuario = intval($idusuario);
+        if ($idusuario > 0) {
+            $arrData = $this->model->consultarUsuario($idusuario, '');
+            if (empty($arrData)) {
+                $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
+            } else {
+                $arrResponse = array('status' => true, 'data' => $arrData);
+            }
+            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -121,7 +138,7 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH.'images/'; // RAIZ/public/files/images/
+                    $ruta_aux = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 
@@ -194,7 +211,9 @@ class UsuariosController extends Controllers
                     }
                     if ($request_user === 'exist') {
                         $arrResponse = array(
-                            'status' => false, 'title' => 'Datos duplicados', 'msg' => 'Email, telefono o nombre de usuario ya existen.',
+                            'status' => false,
+                            'title' => 'Datos duplicados',
+                            'msg' => 'Email, telefono o nombre de usuario ya existen.',
                             'results' =>  $request_user
                         );
                     } else if ($request_user === 'admin') {
@@ -222,13 +241,17 @@ class UsuariosController extends Controllers
                         }
                     } else {
                         $arrResponse = array(
-                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                            "status" => false,
+                            'title' => 'Error',
+                            "msg" => 'No es posible almacenar los datos.',
                             'results' => ""
                         );
                     }
                 } else {
                     $arrResponse = array(
-                        'status' => false, 'title' => 'Error', 'msg' => 'No fue posible guardar la imagen.',
+                        'status' => false,
+                        'title' => 'Error',
+                        'msg' => 'No fue posible guardar la imagen.',
                         'results' => $success
                     );
                 }
@@ -264,7 +287,7 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH.'images/'; // RAIZ/public/files/images/
+                    $ruta_aux = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 
@@ -301,25 +324,26 @@ class UsuariosController extends Controllers
                     if ($idUsuario <= 0) {
                         $request_user = 'El ID es 0';
                     } else {
-                        if ($_SESSION['permisosMod']['upd']) {
-                            $ruta_foto = ($_POST['foto_bdr'] === '1') ? $ruta_foto : "";
-                            $request_user = $this->model->editarPerfil(
-                                $idUsuario,
-                                $nom_usu,
-                                $idPersona,
-                                $nombre,
-                                $appat,
-                                $apmat,
-                                $email,
-                                $celular,
-                                $direccion,
-                                $ruta_foto
-                            );
-                        }
+
+                        $ruta_foto = ($_POST['foto_bdr'] === '1') ? $ruta_foto : "";
+                        $request_user = $this->model->editarPerfil(
+                            $idUsuario,
+                            $nom_usu,
+                            $idPersona,
+                            $nombre,
+                            $appat,
+                            $apmat,
+                            $email,
+                            $celular,
+                            $direccion,
+                            $ruta_foto
+                        );
                     }
                     if ($request_user === 'exist') {
                         $arrResponse = array(
-                            'status' => false, 'title' => 'Datos duplicados', 'msg' => 'Email, telefono o nombre de usuario ya existen.',
+                            'status' => false,
+                            'title' => 'Datos duplicados',
+                            'msg' => 'Email, telefono o nombre de usuario ya existen.',
                             'results' =>  $request_user
                         );
                     } else if ($request_user > 0) {
@@ -332,13 +356,17 @@ class UsuariosController extends Controllers
                         );
                     } else {
                         $arrResponse = array(
-                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                            "status" => false,
+                            'title' => 'Error',
+                            "msg" => 'No es posible almacenar los datos.',
                             'results' => $request_user
                         );
                     }
                 } else {
                     $arrResponse = array(
-                        'status' => false, 'title' => 'Error', 'msg' => 'No fue posible guardar la imagen.',
+                        'status' => false,
+                        'title' => 'Error',
+                        'msg' => 'No fue posible guardar la imagen.',
                         'results' => $success
                     );
                 }
@@ -371,11 +399,12 @@ class UsuariosController extends Controllers
                     }
                     if ($request_user === 0) {
                         $arrResponse = array(
-                            'status' => false, 'title' => 'Incorrecto', 'msg' => 'La contraseña actual no es correcta.',
+                            'status' => false,
+                            'title' => 'Incorrecto',
+                            'msg' => 'La contraseña actual no es correcta.',
                             'results' =>  $request_user
                         );
                     } else if ($request_user > 0) {
-
                         $arrResponse = array(
                             'status' => true,
                             'title' => 'Actualizado',
@@ -384,8 +413,10 @@ class UsuariosController extends Controllers
                         );
                     } else {
                         $arrResponse = array(
-                            "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
-                            'results' => ""
+                            "status" => false,
+                            'title' => 'Error',
+                            "msg" => 'No es posible almacenar los datos.',
+                            'results' =>  $request_user
                         );
                     }
                 }
