@@ -128,6 +128,7 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
+              console.log(response);
               objData = $.parseJSON(response);
               if (objData.status) {
                 MostrarAlertaHtml(

@@ -32,34 +32,34 @@ class TramitesController extends Controllers
     {
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectTramites();
-            for ($i = 0; $i < count($arrData); $i++) {
-                $btnView = '';
-                $btnHistory = '';
 
-                $arrData[$i]['expediente'] = '<b>' . $arrData[$i]['expediente'] . '</b>';
+            $estadoColors = [
+                'PENDIENTE' => 'bg-black font-p',
+                'ACEPTADO'  => 'bg-success font-p',
+                'DERIVADO'  => 'bg-primary font-p',
+                'RECHAZADO' => 'bg-danger font-p',
+                'DEFAULT'   => 'bg-info font-p'
+            ];
 
-                if ($arrData[$i]['estado'] == "PENDIENTE") {
-                    $arrData[$i]['estado'] = '<span class="badge bg-black">' . $arrData[$i]['estado'] . '</span>';
-                } else if ($arrData[$i]['estado'] == "ACEPTADO") {
-                    $arrData[$i]['estado'] = '<span class="badge bg-success">' . $arrData[$i]['estado'] . '</span>';
-                } elseif ($arrData[$i]['estado'] == "DERIVADO") {
-                    $arrData[$i]['estado'] = '<span class="badge bg-primary">' . $arrData[$i]['estado'] . '</span>';
-                } elseif ($arrData[$i]['estado'] == "RECHAZADO") {
-                    $arrData[$i]['estado'] = '<span class="badge bg-danger">' . $arrData[$i]['estado'] . '</span>';
-                } else {
-                    $arrData[$i]['estado'] = '<span class="badge bg-info">' . $arrData[$i]['estado'] . '</span>';
-                }
+            foreach ($arrData as &$item) {
+                $item['expediente'] = '<b>' . $item['expediente'] . '</b>';
 
-                if ($_SESSION['permisosMod']['rea']) {
-                    $btnView = '<button class="btn btn-warning btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>';
-                    $btnHistory = '<button class="btn btn-success btn-sm btn-table btnSeguimiento" title="Ver Historial"><i class="nav-icon fas fa-search"></i></button>';
-                }
-                $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnView . ' ' . $btnHistory . '</div></div>';
+                $colorClass = $estadoColors[$item['estado']] ?? $estadoColors['DEFAULT'];
+                $item['estado'] = '<span class="badge ' . $colorClass . '">' . $item['estado'] . '</span>';
+
+                $item['Fecha'] = $this->getFechaBadge($item['Fecha']);
+
+                $btnView = '<button class="btn btn-warning btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>';
+                $btnHistory = '<button class="btn btn-success btn-sm btn-table btnSeguimiento" title="Ver Historial"><i class="nav-icon fas fa-search"></i></button>';
+
+                $item['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnView . ' ' . $btnHistory . '</div></div>';
             }
+
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         }
         die();
     }
+
     public function getTramite(string $expediente)
     {
         if ($_SESSION['permisosMod']['rea']) {
@@ -235,8 +235,7 @@ class TramitesController extends Controllers
                             $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
                             $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE');
 
-
-                            $this->model->registrarDerivacion($iddocumento);
+                            $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
 
                             $arrData = $this->model->selectTramite($expediente, "");
 
@@ -327,6 +326,16 @@ class TramitesController extends Controllers
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
+    }
+
+    function obtenerEtiquetaTiempo($diferenciaDias, $fechaColors)
+    {
+        if ($diferenciaDias == 0) return $fechaColors[0];
+        if ($diferenciaDias == 1) return $fechaColors[1];
+        if ($diferenciaDias <= 7) return $fechaColors[7];
+        if ($diferenciaDias <= 30) return $fechaColors[30];
+        if ($diferenciaDias <= 365) return $fechaColors[365];
+        return $fechaColors['default'];
     }
 }
 

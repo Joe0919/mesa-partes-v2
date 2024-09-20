@@ -29,7 +29,7 @@ class TramiteModel extends Mysql
 
     public function selectTramites()
     {
-        $sql = "SELECT idderivacion, dc.nro_expediente expediente, DATE_FORMAT(d.fechad, '%d/%m/%Y') Fecha,
+        $sql = "SELECT idderivacion, dc.nro_expediente expediente, DATE_FORMAT(dc.fecha_registro, '%d/%m/%Y') Fecha,
                 tipodoc, dni, CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) Datos,
                 origen, area, estado 
                 FROM derivacion d   
@@ -57,7 +57,7 @@ class TramiteModel extends Mysql
         $this->intIdUbicacion = $ubicacion;
 
         $request = $this->consultarVarios(
-            "dc.nro_expediente expediente, DATE_FORMAT(d.fechad, '%d/%m/%Y') Fecha,
+            "dc.nro_expediente expediente, DATE_FORMAT(dc.fecha_registro, '%d/%m/%Y') Fecha,
                 tipodoc, dni, CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) Datos,
                 origen, area, estado",
             "derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
@@ -174,7 +174,6 @@ class TramiteModel extends Mysql
 
         return $request;
     }
-
     public function selectAnios(string $column, string $condicion = '', array $arrValues = [])
     {
 
@@ -182,12 +181,12 @@ class TramiteModel extends Mysql
 
         $arrayValues = $condicion == '' ? [] : $arrValues;
 
-            $request = $this->consultarTabla(
-                "distinct $column dato",
-                "derivacion",
-                $where,
-                $arrayValues
-            );
+        $request = $this->consultarTabla(
+            "distinct $column dato",
+            "derivacion",
+            $where,
+            $arrayValues
+        );
         return $request;
     }
     public function genExpediente()
@@ -229,7 +228,7 @@ class TramiteModel extends Mysql
                 "(null,?,?,?,?,'PENDIENTE',?,?,?,
                 (SELECT idareainstitu 
                 FROM areainstitu ai JOIN area a ON ai.idarea = a.idarea 
-                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'), 0)",
+                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'), 0,sysdate())",
                 $arrData
             );
             $return = $request_insert;
@@ -327,6 +326,94 @@ class TramiteModel extends Mysql
             [$this->strDescripcion, $this->intIdDerivacion]
         );
 
+        return $request;
+    }
+
+    public function selectCantDocs($idarea = '')
+    {
+        $this->intIdUbicacion = $idarea;
+
+        $where = $idarea == '' ? '' : "WHERE idubicacion = ?";
+        $arrValues = $this->intIdUbicacion == '' ? [] : [$this->intIdUbicacion];
+
+        $request = $this->consultarVarios(
+            "SUM(CASE WHEN estado = 'PENDIENTE' THEN 1 ELSE 0 END) AS total_pendiente,
+                SUM(CASE WHEN estado = 'ACEPTADO' THEN 1 ELSE 0 END) AS total_aceptado,
+                SUM(CASE WHEN estado = 'RECHAZADO' THEN 1 ELSE 0 END) AS total_rechazado,
+                SUM(CASE WHEN estado = 'ARCHIVADO' THEN 1 ELSE 0 END) AS total_archivado",
+            "documento",
+            $where,
+            $arrValues
+        );
+
+        return $request;
+    }
+
+    public function selectRanking()
+    {
+        $sql = "SELECT ROW_NUMBER() OVER (ORDER BY COUNT(d.idubicacion) DESC) AS fila, a.area, COUNT(d.idubicacion) AS total_documentos
+                FROM documento d JOIN areainstitu ae ON ae.idareainstitu = d.idubicacion
+                JOIN area a ON ae.idarea = a.idarea
+                GROUP BY a.area
+                ORDER BY total_documentos DESC";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
+    public function selectDocsxTiempo()
+    {
+        $sql = "SELECT ROW_NUMBER() OVER (ORDER BY 
+                        CASE periodo
+                            WHEN 'Hoy' THEN 1
+                            WHEN 'Esta semana' THEN 2
+                            WHEN 'Este mes' THEN 3
+                            WHEN 'Este año' THEN 4
+                            WHEN 'Otros' THEN 5
+                        END) AS fila,
+                    periodo,
+                    cantidad
+                FROM (SELECT 'Hoy' AS periodo, COUNT(*) AS cantidad
+                    FROM documento
+                    WHERE DATE(fecha_registro) = CURDATE()
+                    UNION ALL
+                    SELECT 'Esta semana', COUNT(*)
+                    FROM documento
+                    WHERE fecha_registro >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                    UNION ALL
+                    SELECT 'Este mes', COUNT(*)
+                    FROM documento
+                    WHERE fecha_registro >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+                    UNION ALL
+                    SELECT 'Este año', COUNT(*)
+                    FROM documento
+                    WHERE fecha_registro >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+                    UNION ALL
+                    SELECT 'Otros', COUNT(*)
+                    FROM documento
+                    WHERE fecha_registro < DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+                ) AS resultados
+                ORDER BY 
+                    CASE periodo
+                        WHEN 'Hoy' THEN 1
+                        WHEN 'Esta semana' THEN 2
+                        WHEN 'Este mes' THEN 3
+                        WHEN 'Este año' THEN 4
+                        WHEN 'Otros' THEN 5
+                    END";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
+    public function selectIngresoDocs()
+    {
+        $sql = "SELECT * FROM ingreso_docs_fecha i";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+    public function selectProcesDocs()
+    {
+        $sql = "SELECT * FROM docs_procesados_fecha d;";
+        $request = $this->select_all($sql);
         return $request;
     }
 }

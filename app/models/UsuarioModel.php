@@ -248,7 +248,6 @@ class UsuarioModel extends Mysql
         }
         return $request;
     }
-
     public function editarPswUsuario($psw_anterior, $psw_nueva, $idusu)
     {
         $this->intIdUsuario = $idusu;
@@ -280,7 +279,6 @@ class UsuarioModel extends Mysql
         }
         return $request;
     }
-
     public function eliminarUsuario($dni)
     {
         $this->strDNI = $dni;

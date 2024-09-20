@@ -45,8 +45,18 @@
                         <section class="col-lg-12 ">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
-                                    <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla de Trámites Enviados</h3>
+                                    <div class="col-md-4">
+                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Trámites</h3>
+                                    </div>
+                                    <div class="text-right">
+                                        <span>Fecha de registro:</span>
+                                        <small class="badge badge-danger"><i class="far fa-clock"></i> 0-1 días</small>
+                                        <small class="badge badge-warning"><i class="far fa-clock"></i> 2-4 días</small>
+                                        <small class="badge badge-info"><i class="far fa-clock"></i> 5-7 días</small>
+                                        <small class="badge badge-success"><i class="far fa-clock"></i> Hace 1 sem.</small>
+                                        <small class="badge badge-secondary"><i class="far fa-clock"></i> Hace 1 mes</small>
+                                        <small class="badge bg-purple"><i class="far fa-clock"></i> Hace 6 meses</small>
+                                        <small class="badge bg-dark"><i class="far fa-clock"></i> Más de 1 año</small>
                                     </div>
                                 </div>
                                 <div class="card-body">

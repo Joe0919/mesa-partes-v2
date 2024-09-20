@@ -41,8 +41,13 @@ class AccesoController extends Controllers
                         $_SESSION["idUsuario"] = $arrData["idusuarios"];
                         $_SESSION["login"] = true;
 
+                        //Iniciar la sesion y guardar los datos del usuario
                         $arrData = $this->model->sessionLogin($_SESSION['idUsuario']);
                         sessionUser($_SESSION['idUsuario']);
+
+                        //Guardar datos de acceso
+                        $arrData = $this->model->registrarAcceso($_SESSION['idUsuario']);
+
 
                         $arrResponse = array(
                             'status' => true,
@@ -69,13 +74,20 @@ class AccesoController extends Controllers
             } else {
                 $arrResponse = array(
                     'status' => false,
-                    'title' => 'Usuario Inexistente',
+                    'title' => 'Datos no Registrados',
                     'msg' => 'No se encuentra registrado en el sistema.',
                     'results' => $requestUser
                 );
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            $arrResponse = array(
+                'status' => false,
+                'title' => 'Datos no enviados',
+                'msg' => 'Nos se encontraron datos en POST.',
+            );
         }
+        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
 }

@@ -46,18 +46,32 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla de Trámites Recibidos</h3>
-                                        <div>
-                                            <div class="d-flex align-items-center">
-                                                <label class="mr-1 mb-0">Listar por: </label>
-                                                <select class="select-reporte select-tipo-estado" name="select_estado" id="select_estado">
-                                                    <option value="PENDIENTE">PENDIENTES</option>
-                                                    <option value="ACEPTADO">ACEPTADOS</option>
-                                                    <option value="RECHAZADO">RECHAZADOS</option>
-                                                    <option value="ARCHIVADO">ARCHIVADOS</option>
-                                                </select>
+                                        <div class="col-xl-8 row">
+                                            <div>
+                                                <h3 class="card-title font-weight-bold card-header-title mb-1">Tabla de Trámites Recibidos</h3>
+                                            </div>
+                                            <div class="text-right">
+                                                <span>Fecha de registro:</span>
+                                                <small class="badge badge-danger"><i class="far fa-clock"></i> 0-1 días</small>
+                                                <small class="badge badge-warning"><i class="far fa-clock"></i> 2-4 días</small>
+                                                <small class="badge badge-info"><i class="far fa-clock"></i> 5-7 días</small>
+                                                <small class="badge badge-success"><i class="far fa-clock"></i> Hace 1 sem.</small>
+                                                <small class="badge badge-secondary"><i class="far fa-clock"></i> Hace 1 mes</small>
+                                                <small class="badge bg-purple"><i class="far fa-clock"></i> Hace 6 meses</small>
+                                                <small class="badge bg-dark"><i class="far fa-clock"></i> Más de 1 año</small>
                                             </div>
                                         </div>
+
+                                        <div class="col-xl-4 text-right">
+                                            <label class="mr-1 mb-0">Listar por: </label>
+                                            <select class="select-reporte select-tipo-estado" name="select_estado" id="select_estado">
+                                                <option value="PENDIENTE">PENDIENTES</option>
+                                                <option value="ACEPTADO">ACEPTADOS</option>
+                                                <option value="RECHAZADO">RECHAZADOS</option>
+                                                <option value="ARCHIVADO">ARCHIVADOS</option>
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div class="card-body">

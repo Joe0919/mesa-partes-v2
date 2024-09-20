@@ -53,4 +53,38 @@ class Controllers
             throw new Exception("El archivo del modelo $modelFile no existe.");
         }
     }
+
+    public function getFechaBadge($fecha)
+    {
+        $fechaColors = [
+            0 => ['class' => 'badge-danger font-p'],
+            1 => ['class' => 'badge-warning font-p'],
+            2 => ['class' => 'badge-info font-p'],
+            3 => ['class' => 'badge-success font-p'],
+            4 => ['class' => 'badge-secondary font-p'],
+            5 => ['class' => 'bg-purple font-p'],
+            6 => ['class' => 'bg-dark font-p'],
+            'default' => ['class' => 'badge-light font-p']
+        ];
+
+        $fechaRegistro = DateTime::createFromFormat('d/m/Y', $fecha);
+        $fechaActual = new DateTime();
+        $diferenciaDias = $fechaActual->diff($fechaRegistro)->days;
+
+        if ($diferenciaDias <= 1 ) {
+            return '<span class="badge ' . $fechaColors[0]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 1 && $diferenciaDias <= 4) {
+            return '<span class="badge ' . $fechaColors[1]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 4 && $diferenciaDias <= 7) {
+            return '<span class="badge ' . $fechaColors[2]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 7 && $diferenciaDias <= 30) {
+            return '<span class="badge ' . $fechaColors[3]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 30 && $diferenciaDias <= 180) {
+            return '<span class="badge ' . $fechaColors[4]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 180 && $diferenciaDias <= 365) {
+            return '<span class="badge ' . $fechaColors[5]['class'] . '">' . $fecha . '</span>';
+        } elseif ($diferenciaDias > 365) {
+            return '<span class="badge ' . $fechaColors[6]['class'] . '">' . $fecha . '</span>';
+        }
+    }
 }

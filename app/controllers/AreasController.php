@@ -46,7 +46,14 @@ class AreasController extends Controllers
                 $arrData[$i]['asociados'] = '<h5 class="mb-0" title="Número de datos asociados"><span class="badge badge-pill badge-warning">' . $arrData[$i]['asociados'] . '</span></h5>';
             }
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+        } else {
+            $arrResponse = array(
+                'status' => false,
+                'title' => 'No autorizado',
+                'msg' => 'No tiene permitido ver este recurso.',
+            );
         }
+        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
 
@@ -84,7 +91,9 @@ class AreasController extends Controllers
 
         if ($request_area == 'exist') {
             $arrResponse = array(
-                'status' => false, 'title' => 'Datos duplicados', 'msg' => 'El Codigo o Area ya existe.',
+                'status' => false,
+                'title' => 'Datos duplicados',
+                'msg' => 'El Codigo o Area ya existe.',
                 'results' => $request_area
             );
         } else if ($request_area > 0) {
@@ -97,18 +106,24 @@ class AreasController extends Controllers
                 );
             } else {
                 $arrResponse = array(
-                    'status' => true, 'title' => 'Actualizado', 'msg' => 'Datos Actualizados correctamente.',
+                    'status' => true,
+                    'title' => 'Actualizado',
+                    'msg' => 'Datos Actualizados correctamente.',
                     'results' => $request_area
                 );
             }
         } else if ($request_area == 'denegado') {
             $arrResponse = array(
-                "status" => false, 'title' => 'No permitido', "msg" => 'No tiene permisos para realizar esta acción.',
+                "status" => false,
+                'title' => 'No permitido',
+                "msg" => 'No tiene permisos para realizar esta acción.',
                 'results' => $request_area
             );
         } else {
             $arrResponse = array(
-                "status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.',
+                "status" => false,
+                'title' => 'Error',
+                "msg" => 'No es posible almacenar los datos.',
                 'results' => $request_area
             );
         }
@@ -129,7 +144,7 @@ class AreasController extends Controllers
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
         } else {
-            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción..');
+            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción.');
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
         die();

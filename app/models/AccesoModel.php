@@ -55,4 +55,19 @@ class AccesoModel extends Mysql
 		$_SESSION['userData'] = $request;
 		return $request;
 	}
+
+	public function registrarAcceso(int $IdUsuario)
+	{
+
+		$this->intIdUsuario = $IdUsuario;
+
+		$request = $this->editar(
+			"usuarios",
+			"ultacceso = sysdate()",
+			"idusuarios = ?",
+			[$this->intIdUsuario]
+		);
+
+		return $request;
+	}
 }

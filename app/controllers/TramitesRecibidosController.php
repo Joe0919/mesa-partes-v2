@@ -29,17 +29,33 @@ class TramitesRecibidosController extends Controllers
 
     public function getTramites($idarea, $area, $estado)
     {
-
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectTramitesRecibidos($area, $estado, $idarea);
-            for ($i = 0; $i < count($arrData); $i++) {
+            $estadoColors = [
+                'PENDIENTE' => 'bg-black font-p',
+                'ACEPTADO'  => 'bg-success font-p',
+                'DERIVADO'  => 'bg-primary font-p',
+                'RECHAZADO' => 'bg-danger font-p',
+                'DEFAULT'   => 'bg-info font-p'
+            ];
+
+            $fechaColors = [
+                0 => ['class' => 'badge-danger font-p'],
+                1 => ['class' => 'badge-warning font-p'],
+                7 => ['class' => 'badge-info font-p'],
+                30 => ['class' => 'badge-success font-p'],
+                180 => ['class' => 'badge-secondary font-p'],
+                365 => ['class' => 'bg-purple font-p'],
+                'default' => ['class' => 'badge-light font-p']
+            ];
+            foreach ($arrData as &$item) {
 
                 $botones = '';
 
-                $arrData[$i]['expediente'] = '<b>' . $arrData[$i]['expediente'] . '</b>';
+                $item['expediente'] = '<b>' . $item['expediente'] . '</b>';
 
                 if ($_SESSION['permisosMod']['upd']) {
-                    switch ($arrData[$i]['estado']) {
+                    switch ($item['estado']) {
                         case "PENDIENTE":
                             $botones = '<button class="btn btn-success btn-sm btn-table btnAceptar" title="Aceptar/Rechazar"><i class="nav-icon fas fa-check"></i></button>';
                             break;
@@ -49,32 +65,15 @@ class TramitesRecibidosController extends Controllers
                     }
                 }
 
-                if ($_SESSION['permisosMod']['rea']) {
-                    $botones .= '<button class="btn btn-info btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>
+                $botones .= '<button class="btn btn-info btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>
                                 <button class="btn btn-warning btn-sm btn-table btnSeguimiento" title="Ver Historial"><i class="nav-icon fas fa-search"></i></button>';
-                }
 
-                switch ($arrData[$i]['estado']) {
-                    case "PENDIENTE":
-                        $arrData[$i]['estado'] = '<span class="badge bg-black">' . $arrData[$i]['estado'] . '</span>';
-                        break;
-                    case "ACEPTADO":
-                        $arrData[$i]['estado'] = '<span class="badge bg-success">' . $arrData[$i]['estado'] . '</span>';
-                        break;
-                    case "DERIVADO":
-                        $arrData[$i]['estado'] = '<span class="badge bg-primary">' . $arrData[$i]['estado'] . '</span>';
-                        break;
-                    case "RECHAZADO":
-                        $arrData[$i]['estado'] = '<span class="badge bg-danger">' . $arrData[$i]['estado'] . '</span>';
-                        break;
-                    default:
-                        $arrData[$i]['estado'] = '<span class="badge bg-info">' . $arrData[$i]['estado'] . '</span>';
-                        break;
-                }
+                $colorClass = $estadoColors[$item['estado']] ?? $estadoColors['DEFAULT'];
+                $item['estado'] = '<span class="badge ' . $colorClass . '">' . $item['estado'] . '</span>';
 
+                $item['Fecha'] = $this->getFechaBadge($item['Fecha']);
 
-
-                $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group">' . $botones .  '</div></div>';
+                $item['opciones'] = '<div class="text-center"><div class="btn-group">' . $botones .  '</div></div>';
             }
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         }
@@ -82,16 +81,4 @@ class TramitesRecibidosController extends Controllers
         die();
     }
 
-    public function getTramites1($idarea = null, $area = null, $estado = null)
-    {
-        // Verifica si los parámetros están presentes y no vacíos
-        if ($idarea && $area && $estado) {
-            // Procesa los parámetros
-            echo "ID Area: " . htmlspecialchars($idarea) . "<br>";
-            echo "Area: " . htmlspecialchars($area) . "<br>";
-            echo "Estado: " . htmlspecialchars($estado) . "<br>";
-        } else {
-            echo "Faltan parámetros necesarios.";
-        }
-    }
 }

@@ -37,11 +37,11 @@ body {
   position: relative;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat; 
+  background-repeat: no-repeat;
 }
 
 #fondo::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -51,8 +51,7 @@ body {
   z-index: 1;
 }
 
-
-.title{
+.title {
   font-size: 1.5rem;
 }
 
@@ -379,7 +378,7 @@ body {
   font-size: 20px;
 }
 .info-box-count {
-  font-size: 40px;
+  font-size: 30px;
 }
 .info-box-desc {
   font-weight: 500;
@@ -579,6 +578,15 @@ body {
 
 .table {
   font-size: 0.95rem;
+}
+.font-p {
+  font-size: 85%;
+}
+
+.grafico {
+  width: 100%;
+  max-height: 300px;
+  height: auto;
 }
 
 /* CSS PARA EL LOADER1 */
