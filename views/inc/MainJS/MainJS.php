@@ -2,6 +2,9 @@
 <script>
   const base_url = "<?= base_url(); ?>";
 </script>
+<script>
+  const modulo = "<?= $_SESSION['permisosMod']['idmodulo'] ?>";
+</script>
 <!-- jQuery -->
 <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->

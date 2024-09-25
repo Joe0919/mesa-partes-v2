@@ -17,12 +17,12 @@ class RolesModel extends Mysql
     {
         $whereAdmin = "";
         if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and idroles != 1 ";
+            $whereAdmin = " and u.idroles != 1 ";
         }
         //EXTRAE ROLES
         $sql = "SELECT r.*, COUNT(u.idroles) asociados FROM 
-            roles r LEFT JOIN usuarios u ON r.idroles = u.idroles
-            WHERE r.deleted = 0 " . $whereAdmin . " GROUP BY r.idroles";
+            roles r LEFT JOIN usuarios u ON r.idroles = u.idroles " . $whereAdmin .
+            " WHERE r.deleted = 0  GROUP BY r.idroles";
         $request = $this->select_all($sql);
         return $request;
     }

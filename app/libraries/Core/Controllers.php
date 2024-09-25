@@ -15,6 +15,7 @@ class Controllers
         $this->loadModel($this->controler);
     }
 
+    // 	Metodo para cargar el modelo
     public function loadModel($controler)
     {
         // Obtener el nombre del modelo
@@ -36,6 +37,8 @@ class Controllers
             throw new Exception("El archivo del modelo $routClass no existe.");
         }
     }
+
+    // Método para agregar un nuevo modelo al controlador
     public function loadAdditionalModel($modelName)
     {
         $modelFile = "app/models/" . $modelName . "Model.php";
@@ -54,6 +57,7 @@ class Controllers
         }
     }
 
+    // Método para manejar coloración de fechas
     public function getFechaBadge($fecha)
     {
         $fechaColors = [
@@ -71,7 +75,7 @@ class Controllers
         $fechaActual = new DateTime();
         $diferenciaDias = $fechaActual->diff($fechaRegistro)->days;
 
-        if ($diferenciaDias <= 1 ) {
+        if ($diferenciaDias <= 1) {
             return '<span class="badge ' . $fechaColors[0]['class'] . '">' . $fecha . '</span>';
         } elseif ($diferenciaDias > 1 && $diferenciaDias <= 4) {
             return '<span class="badge ' . $fechaColors[1]['class'] . '">' . $fecha . '</span>';
@@ -86,5 +90,44 @@ class Controllers
         } elseif ($diferenciaDias > 365) {
             return '<span class="badge ' . $fechaColors[6]['class'] . '">' . $fecha . '</span>';
         }
+    }
+
+    // Método para manejar que no se envian datos por POST
+    public function sinPOSTResponse()
+    {
+        return [
+            'status' => false,
+            'title' => 'Datos no enviados',
+            'msg' => 'No se encontraron datos en POST.',
+        ];
+    }
+    // Método para manejar respuestas no autorizadas
+    public function unauthorizedResponse()
+    {
+        return [
+            'status' => false,
+            'title' => 'No autorizado',
+            'msg' => 'No tiene permitido acceder a este recurso.',
+        ];
+    }
+    // Método para manejar respuesta de error
+    public function responseError($request_area = null)
+    {
+        return [
+            'status' => false,
+            'title' => 'Error',
+            'msg' => 'No es posible almacenar los datos.',
+            'results' => $request_area
+        ];
+    }
+    // Método para manejar respuesta de permisos denegados
+    public function responseDenegado()
+    {
+        return [
+            'status' => false,
+            'title' => 'No permitido',
+            'msg' => 'No tiene permisos para realizar esta acción.',
+            'results' => 'denegado'
+        ];
     }
 }

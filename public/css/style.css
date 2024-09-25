@@ -324,6 +324,11 @@ body {
   font-size: 20px;
 }
 
+.select-tramite {
+  width: 250px;
+  text-align: center;
+}
+
 .img-no-search {
   width: 140px;
   height: 140px;
@@ -464,6 +469,13 @@ body {
 .table-data thead tr .th-photo,
 .table-data tfoot tr .th-photo {
   width: 10px;
+}
+
+.table-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 50px;
 }
 
 #Enviar {

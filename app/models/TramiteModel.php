@@ -3,15 +3,17 @@
 class TramiteModel extends Mysql
 {
     private $intIdDerivacion;
+    private $intIdUbicacion;
+    private $intFolios;
+    private $intIdPersona;
+    private $intIdTipo;
+    private $intIdUsuario;
     private $strExpediente;
     private $strFecha;
     private $strNroDoc;
-    private $intFolios;
     private $strAsunto;
     private $strRuta;
-    private $intIdPersona;
     private $strDNI;
-    private $intIdTipo;
     private $intIdDoc;
     private $strEstado;
     private $strArea;
@@ -19,7 +21,6 @@ class TramiteModel extends Mysql
     private $strIdDestino;
     private $strDescripcion;
     private $strAccion;
-    private $intIdUbicacion;
 
 
     public function __construct()
@@ -27,12 +28,30 @@ class TramiteModel extends Mysql
         parent::__construct();
     }
 
-    public function selectTramites()
+    public function selectTramites($IdUbicacion, $area, $estado)
     {
-        $sql = "SELECT idderivacion, dc.nro_expediente expediente, DATE_FORMAT(dc.fecha_registro, '%d/%m/%Y') Fecha,
+        $this->strArea = $area;
+        $this->strEstado = $estado;
+        $this->intIdUbicacion = $IdUbicacion;
+
+        $whereArea = "";
+        $whereEstado = "";
+        $arrValues = [];
+        if ($IdUbicacion != '-1') {
+            $whereArea = " AND area = ? AND idubicacion = ? ";
+            array_push($arrValues, $this->strArea, $this->intIdUbicacion);
+        }
+
+        if ($estado != '0') {
+            $whereEstado = " AND estado = ? ";
+            array_push($arrValues, $this->strEstado);
+        }
+
+        $request = $this->consultarVarios(
+            "dc.nro_expediente expediente, DATE_FORMAT(dc.fecha_registro, '%d/%m/%Y') Fecha,
                 tipodoc, dni, CONCAT(p.nombres, ' ', p.ap_paterno, ' ', p.ap_materno) Datos,
-                origen, area, estado 
-                FROM derivacion d   
+                origen, area, estado ",
+            " derivacion d   
                 JOIN documento dc ON d.iddocumento = dc.iddocumento
                 JOIN areainstitu a ON d.idareainstitu = a.idareainstitu
                 JOIN area ae ON a.idarea = ae.idarea
@@ -44,10 +63,10 @@ class TramiteModel extends Mysql
                     JOIN documento dc ON d.iddocumento = dc.iddocumento
                     WHERE d.deleted = 0
                     GROUP BY dc.nro_expediente) sub_d
-                    ON d.idderivacion = sub_d.max_idderivacion
-                WHERE d.deleted = 0
-                ORDER BY dc.nro_expediente DESC";
-        $request = $this->select_all($sql);
+                    ON d.idderivacion = sub_d.max_idderivacion",
+            "WHERE d.deleted = 0 " . $whereArea . " " . $whereEstado . " ORDER BY dc.nro_expediente DESC",
+            $arrValues
+        );
         return $request;
     }
     public function selectTramitesRecibidos($area, $estado, $ubicacion)
@@ -65,11 +84,9 @@ class TramiteModel extends Mysql
                 JOIN area ae ON a.idarea=ae.idarea
                 JOIN persona p ON dc.idpersona=p.idpersona
                 JOIN tipodoc t ON dc.idtipodoc=t.idtipodoc",
-            "WHERE area = ? AND estado = ? AND idubicacion = ? ORDER BY idderivacion ASC",
+            "WHERE d.deleted = 0 AND area = ? AND estado = ? AND idubicacion = ? ORDER BY idderivacion ASC",
             [$this->strArea, $this->strEstado, $this->intIdUbicacion]
         );
-        // $request = $this->strArea . ' ' . $this->strEstado . ' ' . $this->intIdUbicacion;
-
         return $request;
     }
     public function selectTramitesEnviados($area)
@@ -133,7 +150,6 @@ class TramiteModel extends Mysql
         $request = $this->selectOne($sql, [$this->strExpediente, $this->strDNI, $this->strFecha]);
         return $request;
     }
-
     public function selectHistorial(string $expediente, string $dni = '', string $anio = '')
     {
         $this->strExpediente = $expediente;
@@ -260,24 +276,40 @@ class TramiteModel extends Mysql
 
         return $request;
     }
-    public function registrarHistorial($expediente, $dni, $desc, $accion = 'DERIVADO', $area = 'SECRETARÍA')
+    public function registrarHistorial($expediente, $dni, $desc, $idusuario, $accion = 'DERIVADO', $area = 'SECRETARÍA')
     {
         $this->strExpediente = $expediente;
         $this->strDNI = $dni;
         $this->strDescripcion = $desc;
+        $this->intIdUsuario = $idusuario;
         $this->strAccion = $accion;
         $this->strArea = $area;
+
+        $sql = "SELECT idusuarios,u.dni , concat(nombres,' ',ap_paterno,' ',ap_materno) datos,
+                 rol, IFNULL(area, 'N/A') as area
+                FROM usuarios u JOIN persona p ON p.dni=u.dni
+                JOIN roles r ON r.idroles=u.idroles
+                LEFT JOIN empleado e ON e.idpersona = p.idpersona
+                LEFT JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
+                LEFT JOIN area ar ON a.idarea = ar.idarea where idusuarios = ?";
+        $request = $this->selectOne($sql, [$this->intIdUsuario]);
 
         $arrData = array(
             $this->strExpediente,
             $this->strDNI,
             $this->strAccion,
             $this->strArea,
-            $this->strDescripcion
+            $this->strDescripcion,
+            $this->intIdUsuario,
+            $request['dni'],
+            $request['datos'],
+            $request['rol'],
+            $request['area'],
         );
+
         $request_insert = $this->registrar(
             "historial",
-            "(null, sysdate(), ?, ?, ?, ?, ?, 0)",
+            "(null, sysdate(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
             $arrData
         );
         $return = $request_insert;
@@ -328,7 +360,6 @@ class TramiteModel extends Mysql
 
         return $request;
     }
-
     public function selectCantDocs($idarea = '')
     {
         $this->intIdUbicacion = $idarea;
@@ -348,7 +379,6 @@ class TramiteModel extends Mysql
 
         return $request;
     }
-
     public function selectRanking()
     {
         $sql = "SELECT ROW_NUMBER() OVER (ORDER BY COUNT(d.idubicacion) DESC) AS fila, a.area, COUNT(d.idubicacion) AS total_documentos
@@ -359,7 +389,6 @@ class TramiteModel extends Mysql
         $request = $this->select_all($sql);
         return $request;
     }
-
     public function selectDocsxTiempo()
     {
         $sql = "SELECT ROW_NUMBER() OVER (ORDER BY 
@@ -403,7 +432,6 @@ class TramiteModel extends Mysql
         $request = $this->select_all($sql);
         return $request;
     }
-
     public function selectIngresoDocs()
     {
         $sql = "SELECT * FROM ingreso_docs_fecha i";

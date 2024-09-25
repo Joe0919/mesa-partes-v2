@@ -19,7 +19,7 @@ class AreaModel extends Mysql
     {
         $whereAdmin = "";
         if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and a.idareas != 1 ";
+            $whereAdmin = " and a.idarea != 1 ";
         }
         $sql = "SELECT a.idarea ID, cod_area, area, ai.idareainstitu IdAInst, COUNT(e.idareainstitu) asociados
         FROM areainstitu ai LEFT JOIN derivacion e on ai.idareainstitu=e.idareainstitu

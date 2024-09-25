@@ -50,6 +50,7 @@
                     <!-- Small boxes (Stat box) -->
                     <div class="row">
                         <section class="col-xl-6">
+                            <!-- RESUMEN DE DOCUMENTOS GENERAL -->
                             <div class="card card-outline card-info">
                                 <div class="card-header">
                                     <h3 class="card-title"><i class="fas fa-minus mr-1"></i>INFORMACIÓN DOCUMENTARIA GENERAL</h3>
@@ -107,69 +108,93 @@
                                 </div>
 
                             </div>
-                        </section>
-                        <section class="col-xl-6">
-                            <div class="card card-outline card-fuchsia">
+                            <?php if ($_SESSION['userData']['idusuarios'] == 1) { ?>
+                                <!-- RESUMEN DE DOCUMENTOS EN EL AREA -->
+                                <div class="card card-outline card-fuchsia">
+                                    <div class="card-header">
+                                        <h3 class="card-title"><i class="fas fa-minus mr-1"></i>DOCUMENTOS EN: <strong id="area"><?= $_SESSION['userData']['area'] ?></strong></h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="info-box bg-gradient-info">
+                                                    <span class="info-box-icon bg-gradient-info"><img src="<?= media() ?>/images/pendiente.png"></span>
+                                                    <div class="info-box-content content-lh">
+                                                        <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
+                                                        <span class="info-box-text1 info-box-count" id="span_cant_pendientes_area"></span>
+                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="info-box bg-gradient-green">
+                                                    <span class="info-box-icon bg-gradient-green"><img src="<?= media() ?>/images/aceptar.png"></span>
+                                                    <div class="info-box-content content-lh">
+                                                        <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
+                                                        <span class="info-box-text1 info-box-count" id="span_cant_aceptados_area"></span>
+                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="info-box bg-gradient-purple">
+                                                    <span class="info-box-icon bg-gradient-purple"><img src="<?= media() ?>/images/documentos.png"></span>
+                                                    <div class="info-box-content content-lh">
+                                                        <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
+                                                        <span class="info-box-text1 info-box-count" id="span_cant_archivados_area"></span>
+                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="info-box bg-gradient-danger">
+                                                    <span class="info-box-icon bg-gradient-danger icon "><img src="<?= media() ?>/images/rechazado.png"></span>
+                                                    <div class="info-box-content content-lh">
+                                                        <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
+                                                        <span class="info-box-text1 info-box-count" id="span_cant_rechazados_area"></span>
+                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                            <!-- GRÁFICO DE TRAMITES POR ESTADO -->
+                            <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-minus mr-1"></i>CONTADOR DE DOCUMENTOS EN <span id="area">SECRETARIA</span></h3>
+                                    <h3 class="card-title">Cantidad de Trámites por Estado</h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                                            <i class="fas fa-times"></i>
                                         </button>
                                     </div>
                                 </div>
+
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-info">
-                                                <span class="info-box-icon bg-gradient-info"><img src="<?= media() ?>/images/pendiente.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes_area"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-green">
-                                                <span class="info-box-icon bg-gradient-green"><img src="<?= media() ?>/images/aceptar.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_aceptados_area"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-purple">
-                                                <span class="info-box-icon bg-gradient-purple"><img src="<?= media() ?>/images/documentos.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_archivados_area"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-danger">
-                                                <span class="info-box-icon bg-gradient-danger icon "><img src="<?= media() ?>/images/rechazado.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_rechazados_area"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
+                                        <div class="col">
+                                            <div class="chart-responsive">
+                                                <canvas class="grafico" id="grafico1"></canvas>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </section>
-                    </div>
-
-                    <div class="row">
                         <section class="col-xl-6">
+                            <!-- TABLA RANKING DE TRAMITES X AREA -->
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title">Ranking Trámites x Área </h3>
@@ -203,11 +228,11 @@
                                     </table>
                                 </div>
                             </div>
-                        </section>
-                        <section class="col-xl-6">
+                            <!-- TABLA TRAMITES REGISTRADOS POR PERIODO -->
                             <div class="card card-info">
+                                <!-- GRÁFICO DE TRAMITES REGISTRADOS X FECHA -->
                                 <div class="card-header">
-                                    <h3 class="card-title">Intervalo de Trámites Registrados</h3>
+                                    <h3 class="card-title">Trámites Registrados x Periodo</h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
                                             <i class="fas fa-sync-alt"></i>
@@ -223,7 +248,7 @@
                                         </button>
                                     </div>
                                 </div>
-
+                                <!-- GRÁFICO DE TRAMITES PROCESADOS X FECHA -->
                                 <div class="card-body">
                                     <table id="tablaDocsxTiempo" class="table table-hover">
                                         <thead>
@@ -236,35 +261,6 @@
                                         <tbody>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="row">
-                        <section class="col-xl-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Cantidad de Trámites por Estado</h3>
-                                    <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="chart-responsive">
-                                                <canvas id="grafico1"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </section>

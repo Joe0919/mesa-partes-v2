@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class InformesController extends Controllers{
+class InformesController extends Controllers
+{
 
     public function __construct()
     {
@@ -11,6 +12,7 @@ class InformesController extends Controllers{
         // session_regenerate_id(true); //# MEJORAR EL USO
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
+            exit();
         }
         getPermisos(11);
     }
@@ -18,12 +20,15 @@ class InformesController extends Controllers{
     {
         if (empty($_SESSION['permisosMod']['rea'])) {
             header("Location:" . base_url() . '/dashboard');
+            exit();
         }
 
-        $data['page_id'] = 12;
-        $data['page_tag'] = "Informes";
-        $data['page_title'] = "Informes";
-        $data['file_js'] = "informes.js";
+        $data = [
+            'page_id' => 12,
+            'page_tag' => "Informes",
+            'page_title' => "Informes",
+            'file_js' => "informes.js"
+        ];
         $this->views->getView("informes", "index", $data);
     }
 }

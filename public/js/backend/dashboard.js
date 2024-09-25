@@ -82,28 +82,32 @@ $(document).ready(function () {
   }
   function consultarDocsArea(idarea) {
     return new Promise((resolve, reject) => {
-      $.ajax({
-        url: base_url + "/Dashboard/getDocsArea/" + idarea,
-        type: "GET",
-        beforeSend: function () {
-          $("#loader").show();
-        },
-        success: function (response) {
-          objData = $.parseJSON(response);
-          $("#span_cant_pendientes_area").text(objData[0].total_pendiente);
-          $("#span_cant_aceptados_area").text(objData[0].total_aceptado);
-          $("#span_cant_archivados_area").text(objData[0].total_archivado);
-          $("#span_cant_rechazados_area").text(objData[0].total_rechazado);
-          $("#loader").hide();
-          resolve(); // Resolvemos la promesa
-        },
-        error: function (error) {
-          MostrarAlerta("Error", "Error al cargar los datos", "error");
-          console.error("Error: " + error);
-          $("#loader").hide();
-          reject(error); // Rechazamos la promesa en caso de error
-        },
-      });
+      if (idarea != 0) {
+        $.ajax({
+          url: base_url + "/Dashboard/getDocsArea/" + idarea,
+          type: "GET",
+          beforeSend: function () {
+            $("#loader").show();
+          },
+          success: function (response) {
+            objData = $.parseJSON(response);
+            $("#span_cant_pendientes_area").text(objData[0].total_pendiente);
+            $("#span_cant_aceptados_area").text(objData[0].total_aceptado);
+            $("#span_cant_archivados_area").text(objData[0].total_archivado);
+            $("#span_cant_rechazados_area").text(objData[0].total_rechazado);
+            $("#loader").hide();
+            resolve(); // Resolvemos la promesa
+          },
+          error: function (error) {
+            MostrarAlerta("Error", "Error al cargar los datos", "error");
+            console.error("Error: " + error);
+            $("#loader").hide();
+            reject(error); // Rechazamos la promesa en caso de error
+          },
+        });
+      } else {
+        resolve(); // Resolvemos la promesa
+      }
     });
   }
   function consultarRanking() {
@@ -177,7 +181,6 @@ $(document).ready(function () {
           $("#loader").show();
         },
         success: function (response) {
-          console.log(response);
           objData = $.parseJSON(response);
 
           const labels = [];
@@ -215,7 +218,6 @@ $(document).ready(function () {
           $("#loader").show();
         },
         success: function (response) {
-          console.log(response);
           objData = $.parseJSON(response);
 
           const labels1 = [];

@@ -28,10 +28,11 @@ class TramitesController extends Controllers
         $data['file_js'] = "tramites.js";
         $this->views->getView("Tramites", "index", $data);
     }
-    public function getTramites()
+
+    public function getTramites(string $idarea, string $area, string $estado)
     {
         if ($_SESSION['permisosMod']['rea']) {
-            $arrData = $this->model->selectTramites();
+            $arrData = $this->model->selectTramites($idarea, $area, $estado);
 
             $estadoColors = [
                 'PENDIENTE' => 'bg-black font-p',
@@ -45,21 +46,41 @@ class TramitesController extends Controllers
                 $item['expediente'] = '<b>' . $item['expediente'] . '</b>';
 
                 $colorClass = $estadoColors[$item['estado']] ?? $estadoColors['DEFAULT'];
-                $item['estado'] = '<span class="badge ' . $colorClass . '">' . $item['estado'] . '</span>';
+
+
 
                 $item['Fecha'] = $this->getFechaBadge($item['Fecha']);
 
-                $btnView = '<button class="btn btn-warning btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>';
-                $btnHistory = '<button class="btn btn-success btn-sm btn-table btnSeguimiento" title="Ver Historial"><i class="nav-icon fas fa-search"></i></button>';
+                $botones = '';
 
-                $item['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnView . ' ' . $btnHistory . '</div></div>';
+                if ($_SESSION['permisosMod']['upd']) {
+                    switch ($item['estado']) {
+                        case "PENDIENTE":
+                            $botones .= '<button class="btn bg-gradient-success btn-sm btn-table btnAceptar" title="Aceptar/Rechazar"><i class="nav-icon fas fa-check"></i></button>';
+                            break;
+                        case "ACEPTADO":
+                            $botones .= '<button class="btn bg-gradient-danger btn-sm btn-table btnDerivar" title="Derivar/Archivar"><i class="nav-icon fas fa-arrow-right"></i></button>';
+                            break;
+                    }
+                }
+
+                $btnView = '<button class="btn bg-gradient-info btn-sm btn-table btnMas" title="Más Información"><i class="nav-icon fas fa-eye"></i></button>';
+                $btnHistory = '<button class="btn bg-gradient-secondary btn-sm btn-table btnSeguimiento" title="Ver Historial"><i class="nav-icon fas fa-search"></i></button>';
+
+                $botones .= $btnView;
+                $botones .= $btnHistory;
+
+                $item['opciones'] = '<div class="text-center"><div class="btn-group">' . $botones . '</div></div>';
+
+                $item['estado'] = '<span class="badge ' . $colorClass . '">' . $item['estado'] . '</span>';
             }
 
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
-
     public function getTramite(string $expediente)
     {
         if ($_SESSION['permisosMod']['rea']) {
@@ -74,8 +95,7 @@ class TramitesController extends Controllers
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
         } else {
-            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción..');
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -106,8 +126,7 @@ class TramitesController extends Controllers
 
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         } else {
-            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción..');
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -155,6 +174,9 @@ class TramitesController extends Controllers
                     break;
             }
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+            die();
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             die();
         }
     }
@@ -261,6 +283,7 @@ class TramitesController extends Controllers
             $expediente = limpiarCadena($_POST['expediente']);
             $origen = strtoupper(limpiarCadena($_POST['origen']));
             $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
+            $idusuario = intval(limpiarCadena($_POST['idusuario']));
 
             $request = '';
 
@@ -269,7 +292,7 @@ class TramitesController extends Controllers
                 // Cambiamos el estado del documento a aceptado
                 $request = $this->model->editarDocumento($expediente, 'ACEPTADO');
                 // Guardamos la Aceptacion en el historial del doc
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, 'ACEPTADO', $origen);
+                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ACEPTADO', $origen);
                 $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
             } else if ($accion === 'RECHAZAR') {
                 // Validamos si en SECRETARIA se rechaza el tramite 
@@ -278,21 +301,24 @@ class TramitesController extends Controllers
                     // Colocamos la descripcion por la que se esta Rechazando
                     $this->model->editarDerivacion($idderivacion, $descripcion);
                     // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
                 } else {
                     // Se cumple que es otra area
                     // Derivamos el Tramite a Secretaria sabiendo su ID
                     $this->model->registrarDerivacion($iddocumento, '', $origen, '8', $descripcion);
                     // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
                     // Guardamos la Derivacion a SECRETARIA en el historial 
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion);
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario);
                 }
                 // Cambiamos el estado del documento a RECHAZADO
                 $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
                 $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+            die();
         }
     }
     public function putTramiteDerivacion()
@@ -305,6 +331,7 @@ class TramitesController extends Controllers
             $iddestino = isset($_POST['iddestino']) ? intval(limpiarCadena($_POST['iddestino'])) : '';
             $destino = limpiarCadena($_POST['destino']);
             $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
+            $idusuario = intval(limpiarCadena($_POST['idusuario']));
 
             $request = '';
 
@@ -314,28 +341,21 @@ class TramitesController extends Controllers
                 // Cambiamos el estado  a PENDIENTE ya actualizamos la ubicacion del doc
                 $this->model->editarDocumento($expediente, 'PENDIENTE', $iddestino);
                 // Guardamos la Derivacion en el historial 
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, 'DERIVADO', $destino);
+                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'DERIVADO', $destino);
                 $request = $accion . ' ' . $expediente . ' ' . $dni . ' ' . $origen . ' ' . $destino . ' ' . $descripcion;
                 $arrResponse = array('status' => true, 'title' => 'Trámite Derivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
             } else if ($accion === '2') {
                 // Cambiamos el estado  a ARCHIVADO ya actualizamos la ubicacion del doc
                 $this->model->editarDocumento($expediente, 'ARCHIVADO');
                 // Guardamos la Archivacion en el historial 
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, 'ARCHIVADO', $origen);
+                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ARCHIVADO', $origen);
                 $arrResponse = array('status' => true, 'title' => 'Trámite Archivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+            die();
         }
-    }
-
-    function obtenerEtiquetaTiempo($diferenciaDias, $fechaColors)
-    {
-        if ($diferenciaDias == 0) return $fechaColors[0];
-        if ($diferenciaDias == 1) return $fechaColors[1];
-        if ($diferenciaDias <= 7) return $fechaColors[7];
-        if ($diferenciaDias <= 30) return $fechaColors[30];
-        if ($diferenciaDias <= 365) return $fechaColors[365];
-        return $fechaColors['default'];
     }
 }
 

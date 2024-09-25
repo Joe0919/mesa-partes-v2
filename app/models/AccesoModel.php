@@ -17,10 +17,14 @@ class AccesoModel extends Mysql
 	{
 		$this->strUsuario = $usuario;
 		$this->strPassword = $password;
+		// $sql = "SELECT u.idusuarios, u.contrasena, u.estado
+		//     FROM usuarios u 
+		//     INNER JOIN persona p ON p.dni = u.dni
+		// 	INNER JOIN empleado e ON e.idpersona = p.idpersona
+		//     WHERE u.dni = ?";
 		$sql = "SELECT u.idusuarios, u.contrasena, u.estado
             FROM usuarios u 
             INNER JOIN persona p ON p.dni = u.dni
-			INNER JOIN empleado e ON e.idpersona = p.idpersona
             WHERE u.dni = ?";
 		$request = $this->selectOne($sql, [$this->strUsuario]);
 
@@ -39,17 +43,22 @@ class AccesoModel extends Mysql
 	public function sessionLogin(int $iduser)
 	{
 		$this->intIdUsuario = $iduser;
-		//BUSCAR ROLE 
+		//BUSCAR ROL
 		$sql = "SELECT idusuarios, u.dni dni, nombre nomusu, 
 				concat(p.nombres,' ', p.ap_paterno,' ', p.ap_materno) datos, foto, 
-						u.estado,a.idareainstitu, area, razon, logo, u.idroles, rol
-				FROM usuarios u 
-				INNER JOIN persona p ON p.dni=u.dni 
-				INNER JOIN empleado e ON e.idpersona=p.idpersona 
-				INNER JOIN areainstitu a ON e.idareainstitu = a.idareainstitu 
-				INNER JOIN area ar ON a.idarea = ar.idarea 
-				INNER JOIN institucion i ON a.idinstitucion=i.idinstitucion 
-				INNER JOIN roles r ON r.idroles = u.idroles 
+				u.estado, u.idroles, rol,
+				IFNULL(a.idareainstitu, 0) as idareainstitu, 
+				IFNULL(area, 'INVITADO') as area, 
+				i.razon, i.logo
+				FROM usuarios u
+				INNER JOIN persona p ON p.dni = u.dni
+				LEFT JOIN empleado e ON e.idpersona = p.idpersona 
+				LEFT JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
+				LEFT JOIN area ar ON a.idarea = ar.idarea
+				LEFT JOIN institucion i ON a.idinstitucion = i.idinstitucion OR i.idinstitucion = (
+					SELECT idinstitucion FROM institucion LIMIT 1
+				)
+				INNER JOIN roles r ON r.idroles = u.idroles
 				WHERE idusuarios = ?";
 		$request = $this->selectOne($sql, [$this->intIdUsuario]);
 		$_SESSION['userData'] = $request;

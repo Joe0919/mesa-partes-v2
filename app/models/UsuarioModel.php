@@ -20,6 +20,19 @@ class UsuarioModel extends Mysql
     private $strEstado;
 
 
+    public function selectUsuario()
+    {
+        $whereAdmin = "";
+        if ($_SESSION['idUsuario'] != 1) {
+            $whereAdmin = " and u.idroles != 1 ";
+        }
+        $sql = "SELECT idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado
+        FROM usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles 
+        WHERE u.deleted = 0" . $whereAdmin;
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
     public function selectUsuarios(
         string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
         string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
@@ -28,7 +41,7 @@ class UsuarioModel extends Mysql
     ) {
         $whereAdmin = "";
         if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and p.idpersona != 1 or idusuarios != 1 ";
+            $whereAdmin = " and u.idroles != 1 ";
         }
         $sql = "SELECT $columnas FROM $tablas $condicion " . $whereAdmin;
         $request = $this->select_all($sql);
@@ -289,7 +302,7 @@ class UsuarioModel extends Mysql
         if (empty($request)) {
             $request = $this->editar(
                 "usuarios",
-                " deleted = 1 ",
+                " deleted = 1, estado = 'INACTIVO' ",
                 " dni = ? ",
                 [$this->strDNI]
             );

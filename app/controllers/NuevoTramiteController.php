@@ -12,6 +12,7 @@ class NuevoTramiteController extends Controllers
         // session_regenerate_id(true); //# MEJORAR EL USO
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
+            exit();
         }
         getPermisos(7);
     }
@@ -20,12 +21,15 @@ class NuevoTramiteController extends Controllers
     {
         if (empty($_SESSION['permisosMod']['rea'])) {
             header("Location:" . base_url() . '/dashboard');
+            exit();
         }
 
-        $data['page_id'] = 8;
-        $data['page_tag'] = "Nuevo Tramite";
-        $data['page_title'] = "Nuevo Tramite";
-        $data['file_js'] = "nuevoTramite.js";
+        $data = [
+            'page_id' => 8,
+            'page_tag' => "Nuevo Tramite",
+            'page_title' => "Nuevo Tramite",
+            'file_js' => "nuevoTramite.js"
+        ];
         $this->views->getView("nuevo-tramite", "index", $data);
     }
 }

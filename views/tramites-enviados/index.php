@@ -65,7 +65,7 @@
                                             <tr>
                                                 <th rowspan="2">Expediente</th>
                                                 <th rowspan="2">Fecha</th>
-                                                <th rowspan="2">Tipo Doc</th>
+                                
                                                 <th colspan="2">Remitente</th>
                                                 <th colspan="2">Localización</th>
                                                 <th rowspan="2">Estado</th>

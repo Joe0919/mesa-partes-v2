@@ -18,7 +18,6 @@ $(document).ready(function () {
     columns: [
       { data: "expediente" },
       { data: "Fecha" },
-      { data: "tipodoc" },
       { data: "dni" },
       { data: "Datos" },
       { data: "origen" },

@@ -2,20 +2,38 @@ $(document).ready(function () {
   let idinst,
     idusu,
     idni,
+    idarea,
+    idusuario,
     logo_bdr = 0,
-    expediente = "";
+    expediente = "",
+    area = "",
+    controlador = "",
+    tabla = "",
+    estado,
+    iddocumento,
+    dni,
+    descripcion,
+    idBoton;
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
+  idarea = $("#id_areaid").val();
+  idusuario = $("#iduser").val();
 
   $("#loader").hide();
 
-  // contarDocsGeneral(); //Muestra la cantidad de docs pendientes, aceptados y rechazados
-
-  // contarDocsxArea();
+  if (modulo == 6) {
+    controlador = "tramites";
+    tabla = "tablaTramites";
+  } else if (modulo == 8) {
+    controlador = "tramites-recibidos";
+    tabla = "tablaTramitesRecibidos";
+  } else if (modulo == 9) {
+    controlador = "tramites-enviados";
+  }
 
   // ********************** ACCIONES GENERALES **********************
-  // # DATOS INSTITUCION
+  // # **************************** DATOS INSTITUCION ****************************
   //Boton mostrar datos de Institucion general
   $("#conf-inst").click(function () {
     idinst = 1;
@@ -112,7 +130,6 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
@@ -140,10 +157,9 @@ $(document).ready(function () {
     }
   });
 
-  // # DATOS DEL PERFIL
+  // # **************************** DATOS DEL PERFIL ****************************
   //Mostrar modal con datos de usuario logeado
   $("#conf-perfil").click(function () {
-    console.log(idusu);
     $.ajax({
       url: base_url + "/Usuarios/getUsuarioPerfil/" + idusu,
       type: "GET",
@@ -151,7 +167,6 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
         objData = $.parseJSON(response);
         if (objData.status) {
           $("#idusuarioP").val(objData.data.idusuarios);
@@ -247,7 +262,6 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
@@ -346,7 +360,6 @@ $(document).ready(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                console.log(response);
                 data = $.parseJSON(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");
@@ -372,6 +385,235 @@ $(document).ready(function () {
         );
         $("#iconfirmpswU").select();
       }
+    } else {
+      MostrarAlerta(
+        "Advertencia",
+        "Por favor, complete todos los campos requeridos.",
+        "error"
+      );
+    }
+  });
+
+  //*************** ACCIONES PARA ACEPTAR Y DERIVAR EL TRAMITE ***************
+
+  //Abrir Modal para Aceptar o Rechazar el Trámite
+  $(document).on("click", ".btnAceptar", function () {
+    //Validamos que el documento tenga el estado pendiente
+    if ($.trim($(this).closest("tr").find("td:eq(6)").text()) !== "PENDIENTE") {
+      MostrarAlerta(
+        "Advertencia",
+        "No es posible realizar esta accion....",
+        "error"
+      );
+    } else {
+      area = $(this).closest("tr").find("td:eq(5)").text();
+      expediente = $(this).closest("tr").find("td:eq(0)").text();
+      dni = $(this).closest("tr").find("td:eq(2)").text();
+      $("#idnir").val(dni);
+      $("#modal-title").text("ACEPTAR/RECHAZAR TRÁMITE N°: " + expediente);
+      $.ajax({
+        url: base_url + "/" + controlador + "/getTramite/" + expediente,
+        type: "GET",
+        beforeSend: function () {
+          $("#loader").show();
+        },
+        success: function (response) {
+          objData = $.parseJSON(response);
+          if (objData.status) {
+            $("#idderivacion").val(objData.data.idderivacion);
+            $("#iddocumento").val(objData.data.iddocumento);
+            $("#inrodoc_1").val(objData.data.nro_doc);
+            $("#ifolio_1").val(objData.data.folios);
+            $("#iexpediente_1").val(objData.data.nro_expediente);
+            $("#iestado_1").val(objData.data.estado);
+            $("#itipodoc_1").val(objData.data.tipodoc);
+            $("#iasunto_1").val(objData.data.asunto);
+            $("#modal_aceptacion").modal({
+              backdrop: "static",
+              keyboard: false,
+            });
+            $("#loader").hide();
+          }
+        },
+        error: function (error) {
+          MostrarAlerta("Error", "Error al cargar los datos", "error");
+          console.error("Error: " + error);
+          $("#loader").hide();
+        },
+      });
+    }
+  });
+
+  //Realizar Accion de ACEPTAR o RECHAZAR el Tramite sea el Caso
+  $(".btnGestion").click(function () {
+    idBoton = $(this).attr("id");
+
+    descripcion = $.trim($("#idescripcion").val().toUpperCase());
+    iddocumento = $("#iddocumento").val();
+    expediente = $("#iexpediente_1").val();
+    idni = $("#idnir").val();
+    idderivacion = $("#idderivacion").val();
+
+    idBoton === "btnAceptarDoc" ? (accion = "ACEPTAR") : (accion = "RECHAZAR");
+
+    Swal.fire({
+      title: "¿Está seguro?",
+      text: `Al ${accion} el documento no podrá deshacer la acción`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, Continuar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: base_url + "/Tramites/putTramiteAceptacion",
+          type: "POST",
+          datatype: "json",
+          data: {
+            origen: area,
+            descripcion: descripcion,
+            iddocumento: iddocumento,
+            expediente: expediente,
+            dni: dni,
+            idderivacion: idderivacion,
+            accion: accion,
+            idusuario: idusuario,
+          },
+          beforeSend: function () {
+            $("#loader").show();
+          },
+          success: function (response) {
+            objData = $.parseJSON(response);
+            if (objData.status) {
+              $("#form_aceptacion")[0].reset();
+              $("#modal_aceptacion").modal("hide");
+              inicializarTablaTramites(tabla, controlador);
+              MostrarAlertaxTiempo(objData.title, objData.msg, "success");
+            } else {
+              MostrarAlerta(
+                "Error",
+                "Hubo problemas al realizar la accion",
+                "error"
+              );
+            }
+            $("#loader").hide();
+          },
+          error: function (error) {
+            MostrarAlerta("Error", "Error al realizar accion.", "error");
+            $("#loader").hide();
+            console.error("Error: " + error);
+          },
+        });
+      }
+    });
+  });
+
+  //Mostrar modal para Derivar o Archivar
+  $(document).on("click", ".btnDerivar", function () {
+    if ($.trim($(this).closest("tr").find("td:eq(6)").text()) !== "ACEPTADO") {
+      //El documento tiene otro estado
+      MostrarAlerta(
+        "Advertencia",
+        "No es posible realizar esta accion",
+        "error"
+      );
+    } else {
+      expediente = $(this).closest("tr").find("td:eq(0)").text();
+      dni = $(this).closest("tr").find("td:eq(2)").text(); //Tomar DNI del Remitente
+      area = $(this).closest("tr").find("td:eq(5)").text();
+      llenarSelectDestino(area);
+      $("#expediente_d").val(expediente);
+      $("#dni_d").val(dni);
+      $("#idorigen").val($(this).closest("tr").find("td:eq(5)").text());
+      $("#p_expediente_d").text(expediente);
+      $("#modal_derivacion").modal("show");
+      $("#select-destino").attr("required", "required");
+    }
+  });
+
+  //Ocultar Areas destino al solo ARCHIVAR
+  $("#idaccion").change(function () {
+    let sel = $(this).val();
+    if (sel == "2") {
+      $("#column").hide();
+      $("#btnEnviarDerivacion").text("Archivar");
+      $("#select-destino").removeAttr("required");
+    } else {
+      $("#column").show();
+      $("#btnEnviarDerivacion").text("Derivar");
+      $("#select-destino").attr("required", "required");
+    }
+  });
+
+  //Derivar o Archivar el Trámite
+  $("#form_derivacion").on("submit", function (e) {
+    e.preventDefault();
+    accion = $("#idaccion").val();
+    destino = $("#select-destino option:selected").text();
+    origen = $("#idorigen").val();
+    dni = $("#dni_d").val();
+    let formulario = $(this);
+    let aux, titulo;
+    accion === "1"
+      ? ((aux = "DERIVAR"),
+        (titulo = `¿Está seguro de ${aux}?`),
+        (html = `El documento se va a <b>${aux}</b> al área <b>${destino}</b>.`))
+      : ((aux = "ARCHIVAR"),
+        (titulo = `¿Está seguro de ${aux}?`),
+        (html = `El documento se va a <b>${aux}</b> en el area <b>${origen}</b>.`));
+    if (verificarCampos(formulario)) {
+      Swal.fire({
+        title: titulo,
+        html: html,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Si, Continuar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          var formData = new FormData(this);
+          formData.append("accion", accion);
+          formData.append("destino", destino);
+          formData.append("dni", dni);
+          formData.append("idusuario", idusuario);
+          $.ajax({
+            url: base_url + "/Tramites/putTramiteDerivacion",
+            type: "POST",
+            datatype: "json",
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+              $("#loader").show();
+            },
+            success: function (response) {
+              objData = $.parseJSON(response);
+              if (objData.status) {
+                $("#form_derivacion")[0].reset();
+                $("#modal_derivacion").modal("hide");
+                inicializarTablaTramites(tabla, controlador);
+                MostrarAlertaxTiempo(objData.title, objData.msg, "success");
+              } else {
+                MostrarAlerta(
+                  "Error",
+                  "Hubo problemas al realizar la accion",
+                  "error"
+                );
+              }
+              $("#loader").hide();
+            },
+            error: function (error) {
+              MostrarAlerta("Error", "Error al realizar accion.", "error");
+              $("#loader").hide();
+              console.error("Error: " + error);
+            },
+          });
+        }
+      });
     } else {
       MostrarAlerta(
         "Advertencia",
@@ -532,10 +774,11 @@ $(document).ready(function () {
         url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
       },
       ajax: {
-        url: base_url + "/Tramites/getHistorial/" + expediente,
+        url: base_url + "/" + controlador + "/getHistorial/" + expediente,
         method: "GET",
         dataSrc: "",
       },
+      ordering: false,
       columns: [
         { data: "accion" },
         { data: "fecha" },
@@ -549,111 +792,83 @@ $(document).ready(function () {
 });
 
 //******************** FUNCIONES *******************
+function inicializarTablaTramites(tabla, controlador) {
+  const url =
+    base_url +
+    "/" +
+    controlador +
+    "/getTramites/" +
+    idarea +
+    "/" +
+    area.replace(/ /g, "+") +
+    "/" +
+    estado.replace(/ /g, "+");
 
-function datosUsuarioLogeado(callback) {
-  let opcion = 3;
-  let idni = $("#dniuser").val();
-  $.ajax({
-    url: "../../app/controllers/EmpleadoController.php.php",
-    type: "POST",
-    datatype: "json",
-    data: { opcion: opcion, idni: idni },
-    beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
-      $("#loader").show();
+  tabla = $("#" + tabla).DataTable({
+    destroy: true,
+    language: {
+      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
     },
-    success: function (response) {
-      data = $.parseJSON(response);
-      nombres = data["nombres"] + " " + data["ap"] + " " + data["am"] + " ";
-      $("#info-datos").text(nombres);
-      $("#id_areaid").val(data["IDArea"]);
-      $("#info-area").val(data["Area"]);
-      $("#info-area-desc").text(data["Area"]);
-      $("#info-area1").text(data["Area"]);
-      $("#idinstitu").val(data["IDInst"]);
+    ajax: {
+      url: url,
+      dataSrc: "",
+    },
+    ordering: true,
+    autoWidth: false,
+    columns: [
+      { data: "expediente" },
+      { data: "Fecha" },
+      { data: "dni" },
+      { data: "Datos" },
+      { data: "origen" },
+      { data: "area" },
+      { data: "estado" },
+      { data: "opciones" },
+    ],
+
+    initComplete: function () {
       $("#loader").hide();
-      callback(); // llamar a la funcion despues de cargar los datos
-      datosCargados = true;
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
-      console.error("Error: " + error);
     },
   });
 }
-function contarDocsxArea() {
-  let opcion = 2;
-  let idubicacion = $("#id_areaid").val();
+
+//Llenar el Select Con Areas distintas al actual
+function llenarSelectDestino(area) {
   $.ajax({
-    url: "../../app/controllers/DocumentoController.php.php",
+    url: base_url + "/Tramites/getSelectDestino",
     type: "POST",
     datatype: "json",
-    data: { opcion: opcion, idubicacion: idubicacion },
+    data: { area: area },
     beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
-      $("#loader").show();
-    },
-    success: function (response) {
-      data = $.parseJSON(response);
-      $("#span_cant_rechazados_area").text(data["cantidad_rechazado_area"]);
-      $("#span_cant_pendientes_area").text(data["cantidad_pendiente_area"]);
-      $("#span_cant_aceptados_area").text(data["cantidad_aceptado_area"]);
-      $("#loader").hide();
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
-      console.error("Error: " + error);
-    },
-  });
-}
-function contarDocsGeneral() {
-  let opcion = 1;
-  $.ajax({
-    url: base_url + "/app/controllers/DocumentoController.php",
-    type: "POST",
-    datatype: "json",
-    data: { opcion: opcion },
-    beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
       $("#loader").show();
     },
     success: function (response) {
       console.log(response);
       data = $.parseJSON(response);
-      $("#span_cant_rechazados").text(data["cantidad_rechazado"]);
-      $("#span_cant_pendientes").text(data["cantidad_pendiente"]);
-      $("#span_cant_aceptados").text(data["cantidad_aceptado"]);
+      let select = $("#select-destino");
+      select.empty();
+      let placeholderOption = $("<option></option>");
+      placeholderOption.val("");
+      placeholderOption.text("Seleccione destino...");
+      placeholderOption.attr("disabled", true);
+      placeholderOption.attr("selected", true);
+      select.append(placeholderOption);
+      for (let i = 0; i < data.length; i++) {
+        let option = $("<option></option>");
+        option.val(data[i].ID);
+        option.text(data[i].area);
+        select.append(option);
+      }
       $("#loader").hide();
     },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
+    error: function (error) {
+      MostrarAlerta("Error", "Error al llenar áreas destino", "error");
       console.error("Error: " + error);
+      $("#loader").hide();
     },
   });
 }
-function cargarDatosInstitucion() {
-  opcion = 1;
-  $.ajax({
-    url: "../../app/controllers/InstitucionController.php.php",
-    type: "POST",
-    datatype: "json",
-    data: { opcion: opcion },
-    beforeSend: function () {
-      /* * Se ejecuta al inicio de la petición* */
-      $("#loader").show();
-    },
-    success: function (response) {
-      data = $.parseJSON(response);
-      $("#loader").hide();
-      $("#inst_logo").attr("src", "../../public/" + data[0]["logo"]);
-      $("#inst_footer").text(data[0]["razon"]);
-    },
-    error: function (xhr, status, error) {
-      // Manejar errores de la petición AJAX
-      console.error("Error: " + error);
-    },
-  });
-}
+
 function validaNumericos(event) {
   if (event.charCode >= 48 && event.charCode <= 57) {
     return true;

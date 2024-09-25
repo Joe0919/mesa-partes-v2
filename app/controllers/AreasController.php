@@ -1,5 +1,4 @@
 <?php
-
 class AreasController extends Controllers
 {
     public function __construct()
@@ -8,168 +7,191 @@ class AreasController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        // session_regenerate_id(true); //# MEJORAR EL USO
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
+            exit();
         }
         getPermisos(4);
     }
 
+    // Método para cargar la vista principal de áreas
     public function index()
     {
         if (empty($_SESSION['permisosMod']['rea'])) {
             header("Location:" . base_url() . '/dashboard');
+            exit();
         }
-
-        $data['page_id'] = 5;
-        $data['page_tag'] = "Áreas";
-        $data['page_title'] = "Áreas";
-        $data['file_js'] = "areas.js";
+        $data = [
+            'page_id' => 5,
+            'page_tag' => "Áreas",
+            'page_title' => "Áreas",
+            'file_js' => "areas.js"
+        ];
         $this->views->getView("Areas", "index", $data);
     }
 
+    // Método para obtener todas las áreas
     public function getAreas()
     {
-        if ($_SESSION['permisosMod']['rea']) {
-            $btnEditar = '';
-            $btnBorrar = '';
-            $arrData = $this->model->selectAreas();
-            for ($i = 0; $i < count($arrData); $i++) {
-                if ($_SESSION['permisosMod']['upd']) {
-                    $btnEditar = '<button class="btn btn-primary btn-sm btn-table btnEditar" title="Editar"><i class="nav-icon fas fa-edit"></i></button>';
-                }
-                if ($_SESSION['permisosMod']['del']) {
-                    $btnBorrar = '<button class="btn btn-danger btn-sm btn-table btnBorrar" title="Eliminar"><i class="nav-icon fas fa-trash"></i></button>';
-                }
-                $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group"> ' . $btnEditar . ' ' . $btnBorrar . '</div></div>';
-
-                $arrData[$i]['asociados'] = '<h5 class="mb-0" title="Número de datos asociados"><span class="badge badge-pill badge-warning">' . $arrData[$i]['asociados'] . '</span></h5>';
-            }
-            echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
-        } else {
-            $arrResponse = array(
-                'status' => false,
-                'title' => 'No autorizado',
-                'msg' => 'No tiene permitido ver este recurso.',
-            );
+        if (!$_SESSION['permisosMod']['rea']) {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+            die();
         }
-        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+
+        $arrData = $this->model->selectAreas();
+        foreach ($arrData as &$area) {
+            $area['opciones'] = $this->getOpcionesBotones();
+            $area['asociados'] = '<h5 class="mb-0" title="Número de datos asociados"><span class="badge badge-pill badge-warning">' . $area['asociados'] . '</span></h5>';
+        }
+        echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         die();
     }
 
+    // Método privado para generar los botones de opciones
+    private function getOpcionesBotones()
+    {
+        $btnEditar = $_SESSION['permisosMod']['upd'] ?
+            '<button class="btn btn-primary btn-sm btn-table btnEditar" title="Editar"><i class="nav-icon fas fa-edit"></i></button>' : '';
+        $btnBorrar = $_SESSION['permisosMod']['del'] ?
+            '<button class="btn btn-danger btn-sm btn-table btnBorrar" title="Eliminar"><i class="nav-icon fas fa-trash"></i></button>' : '';
+
+        return '<div class="text-center"><div class="btn-group">' . $btnEditar . ' ' . $btnBorrar . '</div></div>';
+    }
+
+    // Método para obtener las áreas para un select
     public function getSelectAreas()
     {
         $arrData = $this->model->selectAreas();
         echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+        die();
     }
 
+    // Método para crear o actualizar un área
     public function setArea()
     {
         $intIdArea = intval(limpiarCadena($_POST['idarea']));
-        $strCodigo =  strtoupper(limpiarCadena($_POST['icodigo']));
+        $strCodigo = strtoupper(limpiarCadena($_POST['icodigo']));
         $strArea = strtoupper(limpiarCadena($_POST['iarea']));
         $intIdInst = intval(limpiarCadena($_POST['id_inst']));
-        $request_area = "";
 
+        $request_area = $this->handleAreaRequest($intIdArea, $strCodigo, $strArea, $intIdInst);
+        echo json_encode($request_area, JSON_UNESCAPED_UNICODE);
+        die();
+    }
+
+    // Método para manejar las solicitudes de creación o actualización de áreas
+    private function handleAreaRequest($intIdArea, $strCodigo, $strArea, $intIdInst)
+    {
         if ($intIdArea == 0) {
-            //Crear
-            if ($_SESSION['permisosMod']['cre']) {
-                $request_area = $this->model->crearArea($strCodigo, $strArea, $intIdInst);
-                $option = 1;
-            } else {
-                $request_area = "denegado";
-            }
+            return $this->crearArea($strCodigo, $strArea, $intIdInst);
         } else {
-            //Actualizar
-            if ($_SESSION['permisosMod']['upd']) {
-                $request_area = $this->model->editarArea($intIdArea, $strCodigo, $strArea);
-                $option = 2;
-            } else {
-                $request_area = "denegado";
-            }
+            return $this->editarArea($intIdArea, $strCodigo, $strArea);
+        }
+    }
+
+    // Método para crear un área
+    private function crearArea($strCodigo, $strArea, $intIdInst)
+    {
+        if (!$_SESSION['permisosMod']['cre']) {
+            return $this->responseDenegado();
         }
 
+        $request_area = $this->model->crearArea($strCodigo, $strArea, $intIdInst);
+        return $this->generateResponse($request_area, 1);
+    }
+
+    // Método para editar un área
+    private function editarArea($intIdArea, $strCodigo, $strArea)
+    {
+        if (!$_SESSION['permisosMod']['upd']) {
+            return $this->responseDenegado();
+        }
+
+        $request_area = $this->model->editarArea($intIdArea, $strCodigo, $strArea);
+        return $this->generateResponse($request_area, 2);
+    }
+
+    // Método para generar la respuesta basada en el resultado de la operación
+    private function generateResponse($request_area, $option)
+    {
         if ($request_area == 'exist') {
-            $arrResponse = array(
+            return [
                 'status' => false,
                 'title' => 'Datos duplicados',
                 'msg' => 'El Codigo o Area ya existe.',
                 'results' => $request_area
-            );
-        } else if ($request_area > 0) {
-            if ($option == 1) {
-                $arrResponse = array(
-                    'status' => true,
-                    'title' => 'Registrado',
-                    'msg' => 'Datos guardados correctamente.',
-                    'results' => $request_area
-                );
-            } else {
-                $arrResponse = array(
-                    'status' => true,
-                    'title' => 'Actualizado',
-                    'msg' => 'Datos Actualizados correctamente.',
-                    'results' => $request_area
-                );
-            }
-        } else if ($request_area == 'denegado') {
-            $arrResponse = array(
-                "status" => false,
-                'title' => 'No permitido',
-                "msg" => 'No tiene permisos para realizar esta acción.',
-                'results' => $request_area
-            );
-        } else {
-            $arrResponse = array(
-                "status" => false,
-                'title' => 'Error',
-                "msg" => 'No es posible almacenar los datos.',
-                'results' => $request_area
-            );
+            ];
         }
+
+        if ($request_area > 0) {
+            return [
+                'status' => true,
+                'title' => $option == 1 ? 'Registrado' : 'Actualizado',
+                'msg' => $option == 1 ? 'Datos guardados correctamente.' : 'Datos Actualizados correctamente.',
+                'results' => $request_area
+            ];
+        }
+
+        return $this->responseError($request_area);
+    }
+
+
+
+    // Método para obtener un área específica
+    public function getArea(int $idarea)
+    {
+        if (!$_SESSION['permisosMod']['rea']) {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+            die();
+        }
+
+        $intIdArea = intval(limpiarCadena($idarea));
+        if ($intIdArea <= 0) {
+            echo json_encode(['status' => false, 'title' => 'Error', 'msg' => 'ID de área inválido.'], JSON_UNESCAPED_UNICODE);
+            die();
+        }
+
+        $arrData = $this->model->selectArea($intIdArea);
+        $arrResponse = empty($arrData) ?
+            ['status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.'] :
+            ['status' => true, 'title' => 'ok', 'data' => $arrData];
+
         echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
-    public function getArea(int $idarea)
-    {
-        if ($_SESSION['permisosMod']['rea']) {
-            $intIdArea = intval(limpiarCadena($idarea));
-            if ($intIdArea > 0) {
-                $arrData = $this->model->selectArea($intIdArea);
-                if (empty($arrData)) {
-                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.');
-                } else {
-                    $arrResponse = array('status' => true, 'title' => 'ok', 'data' => $arrData);
-                }
-                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-            }
-        } else {
-            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción.');
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        }
-        die();
-    }
+
+    // Método para eliminar un área
     public function delArea()
     {
-        if ($_POST) {
-            if ($_SESSION['permisosMod']['del']) {
-                $intIdArea = intval(limpiarCadena($_POST['idarea']));
-                $requestDelete = $this->model->eliminarArea($intIdArea);
-                if ($requestDelete == 1) {
-                    $arrResponse = array('status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado el Área');
-                } else if ($requestDelete == 'existD') {
-                    $arrResponse = array('status' => false, 'title' => 'Trámite asociado', 'msg' => 'No es posible eliminar, el Área tiene trámites.');
-                } else if ($requestDelete == 'existE') {
-                    $arrResponse = array('status' => false, 'title' => 'Usuario asociado', 'msg' => 'No es posible eliminar, el Área tiene usuarios.');
-                } else {
-                    $arrResponse = array('status' => false, 'title' => 'Error', 'msg' => 'Error al eliminar el Área.');
-                }
-                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-            }
-        } else {
-            $arrResponse = array('status' => false, 'title' => 'No permitido', 'msg' => 'No tiene permisos para realizar esta acción.');
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        if (!$_POST) {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+            die();
         }
+
+        if (!$_SESSION['permisosMod']['del']) {
+            echo json_encode($this->responseDenegado(), JSON_UNESCAPED_UNICODE);
+            die();
+        }
+
+        $intIdArea = intval(limpiarCadena($_POST['idarea']));
+        $requestDelete = $this->model->eliminarArea($intIdArea);
+
+        switch ($requestDelete) {
+            case 1:
+                $arrResponse = ['status' => true, 'title' => 'Eliminado', 'msg' => 'Se ha eliminado el Área'];
+                break;
+            case 'existD':
+                $arrResponse = ['status' => false, 'title' => 'Trámite asociado', 'msg' => 'No es posible eliminar, el Área tiene trámites.'];
+                break;
+            case 'existE':
+                $arrResponse = ['status' => false, 'title' => 'Usuario asociado', 'msg' => 'No es posible eliminar, el Área tiene usuarios.'];
+                break;
+            default:
+                $arrResponse = ['status' => false, 'title' => 'Error', 'msg' => 'Error al eliminar el Área.'];
+                break;
+        }
+
+        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
 }

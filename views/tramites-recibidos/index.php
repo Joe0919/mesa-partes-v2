@@ -10,7 +10,6 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
     <div class="wrapper" id="wrapper_content">
@@ -63,8 +62,8 @@
                                         </div>
 
                                         <div class="col-xl-4 text-right">
-                                            <label class="mr-1 mb-0">Listar por: </label>
-                                            <select class="select-reporte select-tipo-estado" name="select_estado" id="select_estado">
+                                            <strong class="mx-2 mb-0">Listar por: </strong>
+                                            <select class="select-reporte select-tipo-estado custom-select" name="select_estado" id="select_estado">
                                                 <option value="PENDIENTE">PENDIENTES</option>
                                                 <option value="ACEPTADO">ACEPTADOS</option>
                                                 <option value="RECHAZADO">RECHAZADOS</option>
@@ -80,7 +79,6 @@
                                             <tr>
                                                 <th rowspan="2">Expediente</th>
                                                 <th rowspan="2">Fecha</th>
-                                                <th rowspan="2">Tipo Doc</th>
                                                 <th colspan="2">Remitente</th>
                                                 <th colspan="2">Localización</th>
                                                 <th rowspan="2">Estado</th>
@@ -108,8 +106,6 @@
         <?php
 
         require_once "views/inc/Modals/Modals-tramites.php";
-
-        require_once "Modals-tramitesRecibidos.php";
 
         require_once "views/inc/Modals/Modals.php";
 

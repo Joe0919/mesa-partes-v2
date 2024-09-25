@@ -32,9 +32,8 @@ class UsuariosController extends Controllers
     public function getUsuarios()
     {
         if ($_SESSION['permisosMod']['rea']) {
-            $arrData = $this->model->selectUsuarios();
+            $arrData = $this->model->selectUsuario();
             for ($i = 0; $i < count($arrData); $i++) {
-                // $btnView = '';
                 $btnEditar = '';
                 $btnEditPsw = '';
                 $btnBorrar = '';
@@ -72,6 +71,8 @@ class UsuariosController extends Controllers
                 $arrData[$i]['opciones'] = '<div class="text-center"><div class="btn-group">' . $btnEditar . ' ' . $btnEditPsw . ' ' . $btnBorrar . '</div></div>';
             }
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -90,8 +91,7 @@ class UsuariosController extends Controllers
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
         } else {
-            $arrResponse = array('status' => false, 'msg' => 'No tiene permisos para realizar esta acción.');
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -106,6 +106,8 @@ class UsuariosController extends Controllers
                 $arrResponse = array('status' => true, 'data' => $arrData);
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode(array('status' => false, 'msg' => 'Id de usuario no valido.'), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -257,6 +259,8 @@ class UsuariosController extends Controllers
                 }
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -294,19 +298,19 @@ class UsuariosController extends Controllers
                     $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
                     $date = date("Ymd");
 
-                    $nuevo_nombre = UPLOADS_PATH . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+                    $nuevo_nombre = $ruta_aux . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
 
                     if (!file_exists($ruta_aux)) {
                         mkdir($ruta_aux, 0777, true);
                     }
 
-                    if (file_exists(UPLOADS_PATH . $rutaID)) {
-                        $files = array_diff(scandir(UPLOADS_PATH . $rutaID), array('.', '..'));
+                    if (file_exists($ruta_aux . $rutaID)) {
+                        $files = array_diff(scandir($ruta_aux . $rutaID), array('.', '..'));
                         if (count($files) > 0) {
-                            eliminarArchivos(UPLOADS_PATH . $rutaID);
+                            eliminarArchivos($ruta_aux . $rutaID);
                         }
                     } else {
-                        mkdir(UPLOADS_PATH . $rutaID, 0777, true);
+                        mkdir($ruta_aux . $rutaID, 0777, true);
                     }
 
                     if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
@@ -372,6 +376,8 @@ class UsuariosController extends Controllers
                 }
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
@@ -422,8 +428,10 @@ class UsuariosController extends Controllers
                 }
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
-            die();
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
+        die();
     }
 
     public function delUser()
@@ -441,6 +449,8 @@ class UsuariosController extends Controllers
                 }
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
     }
