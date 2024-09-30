@@ -199,6 +199,7 @@ class TramitesController extends Controllers
                 $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
             } else {
                 $idpersona = limpiarCadena($_POST['idpersona']);
+                $idusuario = intval(limpiarCadena($_POST['idusuario']));
                 $dni = limpiarCadena($_POST['idni']);
                 $ruc = limpiarCadena($_POST['iruc']);
                 $entidad = strtoupper(limpiarCadena($_POST['ientidad']));
@@ -255,13 +256,55 @@ class TramitesController extends Controllers
                             $arrResponse = array("status" => false, "title" => "Error", "msg" => 'Datos duplicados.');
                         } else {
                             $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
-                            $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE');
+                            $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE', $idusuario);
 
                             $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
 
                             $arrData = $this->model->selectTramite($expediente, "");
 
-                            $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData);
+                            $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
+                            <hr>
+                            <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio
+                                Caldas Domínguez - Pomabamba.</b>
+                                <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite
+                                recepcionado:
+                            </p>
+                            <div class='container'>
+                                <table width='100%' border='1' cellspacing='0' cellpadding='5' id='tableDoc'>
+                                    <tr>
+                                        <th colspan='2' class='title_table'>
+                                            DATOS DEL DOCUMENTO</th>
+                                    </tr>
+                                    <tr>
+                                        <th style='width: 40%;'>N° Expediente</th>
+                                        <td>" . $arrData['nro_expediente'] . "</td>
+                                    </tr>
+                                    <tr>
+                                        <th>N°. Documento</th>
+                                        <td>" . $arrData['nro_doc'] . "</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Tipo Documento</th>
+                                        <td>" . $arrData['tipodoc'] . "</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Remitente</th>
+                                        <td>" . $arrData['Datos'] . "</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <td>" . $arrData['Fecha'] . "</td>
+                                    </tr>
+                                </table>
+                            </div>                   
+                            <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
+                                    Virtual</b> en
+                                la pestaña <b><i>Seguimiento</i></b>
+                            </p>";
+
+                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html);
+
+                            $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
                         }
                     } else {
                         $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar el pdf.');

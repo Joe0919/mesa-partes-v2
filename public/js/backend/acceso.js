@@ -19,7 +19,6 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
         data = $.parseJSON(response);
         if (!data.status) {
           Swal.fire({

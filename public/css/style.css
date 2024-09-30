@@ -523,6 +523,13 @@ body {
   padding: 6px;
 }
 
+.box-link {
+  transition: transform .4s ease; 
+}
+
+.box-link:hover {
+  transform: scale(1.04);
+}
 /* ESTILOS PARA LA PÁGINA DE INGRESO DE DOCUMENTOS */
 .header {
   margin-bottom: 0.5rem;

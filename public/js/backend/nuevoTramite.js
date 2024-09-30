@@ -1,6 +1,8 @@
 $(document).ready(function () {
   $("#loader").hide();
 
+  let idusuario = $("#iduser").val();
+
   $("#nom_pdf").hide();
 
   $("#idnombre").prop("readonly", true);
@@ -116,6 +118,7 @@ $(document).ready(function () {
       }).then((result) => {
         if (result.isConfirmed) {
           let formData = new FormData(this);
+          formData.append("idusuario", idusuario);
           $("#loader").show();
           $.ajax({
             url: base_url + "/Tramites/setTramite",

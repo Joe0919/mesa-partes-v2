@@ -21,6 +21,7 @@ class TramiteModel extends Mysql
     private $strIdDestino;
     private $strDescripcion;
     private $strAccion;
+    private $strGroupBy;
 
 
     public function __construct()
@@ -432,15 +433,132 @@ class TramiteModel extends Mysql
         $request = $this->select_all($sql);
         return $request;
     }
-    public function selectIngresoDocs()
+    public function selectIngresoDocs($groupBy)
     {
-        $sql = "SELECT * FROM ingreso_docs_fecha i";
+        $this->strGroupBy = $groupBy;
+
+        switch ($this->strGroupBy) {
+            case "dia":
+                $sql = "SELECT DATE_FORMAT(fecha_registro, '%d/%m/%Y') AS fecha, COUNT(*) AS cantidad
+                FROM documento
+                GROUP BY DATE_FORMAT(fecha_registro, '%d/%m/%Y')
+                ORDER BY fecha_registro";
+                break;
+            case "semana":
+                // ,' (', DATE_FORMAT(MIN(fecha_registro), '%d/%m'), ' - ',
+                // DATE_FORMAT(DATE_ADD(MIN(fecha_registro), INTERVAL 6 DAY), '%d/%m'), ')'  <== Agrega fecha de inicio y fin
+                $sql = "SELECT
+                            CONCAT(YEAR(fecha_registro), ' S', WEEK(fecha_registro)) AS fecha,
+                            COUNT(*) AS cantidad
+                        FROM documento
+                        GROUP BY YEAR(fecha_registro), WEEK(fecha_registro)
+                        ORDER BY YEAR(fecha_registro), WEEK(fecha_registro)";
+                break;
+            case "mes":
+                $sql = "SELECT
+                            CONCAT(
+                                CASE MONTH(fecha_registro)
+                                    WHEN 1 THEN 'Enero'
+                                    WHEN 2 THEN 'Febrero'
+                                    WHEN 3 THEN 'Marzo'
+                                    WHEN 4 THEN 'Abril'
+                                    WHEN 5 THEN 'Mayo'
+                                    WHEN 6 THEN 'Junio'
+                                    WHEN 7 THEN 'Julio'
+                                    WHEN 8 THEN 'Agosto'
+                                    WHEN 9 THEN 'Septiembre'
+                                    WHEN 10 THEN 'Octubre'
+                                    WHEN 11 THEN 'Noviembre'
+                                    WHEN 12 THEN 'Diciembre'
+                                END, 
+                                ' ',
+                                YEAR(fecha_registro)
+                            ) AS fecha,
+                            COUNT(*) AS cantidad
+                        FROM documento
+                        GROUP BY YEAR(fecha_registro), MONTH(fecha_registro)
+                        ORDER BY YEAR(fecha_registro), MONTH(fecha_registro)";
+                break;
+            case "anio":
+                $sql = "SELECT YEAR(fecha_registro) AS fecha, COUNT(*) AS cantidad
+                FROM documento
+                GROUP BY YEAR(fecha_registro)
+                ORDER BY YEAR(fecha_registro)";
+                break;
+        }
         $request = $this->select_all($sql);
         return $request;
     }
-    public function selectProcesDocs()
+    public function selectProcesDocs($groupBy)
     {
-        $sql = "SELECT * FROM docs_procesados_fecha d;";
+        $this->strGroupBy = $groupBy;
+
+        switch ($this->strGroupBy) {
+            case "dia":
+                $sql = "SELECT DATE_FORMAT(fecha, '%d/%m/%Y') AS fecha, 
+                               COUNT(DISTINCT expediente) AS cantidad
+                        FROM historial h
+                        WHERE h.idhistorial > (
+                            SELECT MIN(h2.idhistorial)
+                            FROM historial h2
+                            WHERE h2.expediente = h.expediente
+                        )
+                        GROUP BY DATE_FORMAT(fecha, '%d/%m/%Y')
+                        ORDER BY fecha";
+                break;
+            case "semana":
+                $sql = "SELECT CONCAT(YEAR(fecha), ' S', WEEK(fecha)) AS fecha,
+                               COUNT(DISTINCT expediente) AS cantidad
+                        FROM historial h
+                        WHERE h.idhistorial > (
+                            SELECT MIN(h2.idhistorial)
+                            FROM historial h2
+                            WHERE h2.expediente = h.expediente
+                        )
+                        GROUP BY YEAR(fecha), WEEK(fecha)
+                        ORDER BY YEAR(fecha), WEEK(fecha)";
+                break;
+            case "mes":
+                $sql = "SELECT CONCAT(
+                            CASE MONTH(fecha)
+                                WHEN 1 THEN 'Enero'
+                                WHEN 2 THEN 'Febrero'
+                                WHEN 3 THEN 'Marzo'
+                                WHEN 4 THEN 'Abril'
+                                WHEN 5 THEN 'Mayo'
+                                WHEN 6 THEN 'Junio'
+                                WHEN 7 THEN 'Julio'
+                                WHEN 8 THEN 'Agosto'
+                                WHEN 9 THEN 'Septiembre'
+                                WHEN 10 THEN 'Octubre'
+                                WHEN 11 THEN 'Noviembre'
+                                WHEN 12 THEN 'Diciembre'
+                            END, 
+                            ' ', YEAR(fecha)
+                        ) AS fecha,
+                        COUNT(DISTINCT expediente) AS cantidad
+                        FROM historial h
+                        WHERE h.idhistorial > (
+                            SELECT MIN(h2.idhistorial)
+                            FROM historial h2
+                            WHERE h2.expediente = h.expediente
+                        )
+                        GROUP BY YEAR(fecha), MONTH(fecha)
+                        ORDER BY YEAR(fecha), MONTH(fecha)";
+                break;
+            case "anio":
+                $sql = "SELECT YEAR(fecha) AS fecha, 
+                               COUNT(DISTINCT expediente) AS cantidad
+                        FROM historial h
+                        WHERE h.idhistorial > (
+                            SELECT MIN(h2.idhistorial)
+                            FROM historial h2
+                            WHERE h2.expediente = h.expediente
+                        )
+                        GROUP BY YEAR(fecha)
+                        ORDER BY YEAR(fecha)";
+                break;
+        }
         $request = $this->select_all($sql);
         return $request;
     }

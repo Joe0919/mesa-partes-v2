@@ -97,16 +97,13 @@ function limpiarCadena($strCadena)
 }
 
 //Genera una contraseña de 8 caracteres
-function genContrasena($length = 8)
+function genContrasena()
 {
     $pass = "";
-    $longitudPass = $length;
-    $cadena = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
-    $longitudCadena = strlen($cadena);
-
-    for ($i = 1; $i <= $longitudPass; $i++) {
-        $pos = rand(0, $longitudCadena - 1);
-        $pass .= substr($cadena, $pos, 1);
+    $str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!¡¿?@#$/-";
+    for ($i = 0; $i < 8; $i++) {
+        $char = rand(0, strlen($str) - 1);
+        $pass .= $str[$char];
     }
     return $pass;
 }

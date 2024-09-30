@@ -13,6 +13,7 @@ class Controllers
 
         $this->views = new Views();
         $this->loadModel($this->controler);
+        $this->loadDependencies('vendor/phpmailer/src/clsMail.php');
     }
 
     // 	Metodo para cargar el modelo
@@ -37,6 +38,12 @@ class Controllers
             throw new Exception("El archivo del modelo $routClass no existe.");
         }
     }
+
+    private function loadDependencies($dependencie)
+    {
+        require_once $dependencie;
+    }
+
 
     // Método para agregar un nuevo modelo al controlador
     public function loadAdditionalModel($modelName)
@@ -129,5 +136,22 @@ class Controllers
             'msg' => 'No tiene permisos para realizar esta acción.',
             'results' => 'denegado'
         ];
+    }
+
+    public function cargarPlantilla($body)
+    {
+        $plantilla = file_get_contents('app/templates/plantilla_tramite.html');
+
+        // Reemplazar marcadores de posición
+        $plantilla = str_replace('{ cuerpo }', $body, $plantilla); // Reemplaza el marcador con el contenido del cuerpo
+
+        return $plantilla;
+    }
+
+    // Método para enviar correos
+    public function enviarCorreo($titulo, $nombre, $correo, $asunto, $cuerpo)
+    {
+        $enviarEmail = new clsMail(); // Instanciar la clase clsMail
+        return $enviarEmail->metEnviar($titulo, $nombre, $correo, $asunto, $cuerpo);
     }
 }

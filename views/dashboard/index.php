@@ -47,13 +47,72 @@
             <!-- Main content -->
             <main class="content">
                 <div class="container-fluid">
-                    <!-- Small boxes (Stat box) -->
+
+                    <button class="btn bg-black" id="prueba"> Enviar correo </button>
+
+                    <!-- RESUMEN DE DOCUMENTOS GENERAL -->
+                    <?php if ($_SESSION['userData']['idusuarios'] == 1) { ?>
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <a href="<?= base_url(); ?>/tramites" title="Administrar">
+                                    <div class="info-box bg-gradient-info box-link">
+                                        <span class="info-box-icon bg-gradient-info"><img src="<?= media() ?>/images/pendiente.png"></span>
+                                        <div class="info-box-content content-lh">
+                                            <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
+                                            <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
+                                            <span class="progress-description info-box-desc">Documentos</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <a href="<?= base_url(); ?>/tramites" title="Administrar">
+                                    <div class="info-box bg-gradient-green box-link">
+                                        <span class="info-box-icon bg-gradient-green"><img src="<?= media() ?>/images/aceptar.png"></span>
+                                        <div class="info-box-content content-lh">
+                                            <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
+                                            <span class="info-box-text1 info-box-count" id="span_cant_aceptados"></span>
+                                            <span class="progress-description info-box-desc">Documentos</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <a href="<?= base_url(); ?>/tramites" title="Administrar">
+                                    <div class="info-box bg-gradient-purple box-link">
+                                        <span class="info-box-icon bg-gradient-purple"><img src="<?= media() ?>/images/documentos.png"></span>
+                                        <div class="info-box-content content-lh">
+                                            <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
+                                            <span class="info-box-text1 info-box-count" id="span_cant_archivados"></span>
+                                            <span class="progress-description info-box-desc">Documentos</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="col-12 col-sm-6 col-xl-3">
+                                <a href="<?= base_url(); ?>/tramites" title="Administrar">
+                                    <div class="info-box bg-gradient-danger box-link">
+                                        <span class="info-box-icon bg-gradient-danger icon"><img src="<?= media() ?>/images/rechazado.png"></span>
+                                        <div class="info-box-content content-lh">
+                                            <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
+                                            <span class="info-box-text1 info-box-count" id="span_cant_rechazados"></span>
+                                            <span class="progress-description info-box-desc">Documentos</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+
                     <div class="row">
                         <section class="col-xl-6">
-                            <!-- RESUMEN DE DOCUMENTOS GENERAL -->
-                            <div class="card card-outline card-info">
+                            <!-- RESUMEN DE DOCUMENTOS EN EL AREA -->
+                            <div class="card card-outline card-fuchsia">
                                 <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-minus mr-1"></i>INFORMACIÓN DOCUMENTARIA GENERAL</h3>
+                                    <h3 class="card-title"><i class="fas fa-minus mr-1"></i>DOCUMENTOS EN: <strong id="area"><?= $_SESSION['userData']['area'] ?></strong></h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                             <i class="fas fa-minus"></i>
@@ -65,66 +124,8 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-info">
-                                                <span class="info-box-icon bg-gradient-info"><img src="<?= media() ?>/images/pendiente.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-green">
-                                                <span class="info-box-icon bg-gradient-green"><img src="<?= media() ?>/images/aceptar.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_aceptados"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-purple">
-                                                <span class="info-box-icon bg-gradient-purple"><img src="<?= media() ?>/images/documentos.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_archivados"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="info-box bg-gradient-danger">
-                                                <span class="info-box-icon bg-gradient-danger icon"><img src="<?= media() ?>/images/rechazado.png"></span>
-                                                <div class="info-box-content content-lh">
-                                                    <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
-                                                    <span class="info-box-text1 info-box-count" id="span_cant_rechazados"></span>
-                                                    <span class="progress-description info-box-desc">Documentos</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <?php if ($_SESSION['userData']['idusuarios'] == 1) { ?>
-                                <!-- RESUMEN DE DOCUMENTOS EN EL AREA -->
-                                <div class="card card-outline card-fuchsia">
-                                    <div class="card-header">
-                                        <h3 class="card-title"><i class="fas fa-minus mr-1"></i>DOCUMENTOS EN: <strong id="area"><?= $_SESSION['userData']['area'] ?></strong></h3>
-                                        <div class="card-tools">
-                                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                                <i class="fas fa-minus"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="info-box bg-gradient-info">
+                                            <a href="<?= base_url(); ?>/tramites-recibidos" title="Administrar">
+                                                <div class="info-box bg-gradient-info box-link">
                                                     <span class="info-box-icon bg-gradient-info"><img src="<?= media() ?>/images/pendiente.png"></span>
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
@@ -132,9 +133,11 @@
                                                         <span class="progress-description info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="info-box bg-gradient-green">
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="<?= base_url(); ?>/tramites-recibidos" title="Administrar">
+                                                <div class="info-box bg-gradient-green box-link">
                                                     <span class="info-box-icon bg-gradient-green"><img src="<?= media() ?>/images/aceptar.png"></span>
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
@@ -142,9 +145,11 @@
                                                         <span class="progress-description info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="info-box bg-gradient-purple">
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="<?= base_url(); ?>/tramites-recibidos" title="Administrar">
+                                                <div class="info-box bg-gradient-purple box-link">
                                                     <span class="info-box-icon bg-gradient-purple"><img src="<?= media() ?>/images/documentos.png"></span>
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
@@ -152,9 +157,11 @@
                                                         <span class="progress-description info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="info-box bg-gradient-danger">
+                                            </a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="<?= base_url(); ?>/tramites-recibidos" title="Administrar">
+                                                <div class="info-box bg-gradient-danger box-link">
                                                     <span class="info-box-icon bg-gradient-danger icon "><img src="<?= media() ?>/images/rechazado.png"></span>
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
@@ -162,11 +169,11 @@
                                                         <span class="progress-description info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            <?php } ?>
+                            </div>
                             <!-- GRÁFICO DE TRAMITES POR ESTADO -->
                             <div class="card">
                                 <div class="card-header">
@@ -180,7 +187,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
@@ -191,6 +197,8 @@
                                     </div>
 
                                 </div>
+                                <div class="overlay dark" id="overlayGrafEstado"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
+
                             </div>
                         </section>
                         <section class="col-xl-6">
@@ -213,7 +221,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <div class="card-body">
                                     <table id="tablaRanking" class="table table-hover">
                                         <thead>
@@ -227,10 +234,10 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="overlay dark" id="overlayRanking"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
                             </div>
                             <!-- TABLA TRAMITES REGISTRADOS POR PERIODO -->
                             <div class="card card-info">
-                                <!-- GRÁFICO DE TRAMITES REGISTRADOS X FECHA -->
                                 <div class="card-header">
                                     <h3 class="card-title">Trámites Registrados x Periodo</h3>
                                     <div class="card-tools">
@@ -248,7 +255,6 @@
                                         </button>
                                     </div>
                                 </div>
-                                <!-- GRÁFICO DE TRAMITES PROCESADOS X FECHA -->
                                 <div class="card-body">
                                     <table id="tablaDocsxTiempo" class="table table-hover">
                                         <thead>
@@ -262,19 +268,25 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                <div class="overlay dark" id="overlayPeriodo"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
                             </div>
                         </section>
                     </div>
 
                     <div class="row">
                         <section class="col-12">
+                            <!-- GRÁFICO DE TRAMITES REGISTRADOS X FECHA -->
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">Trámites Ingresados x Fecha</h3>
                                     <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </button>
+                                        <strong class="mr-2 mb-0">Filtrar: </strong>
+                                        <select class="custom-select select-tramite" id="selectFiltro1">
+                                            <option value="dia">Por día</option>
+                                            <option value="semana">Por semana</option>
+                                            <option value="mes">Por mes</option>
+                                            <option value="anio">Por año</option>
+                                        </select>
                                         <button type="button" class="btn btn-tool" data-card-widget="maximize">
                                             <i class="fas fa-expand"></i>
                                         </button>
@@ -286,7 +298,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
@@ -297,16 +308,22 @@
                                     </div>
 
                                 </div>
+                                <div class="overlay dark" id="overlayLineRegistrados"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
                             </div>
                         </section>
                         <section class="col-12">
+                            <!-- GRÁFICO DE TRAMITES PROCESADOS X FECHA -->
                             <div class="card">
                                 <div class="card-header">
                                     <h3 class="card-title">Trámites Procesados x Fecha</h3>
                                     <div class="card-tools">
-                                        <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
-                                            <i class="fas fa-sync-alt"></i>
-                                        </button>
+                                        <strong class="mr-2 mb-0">Filtrar: </strong>
+                                        <select class="custom-select select-tramite" id="selectFiltro2">
+                                            <option value="dia">Por día</option>
+                                            <option value="semana">Por semana</option>
+                                            <option value="mes">Por mes</option>
+                                            <option value="anio">Por año</option>
+                                        </select>
                                         <button type="button" class="btn btn-tool" data-card-widget="maximize">
                                             <i class="fas fa-expand"></i>
                                         </button>
@@ -318,7 +335,6 @@
                                         </button>
                                     </div>
                                 </div>
-
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
@@ -329,6 +345,7 @@
                                     </div>
 
                                 </div>
+                                <div class="overlay dark" id="overlayLineProcesados"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
                             </div>
                         </section>
                     </div>

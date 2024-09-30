@@ -1,5 +1,6 @@
 $(document).ready(function () {
   let idarea = $("#id_areaid").val();
+  $(".overlay").hide();
 
   cargarDatosDashboard();
 
@@ -21,7 +22,7 @@ $(document).ready(function () {
         return new Promise((resolve) => setTimeout(resolve, 70));
       })
       .then(() => {
-        return consultarDocsxIntervalo();
+        return consultarDocsxPeriodo();
       })
       .then(() => {
         return new Promise((resolve) => setTimeout(resolve, 80));
@@ -49,7 +50,7 @@ $(document).ready(function () {
         url: base_url + "/Dashboard/getDocsGeneral",
         type: "GET",
         beforeSend: function () {
-          $("#loader").show();
+          $("#overlayGrafEstado").show();
         },
         success: function (response) {
           objData = $.parseJSON(response);
@@ -68,13 +69,12 @@ $(document).ready(function () {
           ];
 
           crearGrafico({ labels: labels, values: values }, "bar", "grafico1");
-          $("#loader").hide();
+          $("#overlayGrafEstado").hide();
           resolve();
         },
         error: function (error) {
           MostrarAlerta("Error", "Error al cargar los datos", "error");
           console.error("Error: " + error);
-          $("#loader").hide();
           reject(error); // Rechazamos la promesa en caso de error
         },
       });
@@ -87,7 +87,7 @@ $(document).ready(function () {
           url: base_url + "/Dashboard/getDocsArea/" + idarea,
           type: "GET",
           beforeSend: function () {
-            $("#loader").show();
+            $("#overlayArea").show();
           },
           success: function (response) {
             objData = $.parseJSON(response);
@@ -111,6 +111,7 @@ $(document).ready(function () {
     });
   }
   function consultarRanking() {
+    $("#overlayRanking").show();
     return new Promise((resolve, reject) => {
       tablaRanking = $("#tablaRanking").DataTable({
         destroy: true,
@@ -132,18 +133,18 @@ $(document).ready(function () {
           { data: "total_documentos" },
         ],
         initComplete: function () {
-          $("#loader").hide();
-          resolve(); // Resolvemos la promesa al completar la inicialización
+          $("#overlayRanking").hide();
+          resolve();
         },
         error: function (error) {
-          $("#loader").hide();
-          reject(error); // Rechazamos la promesa en caso de error
+          reject(error);
         },
       });
     });
   }
 
-  function consultarDocsxIntervalo() {
+  function consultarDocsxPeriodo() {
+    $("#overlayPeriodo").show();
     return new Promise((resolve, reject) => {
       tablaDocsxTiempo = $("#tablaDocsxTiempo").DataTable({
         destroy: true,
@@ -161,12 +162,11 @@ $(document).ready(function () {
         paging: false,
         columns: [{ data: "fila" }, { data: "periodo" }, { data: "cantidad" }],
         initComplete: function () {
-          $("#loader").hide();
-          resolve(); // Resolvemos la promesa al completar la inicialización
+          $("#overlayPeriodo").hide();
+          resolve();
         },
         error: function (error) {
-          $("#loader").hide();
-          reject(error); // Rechazamos la promesa en caso de error
+          reject(error);
         },
       });
     });
@@ -175,10 +175,11 @@ $(document).ready(function () {
   function consultarIngresoDocs() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: base_url + "/Dashboard/getIngresoDocs",
+        url:
+          base_url + "/Dashboard/getIngresoDocs/" + $("#selectFiltro1").val(),
         type: "GET",
         beforeSend: function () {
-          $("#loader").show();
+          $("#overlayLineRegistrados").show();
         },
         success: function (response) {
           objData = $.parseJSON(response);
@@ -196,26 +197,29 @@ $(document).ready(function () {
             "line",
             "grafico2"
           );
-          $("#loader").hide();
+          $("#overlayLineRegistrados").hide();
           resolve();
         },
         error: function (error) {
           MostrarAlerta("Error", "Error al cargar los datos", "error");
           console.error("Error: " + error);
-          $("#loader").hide();
           reject(error); // Rechazamos la promesa en caso de error
         },
       });
     });
   }
 
+  $("#selectFiltro1").change(function () {
+    consultarIngresoDocs();
+  });
+
   function consultarProcesDocs() {
     return new Promise((resolve, reject) => {
       $.ajax({
-        url: base_url + "/Dashboard/getProcesDocs",
+        url: base_url + "/Dashboard/getProcesDocs/" + $("#selectFiltro2").val(),
         type: "GET",
         beforeSend: function () {
-          $("#loader").show();
+          $("#overlayLineProcesados").show();
         },
         success: function (response) {
           objData = $.parseJSON(response);
@@ -233,18 +237,39 @@ $(document).ready(function () {
             "line",
             "grafico3"
           );
-          $("#loader").hide();
+          $("#overlayLineProcesados").hide();
           resolve();
         },
         error: function (error) {
           MostrarAlerta("Error", "Error al cargar los datos", "error");
           console.error("Error: " + error);
-          $("#loader").hide();
-          reject(error); // Rechazamos la promesa en caso de error
+          reject(error);
         },
       });
     });
   }
+  $("#selectFiltro2").change(function () {
+    consultarProcesDocs();
+  });
+
+  $("#prueba").click(function () {
+    $.ajax({
+      url: base_url + "/Dashboard/pruebaEmail",
+      type: "POST",
+      success: function (response) {
+        if (response) {
+          MostrarAlerta("Exito", "Revise su bandeja", "success");
+        } else {
+          MostrarAlerta("Error", "No se envio", "error");
+        }
+        console.log(response);
+      },
+      error: function (error) {
+        MostrarAlerta("Error", "Error al cargar los datos", "error");
+        console.error("Error: " + error);
+      },
+    });
+  });
 });
 
 function crearGrafico(datos, tipoGrafico, canvas) {
@@ -308,9 +333,17 @@ function crearGrafico(datos, tipoGrafico, canvas) {
     plugins: [ChartDataLabels], // Asegúrate de incluir el plugin
   });
 }
+
+let graficos = {}; // Objeto para almacenar las instancias de los gráficos
+
 function crearGraficoLine(datos, tipoGrafico, canvas) {
+  // Destruir el gráfico existente si existe
+  if (graficos[canvas]) {
+    graficos[canvas].destroy();
+  }
+
   const ctx = document.getElementById(canvas).getContext("2d");
-  const grafico = new Chart(ctx, {
+  graficos[canvas] = new Chart(ctx, {
     type: tipoGrafico,
     data: {
       labels: datos.labels, // Asumiendo que los datos tienen un campo 'labels'
@@ -324,26 +357,36 @@ function crearGraficoLine(datos, tipoGrafico, canvas) {
       ],
     },
     options: {
-      responsive: true, // Hacer que el gráfico sea responsivo
-      maintainAspectRatio: false, // Permitir que el gráfico no mantenga la relación de aspecto
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: false,
+          max: Math.max(...datos.values) + 2, // Ajusta el valor máximo
           grid: {
-            display: false, // Ocultar líneas de la cuadrícula en el eje Y
+            display: false,
           },
         },
         x: {
           grid: {
-            display: false, // Ocultar líneas de la cuadrícula en el eje X
+            display: false,
           },
         },
       },
       plugins: {
         legend: {
-          display: false, // No mostrar la leyenda
+          display: false,
+        },
+        datalabels: {
+          anchor: "end",
+          align: "end",
+          color: "#000",
+          formatter: (value) => {
+            return value;
+          },
         },
       },
     },
+    plugins: [ChartDataLabels],
   });
 }

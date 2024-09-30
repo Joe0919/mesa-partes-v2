@@ -29,8 +29,8 @@ class AccesoController extends Controllers
     public function login()
     {
         if ($_POST) {
-            $usuario = $_POST["usuario"];
-            $password = $_POST["password"];
+            $usuario = limpiarCadena($_POST["usuario"]);
+            $password = limpiarCadena($_POST["password"]);
             $requestUser = $this->model->loginUser($usuario, $password);
             echo json_encode($this->handleLoginResponse($requestUser), JSON_UNESCAPED_UNICODE);
         } else {

@@ -6,6 +6,8 @@ const DB_USER = 'root';
 const DB_PASSWORD = '';
 const DB_NAME = 'db_hacdp';
 const DB_CHARSET = 'utf8';
+
+
 define('APP', dirname(dirname(__FILE__)));
 const URL = 'http://localhost/MesaPartesVirtual';
 // Definir BASE_PATH para obtener la ruta base del proyecto

@@ -46,14 +46,61 @@ class DashboardController extends Controllers
         $arrData = $this->model->selectDocsxTiempo();
         echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
     }
-    public function getIngresoDocs()
+    public function getIngresoDocs($filtro)
     {
-        $arrData = $this->model->selectIngresoDocs();
+        $arrData = $this->model->selectIngresoDocs($filtro);
         echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
     }
-    public function getProcesDocs()
+    public function getProcesDocs($filtro)
     {
-        $arrData = $this->model->selectProcesDocs();
+        $arrData = $this->model->selectProcesDocs($filtro);
         echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function pruebaEmail()
+    {
+        $html = "<p class='p_name'>Estimado(a): <b>JOEL BLADIMIR</b></p>
+        <hr>
+        <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio
+            Caldas Domínguez - Pomabamba.</b>
+            <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite
+            recepcionado:
+        </p>
+
+        <div class='container'>
+            <table width='100%' border='1' cellspacing='0' cellpadding='5' id='tableDoc'>
+                <tr>
+                    <th colspan='2' class='title_table'>
+                        DATOS DEL DOCUMENTO</th>
+                </tr>
+                <tr>
+                    <th style='width: 40%;'>EXPEDIENTE</th>
+                    <td>000052</td>
+                </tr>
+                <tr>
+                    <th>N°. DOCUMENTO</th>
+                    <td>012</td>
+                </tr>
+                <tr>
+                    <th>TIPO</th>
+                    <td>MEMORANDUM</td>
+                </tr>
+                <tr>
+                    <th>REMITENTE</th>
+                    <td>JOEL BLADIMIR LLALLIHUAMAN GIRALDO</td>
+                </tr>
+                <tr>
+                    <th>FECHA</th>
+                    <td>28/09/10 10:30PM</td>
+                </tr>
+            </table>
+        </div>
+
+
+        <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
+                Virtual</b> en
+            la pestaña <b><i>Seguimiento</i></b>
+        </p>";
+        echo $this->enviarCorreo("MESA DE PARTES VIRTUAL - HACDP", "Usuario", "joel09llalli@gmail.com", "CAMBIO DE CONTRASEÑA", $html);
     }
 }

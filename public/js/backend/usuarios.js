@@ -394,7 +394,6 @@ $(document).ready(function () {
   });
 
   $("#iemail").blur(function () {
-    //Consulta de disponibilidad de EMAIL al cambiar el click
     let iemail = $.trim($(this).val());
     if (iemail.length == 0) {
       $("#ErrorEmail").text("").css("color", "red");

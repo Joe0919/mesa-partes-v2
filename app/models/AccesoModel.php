@@ -5,6 +5,8 @@ class AccesoModel extends Mysql
 
 	private $intIdUsuario;
 	private $strUsuario;
+	private $strDNI;
+	private $strCorreo;
 	private $strPassword;
 	private $strToken;
 
@@ -77,6 +79,43 @@ class AccesoModel extends Mysql
 			[$this->intIdUsuario]
 		);
 
+		return $request;
+	}
+
+	public function verificarUsuario($dni, $correo)
+	{
+		$this->strDNI = $dni;
+		$this->strCorreo = $correo;
+
+		$sql = "SELECT idusuarios, concat(nombres,' ',ap_paterno,' ',ap_materno) datos, email
+				FROM usuarios u JOIN persona p ON p.dni=u.dni
+        		WHERE u.dni = ? AND email = ? ";
+		return $this->selectOne($sql, [$this->strDNI, $this->strCorreo]);
+	}
+
+	public function editarPswUsuario($idusuario, $contrasena)
+	{
+		$this->intIdUsuario = $idusuario;
+		$this->strPassword = password_hash($contrasena, PASSWORD_BCRYPT);
+
+		$where = " WHERE idusuarios = ? ";
+		$request = $this->consultar(
+			"*",
+			"usuarios",
+			$where,
+			[$this->intIdUsuario]
+		);
+
+		if (!empty($request)) {
+			$request = $this->editar(
+				"usuarios",
+				"contrasena = ? , fechaedicion = sysdate()",
+				"idusuarios = ?",
+				[$this->strPassword, $this->intIdUsuario]
+			);
+		} else {
+			$request = 'no hay';
+		}
 		return $request;
 	}
 }
