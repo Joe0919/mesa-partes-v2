@@ -12,8 +12,6 @@ class PersonaModel extends Mysql
     private $strRUC;
     private $strEntidad;
 
-
-
     public function __construct()
     {
         parent::__construct();

@@ -2,7 +2,6 @@
 
 class Controllers
 {
-
     public $model;
     public $views;
     private $controler;
@@ -11,9 +10,9 @@ class Controllers
     {
         $this->controler = $controler;
 
-        $this->views = new Views();
         $this->loadModel($this->controler);
-        $this->loadDependencies('vendor/phpmailer/src/clsMail.php');
+        $this->loadDependencies('vendor/phpmailer/src/clsMail.php'); //Cargamos la libreria 
+        $this->views = new Views();
     }
 
     // 	Metodo para cargar el modelo

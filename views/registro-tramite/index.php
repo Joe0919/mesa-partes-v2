@@ -8,66 +8,56 @@
     <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed body">
 
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
     <div class="wrapper" id="wrapper_content">
 
-        <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
-
-        <!-- Menu de Navegacion  -->
-        <?php require_once "views/inc/MainSidebar/MainSidebar.php" ?>   
-
         <!-- CONTENIDO PRINCIPAL -->
-        <div class="content-wrapper">
+        <div class="container-xl bg-color-gray px-0">
             <!-- Contenido del Encabezado del Cuerpo -->
-            <div class="content-header">
+            <div class="content-header bg-color-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
+                        <div class="col d-flex justify-content-center">
+                            <h3 class="m-0 font-weight-bold text-center">MESA DE PARTES VIRTUAL</h3>
                         </div>
-                        <div class="col-sm-2">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-upload"></i><?= $data['page_title'] ?></li>
-                            </ol>
-                        </div>
+
                     </div>
                 </div>
             </div>
 
             <!-- Main content -->
-            <main class="content">
-
+            <main class="content px-2">
                 <div class="container-fluid">
-                    <div class="d-flex mb-3">
-                        <!-- <button type="button" id="btnNuevoT" class="btn btn2 bg-gradient-success mr-2" title="Registrar nuevo Trámite"><i class="fa fa-plus"></i>Nuevo Trámite</button>
-                        <button type="button" id="btnLimpiar" class="btn btn-block btn2 bg-gradient-danger mr-2" title="Borrar datos ingresados"><i class="fa fa-eraser"></i>Limpiar Campos</button>
-                        <button type="button" id="btnSeguir" class="btn btn2 bg-gradient-purple mr-2" title="Hacer seguimiento de su tramite"><i class="fa fa-search"></i>Seguimiento</button> -->
+                    <div class="d-flex my-3 justify-content-end">
+                    <a href="<?= base_url(); ?>/seguimiento"  id="btnSeguimiento" class="btn btn2 bg-gradient-info ml-2" title="Hacer seguimiento de su trámite">
+                            <i class="fa fa-search"></i>
+                            <b>Seguimiento</b>
+                        </a>
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card card-danger">
-                                <div class="card-header py-2">
+                        <div class="col-12" id="div_nuevo_tramite">
+                            <div class="card ">
+                                <div class="card-header bg-color-header2 py-2">
                                     <div class="row">
-                                        <div class="col-sm-9 d-flex align-items-center">
+                                        <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
                                             <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-1">
                                             <button type="button" id="btnLimpiar" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.card-header -->
                                 <form id="form_tramite" enctype="multipart/form-data" method="post">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-lg-6">
                                                 <div class="card card-primary">
                                                     <div class="card-header">
                                                         <h3 class="card-title text-bold">DATOS DEL REMITENTE</h3>
@@ -75,13 +65,13 @@
                                                     <div class="card-body">
                                                         <label>Tipo de Persona: </label><span class="span-red"> (*)</span>
                                                         <div class="row mb-2">
-                                                            <div class="col-sm-6">
+                                                            <div class="col-6">
                                                                 <div class="custom-control custom-radio">
                                                                     <input class="custom-control-input" type="radio" id="radio_natural" name="customRadio" checked value="natural">
                                                                     <label for="radio_natural" class="custom-control-label">Natural</label>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-6">
+                                                            <div class="col-6">
                                                                 <div class="custom-control custom-radio">
                                                                     <input class="custom-control-input" type="radio" id="radio_juridica" name="customRadio" value="juridica">
                                                                     <label for="radio_juridica" class="custom-control-label">Jurídica</label>
@@ -148,7 +138,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-lg-6">
                                                 <div class="card card-info">
                                                     <div class="card-header">
                                                         <h3 class="card-title text-bold">DATOS DEL DOCUMENTO</h3>
@@ -223,15 +213,22 @@
 
         require_once "views/inc/Modals/Modals.php";
 
-        require_once "views/inc/MainFooter/MainFooter.php";
-
         ?>
 
     </div>
 
-    <?php require_once "views/inc/MainJS/MainJS.php" ?>
-
+    <!-- jQuery -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/bootstrap5/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const base_url = "<?= base_url(); ?>";
+        const page_id = "<?= $data['page_id'] ?>";
+    </script>
+    <script src="<?= media() ?>/js/funciones.js"></script>
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 

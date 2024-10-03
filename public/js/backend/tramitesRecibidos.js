@@ -12,5 +12,4 @@ $(document).ready(function () {
     inicializarTablaTramites("tablaTramitesRecibidos", "tramites-recibidos");
   });
 
-
 });

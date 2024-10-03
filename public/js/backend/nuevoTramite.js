@@ -1,9 +1,14 @@
+let controlador;
+
 $(document).ready(function () {
   $("#loader").hide();
 
-  let idusuario = $("#iduser").val();
-
+  let idusuario = $("#iduser").length > 0 ? $("#iduser").val() : "0";
   $("#nom_pdf").hide();
+
+  // Acciones para la vista Home
+  $("#btnNuevoTramite").hide();
+  controlador = page_id == "15" ? "Home" : "Tramites";
 
   $("#idnombre").prop("readonly", true);
   $("#idap").prop("readonly", true);
@@ -38,7 +43,7 @@ $(document).ready(function () {
       $("#idni").focus();
     } else {
       $.ajax({
-        url: base_url + "/Persona/getPersona/" + dni,
+        url: `${base_url}/Persona/getPersona/${dni}`,
         type: "GET",
         beforeSend: function () {
           $("#loader").show();
@@ -121,7 +126,7 @@ $(document).ready(function () {
           formData.append("idusuario", idusuario);
           $("#loader").show();
           $.ajax({
-            url: base_url + "/Tramites/setTramite",
+            url: `${base_url}/${controlador}/setTramite`,
             type: "POST",
             datatype: "json",
             data: formData,
@@ -131,7 +136,6 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               objData = $.parseJSON(response);
               if (objData.status) {
                 MostrarAlertaHtml(
@@ -200,24 +204,28 @@ $(document).ready(function () {
 
   // LIMPIAR LOS CAMPOS
   $("#btnLimpiar").click(function () {
-    $("#form_tramite")[0].reset();
-    $("#nom_pdf").hide();
-    $("#div_juridica").hide();
-    $("#btn_validar").prop("disabled", false);
-    $("#idni").prop("readonly", false);
-    $("#idnombre").prop("readonly", true);
-    $("#idap").prop("readonly", true);
-    $("#idam").prop("readonly", true);
-    $("#idcel").prop("readonly", true);
-    $("#iddirec").prop("readonly", true);
-    $("#idemail").prop("readonly", true);
-    $("#idpersona").val("0");
+    resetVistaNuevoTramite();
   });
 });
 
+function resetVistaNuevoTramite() {
+  $("#form_tramite").trigger("reset");
+  $("#nom_pdf").hide();
+  $("#div_juridica").hide();
+  $("#btn_validar").prop("disabled", false);
+  $("#idni").prop("readonly", false);
+  $("#idnombre").prop("readonly", true);
+  $("#idap").prop("readonly", true);
+  $("#idam").prop("readonly", true);
+  $("#idcel").prop("readonly", true);
+  $("#iddirec").prop("readonly", true);
+  $("#idemail").prop("readonly", true);
+  $("#idpersona").val("0");
+}
+
 function llenarSelectTipo() {
   $.ajax({
-    url: base_url + "/Tramites/getSelectTipo",
+    url: `${base_url}/${controlador}/getSelectTipo`,
     type: "GET",
     datatype: "json",
     beforeSend: function () {
@@ -242,6 +250,8 @@ function llenarSelectTipo() {
     },
     error: function (error) {
       console.error("Error: " + error);
+      MostrarAlerta("Error", "Error al cargar los datos", "error");
+      $("#loader").hide();
     },
   });
 }
@@ -254,29 +264,4 @@ function ValidarPDF() {
   } else {
     return true;
   }
-}
-
-function ValidarCorreo(correo) {
-  var expReg =
-    /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
-  var esValido = expReg.test(correo);
-  if (esValido == true) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function generarPas() {
-  var pass = "";
-  var str =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789.#$";
-
-  for (i = 1; i <= 8; i++) {
-    var char = Math.floor(Math.random() * str.length + 1);
-
-    pass += str.charAt(char);
-  }
-
-  return pass;
 }

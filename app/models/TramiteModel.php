@@ -286,14 +286,27 @@ class TramiteModel extends Mysql
         $this->strAccion = $accion;
         $this->strArea = $area;
 
-        $sql = "SELECT idusuarios,u.dni , concat(nombres,' ',ap_paterno,' ',ap_materno) datos,
-                 rol, IFNULL(area, 'N/A') as area
-                FROM usuarios u JOIN persona p ON p.dni=u.dni
-                JOIN roles r ON r.idroles=u.idroles
-                LEFT JOIN empleado e ON e.idpersona = p.idpersona
-                LEFT JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
-                LEFT JOIN area ar ON a.idarea = ar.idarea where idusuarios = ?";
-        $request = $this->selectOne($sql, [$this->intIdUsuario]);
+        $dni_aux = '-';
+        $datos_aux = '-';
+        $rol_aux = '-';
+        $area_aux = '-';
+
+        if ($idusuario != '0') {
+            $sql = "SELECT idusuarios,u.dni , concat(nombres,' ',ap_paterno,' ',ap_materno) datos,
+                     rol, IFNULL(area, 'N/A') as area
+                    FROM usuarios u JOIN persona p ON p.dni=u.dni
+                    JOIN roles r ON r.idroles=u.idroles
+                    LEFT JOIN empleado e ON e.idpersona = p.idpersona
+                    LEFT JOIN areainstitu a ON e.idareainstitu = a.idareainstitu
+                    LEFT JOIN area ar ON a.idarea = ar.idarea where idusuarios = ?";
+            $request = $this->selectOne($sql, [$this->intIdUsuario]);
+
+            $dni_aux = $request['dni'];
+            $datos_aux = $request['datos'];
+            $rol_aux = $request['rol'];
+            $area_aux = $request['area'];
+        }
+
 
         $arrData = array(
             $this->strExpediente,
@@ -302,10 +315,10 @@ class TramiteModel extends Mysql
             $this->strArea,
             $this->strDescripcion,
             $this->intIdUsuario,
-            $request['dni'],
-            $request['datos'],
-            $request['rol'],
-            $request['area'],
+            $dni_aux,
+            $datos_aux,
+            $rol_aux,
+            $area_aux
         );
 
         $request_insert = $this->registrar(

@@ -10,22 +10,25 @@ class TramitesController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        // session_regenerate_id(true); //# MEJORAR EL USO
+
         if (empty($_SESSION['login'])) {
             header('Location: ' . base_url() . '/acceso');
         }
         getPermisos(6);
     }
+    
     public function index()
     {
         if (empty($_SESSION['permisosMod']['rea'])) {
             header("Location:" . base_url() . '/dashboard');
         }
 
-        $data['page_id'] = 7;
-        $data['page_tag'] = "Trámites";
-        $data['page_title'] = "Trámites";
-        $data['file_js'] = "tramites.js";
+        $data = [
+            'page_id' => 7,
+            'page_tag' => "Trámites",
+            'page_title' => "Trámites",
+            'file_js' => "tramites.js",
+        ];
         $this->views->getView("Tramites", "index", $data);
     }
 

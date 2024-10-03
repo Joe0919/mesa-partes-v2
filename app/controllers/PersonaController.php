@@ -8,18 +8,10 @@ class PersonaController extends Controllers
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (empty($_SESSION['login'])) {
-            header('Location: ' . base_url() . '/dashboard');
-            exit();
-        }
     }
 
     public function getPersona(string $dni)
     {
-        if (!$_SESSION['permisosMod']['rea']) {
-            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
-            die();
-        }
 
         $DNI = limpiarCadena($dni);
         if ($DNI != '') {

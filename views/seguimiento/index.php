@@ -2,58 +2,53 @@
 <html lang="es">
 
 <head>
-
+    <link rel="icon" type="image/png" href="<?php echo media() ?>/images/logo.wepb">
     <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
 
     <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
+
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed body">
 
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
     <div class="wrapper" id="wrapper_content">
 
-        <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
-
-        <!-- Menu de Navegacion  -->
-        <?php require_once "views/inc/MainSidebar/MainSidebar.php" ?>
-
         <!-- CONTENIDO PRINCIPAL -->
-        <div class="content-wrapper">
+        <div class="container-xl bg-color-gray px-0">
             <!-- Contenido del Encabezado del Cuerpo -->
-            <div class="content-header">
+            <div class="content-header bg-color-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
+                        <div class="col d-flex justify-content-center">
+                            <h3 class="m-0 font-weight-bold text-center">MESA DE PARTES VIRTUAL</h3>
                         </div>
-                        <div class="col-sm-2">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-export"></i><?= $data['page_title'] ?></li>
-                            </ol>
-                        </div>
+
                     </div>
                 </div>
             </div>
 
             <!-- Main content -->
-            <main class="content">
-
+            <main class="content px-2">
                 <div class="container-fluid">
-                    <div class="d-flex mb-3">
+                    <div class="d-flex my-3 justify-content-end">
+                        <a href="<?= base_url(); ?>/registro-tramite" id="btnNuevoTramite" class="btn btn2 bg-gradient-success ml-2" title="Registrar nuevo Trámite">
+                            <i class="fa fa-plus"></i>
+                            <b>Nuevo Trámite</b>
+                        </a>
                     </div>
 
                     <div class="row">
-                        <div class="col-12">
-                            <div class="card card-olive py-2" id="div_form">
-                                <div class="card-header">
+                        <div class="col-12" id="div_busqueda">
+                            <div class="card card-info my-1" id="div_form">
+                                <div class="card-header py-2">
                                     <div class="row">
-                                        <div class="col-sm-9 d-flex align-items-center">
-                                            <h3 class="title-content-h3 m-0"><i class="fas fa-search mr-1"></i><b>SEGUIMIENTO DE TRÁMITES</b></h3>
+                                        <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
+                                            <h3 class="title-content-h3 m-0"><i class="fas fa-search mr-2"></i><b>SEGUIMIENTO DE TRÁMITES</b></h3>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-1">
                                             <button type="button" id="btnLimpiarB" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>
@@ -65,8 +60,8 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <div class="card card-secondary">
-                                                    <div class="card-header">
+                                                <div class="card">
+                                                    <div class="card-header bg-color-header2">
                                                         <h3 class="card-title text-bold">DATOS DEL TRÁMITE</h3>
                                                     </div>
 
@@ -101,7 +96,7 @@
                                                         </div>
                                                         <br>
                                                         <div class="d-flex justify-content-center">
-                                                            <div class="col-sm-4">
+                                                            <div class="col-12">
                                                                 <button type="submit" class="btn btn-block bg-gradient-blue">
                                                                     <i class="nav-icon fas fa-search mr-1"></i><b>Buscar Trámite</b></button>
                                                             </div>
@@ -124,7 +119,7 @@
                                             <br>
                                             <h2><i class="fas fa-exclamation-triangle text-warning"></i> TRÁMITE NO ENCONTRADO.</h2>
 
-                                            <p>
+                                            <p class="lh-base">
                                                 No se encontró el trámite con el expediente <b id="expediente-info"></b>
                                                 y el DNI <b id="dni-info"></b> presentado el <b id="anio-info"></b>,
                                                 tal vez colocó datos que no son los correctos.<br>
@@ -135,40 +130,30 @@
                                 </div>
                             </div>
 
-                            <div class="card card-olive" id="datos_buscados">
+                            <div class="card card-info" id="datos_buscados">
                                 <div class="card-header">
                                     <h3 class="card-title font-w-600 d-flex-gap"><i class="fas fa-file-pdf "></i> DATOS DEL TRÁMITE ENCONTRADO
                                     </h3>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-7">
-
-                                    </div>
-                                    <div class="col-sm-5">
-                                        <br>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <button type="button" class="btn btn3 btn-primary" id="btnNuevaBusqueda"><i class="fa fa-search"></i>Nueva Búsqueda</button>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <button type="button" class="btn btn3 btn-danger" id="btnHistorial"><i class="fa fa-plus"></i>Mostrar Historial</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
                                 <!-- TABLA CON INFORMACION -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-6">
+
+                                        <div class="col d-flex justify-content-end">
+                                            <button type="button" class="btn bg-gradient-danger ml-2" id="btnNuevaBusqueda"><i class="fa fa-search mr-2"></i>Nueva Búsqueda</button>
+                                            <button type="button" class="btn bg-gradient-purple ml-2" id="btnHistorial"><i class="fa fa-plus mr-2"></i>Mostrar Historial</button>
+                                        </div>
+
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-lg-6">
                                             <div class="callout callout-success">
 
                                                 <table border="2" class="table-doc table-data" cellspacing="0" cellpadding="5" id="tableDoc">
                                                     <thead>
                                                         <tr>
                                                             <th colspan="2">
-                                                                <h5 class="font-w-600">DATOS DEL DOCUMENTO</h5>
+                                                                <p class="font-w-600">DATOS DEL DOCUMENTO</p>
                                                                 </font>
                                                             </th>
                                                         </tr>
@@ -203,39 +188,43 @@
 
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-lg-6">
                                             <div class="callout callout-info">
-                                                <table border="2" class="table-remi table-data" cellspacing="0" cellpadding="5" id="tableRemitente">
-                                                    <tr>
-                                                        <th colspan="2">
-                                                            <h5 class="font-w-600">DATOS DEL REMITENTE</h5>
+                                                <table border="2" class="table-remitente table-data" cellspacing="0" cellpadding="5" id="tableRemitente">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2">
+                                                                <p class="font-w-600">DATOS DEL REMITENTE</p>
 
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>DNI</th>
-                                                        <td>
-                                                            <p id="celdadni"></p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Datos</th>
-                                                        <td>
-                                                            <p id="celdadatos"></p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>RUC</th>
-                                                        <td>
-                                                            <p id="celdaruc"></p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Entidad</th>
-                                                        <td>
-                                                            <p id="celdaenti"></p>
-                                                        </td>
-                                                    </tr>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>DNI</th>
+                                                            <td>
+                                                                <p id="celdadni"></p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Datos</th>
+                                                            <td>
+                                                                <p id="celdadatos"></p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>RUC</th>
+                                                            <td>
+                                                                <p id="celdaruc"></p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Entidad</th>
+                                                            <td>
+                                                                <p id="celdaenti"></p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
                                                 </table>
 
                                             </div>
@@ -261,15 +250,22 @@
 
         require_once "views/inc/Modals/Modals.php";
 
-        require_once "views/inc/MainFooter/MainFooter.php";
-
         ?>
 
     </div>
 
-    <?php require_once "views/inc/MainJS/MainJS.php" ?>
-
+    <!-- jQuery -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/bootstrap5/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const base_url = "<?= base_url(); ?>";
+        const page_id = "<?= $data['page_id'] ?>";
+    </script>
+    <script src="<?= media() ?>/js/funciones.js"></script>
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 

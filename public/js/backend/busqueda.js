@@ -1,13 +1,22 @@
 $(document).ready(function () {
+  $("#loader").hide();
+
   $("#div_no_encontrado").hide();
-  $("#datos_buscados").hide();
+  // $("#datos_buscados").hide();
   $("#linea_tiempo").hide();
+
+  // Acciones para la vista de inicio
+  if (page_id == "13") {
+    $("#div_busqueda").hide();
+  }
+
+  controlador = page_id == "14" ? "Home" : "Busqueda";
 
   $("#form_busqueda").on("submit", function (e) {
     e.preventDefault();
     let formData = new FormData(this);
     $.ajax({
-      url: base_url + "/Busqueda/getTramite",
+      url: `${base_url}/${controlador}/getTramite`,
       type: "POST",
       datatype: "json",
       data: formData,
@@ -17,7 +26,6 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
         objData = $.parseJSON(response);
         if (objData.status) {
           $("#celdaexpe").text(objData.data.nro_expediente);
@@ -52,48 +60,13 @@ $(document).ready(function () {
     });
   });
 
-  $("#btnLimpiar").click(function () {
+  $("#btnLimpiarB").click(function () {
     $("#form_busqueda")[0].reset();
     $("#expediente_b").focus();
   });
 
   $("#btnNuevaBusqueda").click(function () {
-    Limpiar();
-  });
-
-  $("#btnHistorial").click(function () {
-    if ($("#celdaexpe").text().length < 6) {
-      MostrarAlerta("Error", "No se puede realizar esta acción", "error");
-    } else {
-      opcion = 11;
-      expediente = $.trim($("#expediente_b").val());
-      idni = $("#dni_b").val();
-      anio = $("#select-año").val();
-      $.ajax({
-        url: "../../app/controllers/tramite-controller.php",
-        type: "POST",
-        datatype: "json",
-        data: {
-          opcion: opcion,
-          expediente: expediente,
-          anio: anio,
-          idni: idni,
-        },
-        beforesend: function () {
-          $("#loader").show();
-        },
-        success: function (response) {
-          $("#linea_tiempo").append(response);
-          $("#linea_tiempo").show();
-          $("#btnHistorial").prop("disabled", true);
-          window.location = "#linea_tiempo";
-          $("#loader").hide();
-        },
-        error: function (error) {
-          console.error("Error: " + error);
-        },
-      });
-    }
+    resetVistaSeguimiento();
   });
 
   $("#btnHistorial").click(function () {
@@ -104,7 +77,7 @@ $(document).ready(function () {
       dni = $("#dni_b").val();
       anio = $("#select-año").val();
       $.ajax({
-        url: base_url + "/Busqueda/getHistorialTramite",
+        url: `${base_url}/${controlador}/getHistorialTramite`,
         type: "POST",
         datatype: "json",
         data: {
@@ -116,14 +89,12 @@ $(document).ready(function () {
           $("#loader").show();
         },
         success: function (response) {
-          console.log(response);
           objData = $.parseJSON(response);
           if (objData.status) {
             $("#linea_tiempo").empty();
             $("#linea_tiempo").html(objData.data);
             $("#linea_tiempo").show();
             $("#btnHistorial").prop("disabled", true);
-            window.location = "#linea_tiempo";
           } else {
             MostrarAlerta("Error", "No se pudo cargar el historial", "error");
           }
@@ -138,11 +109,11 @@ $(document).ready(function () {
     }
   });
 
-  function Limpiar() {
+  function resetVistaSeguimiento() {
     $("#form_busqueda")[0].reset();
     $("#expediente_b").focus();
     $("#div_form").show();
-    $("#datos_buscados").hide();
+    // $("#datos_buscados").hide();
     $("#linea_tiempo").hide();
     $("#celdaexpe").text("");
     $("#celdanro").text("");

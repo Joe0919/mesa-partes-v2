@@ -7,11 +7,12 @@
   --color4: #bdbcbc;
   --color5: #8c0505;
   --color6: #cb2020;
+  --color7: #f5f2f2;
 
-  --color-table1: #896a09;
-  --color-table1-5: #f2e3a9;
-  --color-table2: #bdbdbd;
-  --color-table2-5: #d9d9d8;
+  --color-table1: #3c8dbc;
+  --color-table1-5: #dcedf8;
+  --color-table2: #339524;
+  --color-table2-5: #dfffda;
 
   --color-header1: #044ba2;
   --color-header2: #f5b041;
@@ -25,8 +26,19 @@ body {
   min-height: 100%;
 }
 
-body {
+.body {
   background: linear-gradient(150deg, #0e2a66, #7bd5ff);
+}
+
+.bg-color-gray {
+  background-color: var(--color7);
+}
+.bg-color-header {
+  background-color: var(--color-header1);
+  color: white;
+}
+.bg-color-header2 {
+  background-color: var(--color-header2);
 }
 
 .logo {
@@ -429,6 +441,10 @@ body {
   padding: 0.3rem;
 }
 
+.table-data td p {
+  font-weight: normal;
+}
+
 .table thead th {
   border-bottom: none;
 }
@@ -438,13 +454,13 @@ body {
   text-align: center;
   color: white;
 }
-.table-remi thead tr th {
+.table-remitente thead tr th {
   background: var(--color-table2);
   text-align: center;
   color: white;
 }
 .table-doc tbody tr,
-.table-remi tbody tr {
+.table-remitente tbody tr {
   text-align: center;
   font-size: 19px;
 }
@@ -452,7 +468,7 @@ body {
 .table-doc tbody tr th {
   background: var(--color-table1-5);
 }
-.table-remi tbody tr th {
+.table-remitente tbody tr th {
   background: var(--color-table2-5);
 }
 
@@ -524,7 +540,7 @@ body {
 }
 
 .box-link {
-  transition: transform .4s ease; 
+  transition: transform 0.4s ease;
 }
 
 .box-link:hover {

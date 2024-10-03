@@ -22,6 +22,7 @@ class AccesoController extends Controllers
             'page_title' => "Acceso",
             'file_js' => "acceso.js"
         ];
+        var_dump($this->views);
         $this->views->getView("Acceso", "index", $data);
     }
 

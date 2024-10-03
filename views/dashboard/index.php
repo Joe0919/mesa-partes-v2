@@ -48,8 +48,6 @@
             <main class="content">
                 <div class="container-fluid">
 
-                    <button class="btn bg-black" id="prueba"> Enviar correo </button>
-
                     <!-- RESUMEN DE DOCUMENTOS GENERAL -->
                     <?php if ($_SESSION['userData']['idusuarios'] == 1) { ?>
                         <div class="row">
@@ -105,7 +103,6 @@
                             </div>
                         </div>
                     <?php } ?>
-
 
                     <div class="row">
                         <section class="col-xl-6">

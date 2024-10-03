@@ -16,23 +16,20 @@ $(document).ready(function () {
       processData: false,
       contentType: false,
       beforeSend: function () {
-        $("#loader").show();
+        Swal.fire({
+          title: "Cargando...",
+          text: "Por favor, espere.",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
       },
       success: function (response) {
         data = $.parseJSON(response);
+        Swal.close();
         if (!data.status) {
-          Swal.fire({
-            title: "Cargando...",
-            text: "Por favor, espere.",
-            allowOutsideClick: false,
-            didOpen: () => {
-              Swal.showLoading();
-            },
-          });
-
-          setTimeout(function () {
-            MostrarAlerta(data.title, data.msg, "error");
-          }, 1000);
+          MostrarAlerta(data.title, data.msg, "error");
         } else {
           Swal.fire({
             title: "Ingresando al sistema",
@@ -52,17 +49,8 @@ $(document).ready(function () {
       error: function (error) {
         MostrarAlerta("Error", "Error al enviar los datos", "error");
         console.error("Error: " + error);
-        $("#loader").hide();
+        Swal.close();
       },
     });
   });
 });
-
-function MostrarAlerta(titulo, descripcion, tipoalerta) {
-  Swal.fire({
-    title: titulo,
-    text: descripcion,
-    icon: tipoalerta,
-    confirmButtonText: "Entendido", // Cambia el texto del botón de confirmación
-  });
-}

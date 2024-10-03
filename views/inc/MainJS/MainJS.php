@@ -10,6 +10,7 @@
 <!-- jQuery UI 1.11.4 -->
 <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- JS PRINCIPAL DEL PROYECTO -->
+<script src="<?= media() ?>/js/funciones.js"></script>
 <script src="<?= media() ?>/js/main.js"></script>
 
 <!-- Bootstrap 4 -->

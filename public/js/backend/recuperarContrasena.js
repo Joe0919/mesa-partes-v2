@@ -36,7 +36,6 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (response) {
-            console.log(response);
             objData = $.parseJSON(response);
             if (!objData.status) {
               MostrarAlerta(objData.title, objData.msg, "error");
@@ -71,33 +70,35 @@ $(document).ready(function () {
                       usuario: usuario,
                       correo: correo,
                     },
+                    beforeSend: function () {
+                      Swal.fire({
+                        title: "Enviando al correo",
+                        text: "Por favor, espere.",
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+                        },
+                      });
+                    },
                     success: function (response) {
-                      console.log(response);
                       objData = $.parseJSON(response);
+                      Swal.close(); 
+
                       if (objData.status) {
                         $("#form_recuperar")[0].reset();
                         idusuario = "";
                         usuario = "";
-                        Swal.fire({
-                          title: "Enviando al correo",
-                          text: "Por favor, espere.",
-                          allowOutsideClick: false,
-                          didOpen: () => {
-                            Swal.showLoading();
-                          },
-                        });
-                        setTimeout(function () {
-                          MostrarAlerta(
-                            "Contraseña Cambiada",
-                            "Se le envió la nueva contraseña con éxito a su correo.",
-                            "success"
-                          );
-                        }, 1000);
+                        MostrarAlerta(
+                          "Contraseña Cambiada",
+                          "Se le envió la nueva contraseña con éxito a su correo.",
+                          "success"
+                        );
                       } else {
                         MostrarAlerta(objData.title, objData.msg, "error");
                       }
                     },
                     error: function (error) {
+                      Swal.close();
                       MostrarAlerta(
                         "Error",
                         "Error al enviar al correo",
@@ -120,29 +121,4 @@ $(document).ready(function () {
   });
 });
 
-function MostrarAlerta(titulo, descripcion, tipoalerta) {
-  Swal.fire({
-    title: titulo,
-    text: descripcion,
-    icon: tipoalerta,
-    confirmButtonText: "Entendido", // Cambia el texto del botón de confirmación
-  });
-}
 
-function verificarCampos(formulario) {
-  let camposVacios = formulario.find("input[required]").filter(function () {
-    return $.trim($(this).val()) === "";
-  });
-
-  return camposVacios.length === 0;
-}
-
-function ValidarCorreo(correo) {
-  // let expReg = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  let expReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (expReg.test(correo)) {
-    return true; // El correo electrónico es válido
-  } else {
-    return false; // El correo electrónico no es válido
-  }
-}

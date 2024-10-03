@@ -13,7 +13,7 @@
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
-<body>
+<body class="body">
     <section class="fondo">
         <div class="container bg-light form-login rounded-3 overflow-hidden">
             <div class="row">
@@ -50,6 +50,7 @@
     <script>
         const base_url = "<?= base_url(); ?>";
     </script>
+    <script src="<?= media() ?>/js/funciones.js"></script>
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

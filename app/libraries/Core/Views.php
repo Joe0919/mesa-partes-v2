@@ -6,9 +6,9 @@ class Views
     {
 
         if ($controller == "Home") {
-            $view = "Views/" . $view . ".php";
+            $view = "views/" . $view . ".php";
         } else {
-            $view = "Views/" . $controller . "/" . $view . ".php";
+            $view = "views/" . $controller . "/" . $view . ".php";
         }
         require_once($view);
     }
