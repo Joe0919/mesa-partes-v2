@@ -33,6 +33,9 @@ body {
 .bg-color-gray {
   background-color: var(--color7);
 }
+.bg-gray-1 {
+  background-color: var(--color7);
+}
 .bg-color-header {
   background-color: var(--color-header1);
   color: white;
@@ -310,6 +313,23 @@ body {
   font-size: 18px;
 }
 
+#nom_pdf {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+#nom_pdf a {
+  color: black;
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#nom_pdf a:hover {
+  color: #044ba2;
+}
+
 .select-tipo-estado {
   width: 250px;
   height: 40px;
@@ -492,6 +512,14 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 50px;
+}
+
+.tabla-tramite{
+  border: none;
+}
+
+.tabla-tramite tr td:first-child {
+  font-weight: bold;
 }
 
 #Enviar {

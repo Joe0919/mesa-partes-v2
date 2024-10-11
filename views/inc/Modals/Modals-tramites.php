@@ -256,7 +256,17 @@
                 <button type="button" class="btn btn1 btn-primary" data-dismiss="modal" title="Cerrar la ventana">Cerrar</button>
                 <div>
                     <button type="button" class="btn btn1 btn-success btnGestion" id="btnAceptarDoc" title="Aceptar el documento">Aceptar</button>
-                    <button type="button" class="btn btn1 btn-danger btnGestion" id="btnRechazarDoc" title="Rechazar el documento">Rechazar</button>
+                    <div class="btn-group">
+                        <button id="btnObservarRechazarDoc" type="button" class="btn btn1 btn-info btnGestion">Observar</button>
+                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Desplegar menú</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-action="Observar" data-color="info" data-value="0">Observar</a>
+                            <a class="dropdown-item" data-action="Rechazar" data-color="danger" data-value="1">Rechazar</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

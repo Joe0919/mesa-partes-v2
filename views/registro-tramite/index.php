@@ -2,10 +2,28 @@
 <html lang="es">
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="<?= media() ?>/icons/ionicons.css">
+    <!-- Feather Icons -->
+    <link rel="stylesheet" href="<?= media() ?>/icons/feather.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- Sweet Alert -->
+        <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="<?= media() ?>/css/style.css">
 
-    <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
-
-    <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
+    <link rel="icon" type="image/png" href="<?= media() ?>/images/logo.png">
+    <title><?= ($data["page_title"]) ?></title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed body">
@@ -33,7 +51,7 @@
             <main class="content px-2">
                 <div class="container-fluid">
                     <div class="d-flex my-3 justify-content-end">
-                    <a href="<?= base_url(); ?>/seguimiento"  id="btnSeguimiento" class="btn btn2 bg-gradient-info ml-2" title="Hacer seguimiento de su trámite">
+                        <a href="<?= base_url(); ?>/seguimiento" id="btnSeguimiento" class="btn btn2 bg-gradient-info ml-2" title="Hacer seguimiento de su trámite">
                             <i class="fa fa-search"></i>
                             <b>Seguimiento</b>
                         </a>
@@ -177,7 +195,7 @@
                                                                     <span id="alias"></span>
                                                                 </p>
                                                                 <label for="idfile" id="archivo"><i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...</label>
-                                                                <input type="file" id="idfile" name="ifile" accept="application/pdf">
+                                                                <input type="file" id="idfile" name="ifile" accept="application/pdf" required>
                                                             </div>
                                                         </div>
                                                         <div class="custom-control custom-checkbox div-check">
@@ -228,7 +246,8 @@
     <script src="<?= media() ?>/js/funciones.js"></script>
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
     <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
+
 
 </body>
 

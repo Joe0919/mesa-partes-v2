@@ -2,7 +2,7 @@ $(document).ready(function () {
   $("#loader").hide();
 
   $("#div_no_encontrado").hide();
-  // $("#datos_buscados").hide();
+  $("#datos_buscados").hide();
   $("#linea_tiempo").hide();
 
   // Acciones para la vista de inicio
@@ -10,7 +10,7 @@ $(document).ready(function () {
     $("#div_busqueda").hide();
   }
 
-  controlador = page_id == "14" ? "Home" : "Busqueda";
+  controlador = page_id == "14" ? "Seguimiento" : "Busqueda";
 
   $("#form_busqueda").on("submit", function (e) {
     e.preventDefault();
@@ -113,7 +113,7 @@ $(document).ready(function () {
     $("#form_busqueda")[0].reset();
     $("#expediente_b").focus();
     $("#div_form").show();
-    // $("#datos_buscados").hide();
+    $("#datos_buscados").hide();
     $("#linea_tiempo").hide();
     $("#celdaexpe").text("");
     $("#celdanro").text("");

@@ -140,7 +140,7 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
+                    $ruta_raiz = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 
@@ -149,8 +149,8 @@ class UsuariosController extends Controllers
 
                     $nuevo_nombre = UPLOADS_PATH . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
 
-                    if (!file_exists($ruta_aux)) {
-                        mkdir($ruta_aux, 0777, true);
+                    if (!file_exists($ruta_raiz)) {
+                        mkdir($ruta_raiz, 0777, true);
                     }
                     if (file_exists(UPLOADS_PATH . $rutaID)) {
                         $files = array_diff(scandir(UPLOADS_PATH . $rutaID), array('.', '..'));
@@ -291,26 +291,26 @@ class UsuariosController extends Controllers
                 $success = false;
 
                 if ($_POST['foto_bdr'] === '1') {
-                    $ruta_aux = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
+                    $ruta_raiz = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
                     $rutaID = $idUsuario . '/'; // 1/
                     $file_tmp_name = $foto['tmp_name'];
 
                     $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
                     $date = date("Ymd");
 
-                    $nuevo_nombre = $ruta_aux . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+                    $nuevo_nombre = $ruta_raiz . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
 
-                    if (!file_exists($ruta_aux)) {
-                        mkdir($ruta_aux, 0777, true);
+                    if (!file_exists($ruta_raiz)) {
+                        mkdir($ruta_raiz, 0777, true);
                     }
 
-                    if (file_exists($ruta_aux . $rutaID)) {
-                        $files = array_diff(scandir($ruta_aux . $rutaID), array('.', '..'));
+                    if (file_exists($ruta_raiz . $rutaID)) {
+                        $files = array_diff(scandir($ruta_raiz . $rutaID), array('.', '..'));
                         if (count($files) > 0) {
-                            eliminarArchivos($ruta_aux . $rutaID);
+                            eliminarArchivos($ruta_raiz . $rutaID);
                         }
                     } else {
-                        mkdir($ruta_aux . $rutaID, 0777, true);
+                        mkdir($ruta_raiz . $rutaID, 0777, true);
                     }
 
                     if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {

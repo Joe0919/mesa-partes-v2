@@ -8,7 +8,7 @@ $(document).ready(function () {
 
   // Acciones para la vista Home
   $("#btnNuevoTramite").hide();
-  controlador = page_id == "15" ? "Home" : "Tramites";
+  controlador = page_id == "15" ? "registro-tramite" : "Tramites";
 
   $("#idnombre").prop("readonly", true);
   $("#idap").prop("readonly", true);

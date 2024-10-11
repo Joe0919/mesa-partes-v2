@@ -6,7 +6,7 @@ class TramiteModel extends Mysql
     private $intIdUbicacion;
     private $intFolios;
     private $intIdPersona;
-    private $intIdTipo;
+    private $intIdTipoDoc;
     private $intIdUsuario;
     private $strExpediente;
     private $strFecha;
@@ -22,7 +22,6 @@ class TramiteModel extends Mysql
     private $strDescripcion;
     private $strAccion;
     private $strGroupBy;
-
 
     public function __construct()
     {
@@ -121,15 +120,33 @@ class TramiteModel extends Mysql
     public function selectTramite(string $expediente, string $limit = "LIMIT 1")
     {
         $this->strExpediente = $expediente;
-        $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado, tipodoc, asunto, dni,
-                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, ruc_institu, institucion, archivo, area,
-                    date_format(fechad, '%d/%m/%Y') Fecha, descripcion  
+        $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado,t.idtipodoc, tipodoc, asunto, dni,
+                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, area,
+                    date_format(fechad, '%d/%m/%Y') Fecha, descripcion
                 FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
                 JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
                 JOIN area ae ON a.idarea=ae.idarea
                 JOIN persona p ON dc.idpersona=p.idpersona
                 JOIN tipodoc t ON dc.idtipodoc=t.idtipodoc
                 WHERE nro_expediente = ? AND d.deleted = 0 $limit";
+        $request = $this->selectOne($sql, [$this->strExpediente]);
+        return $request;
+    }
+
+    public function selectTramiteObs(string $expediente)
+    {
+        $this->strExpediente = $expediente;
+        $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado,t.idtipodoc, tipodoc, asunto, p.dni,
+        concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, 
+        IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, ae.area,
+        date_format(fechad, '%d/%m/%Y') Fecha, h.descrip
+        FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
+        JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
+        JOIN area ae ON a.idarea=ae.idarea
+        JOIN persona p ON dc.idpersona=p.idpersona
+        JOIN tipodoc t ON dc.idtipodoc=t.idtipodoc
+        LEFT JOIN historial h ON h.expediente = dc.nro_expediente 
+        WHERE nro_expediente = ? AND d.deleted = 0 ORDER BY idhistorial DESC LIMIT 1";
         $request = $this->selectOne($sql, [$this->strExpediente]);
         return $request;
     }
@@ -220,7 +237,7 @@ class TramiteModel extends Mysql
         $this->strAsunto = $asunto;
         $this->strRuta = $ruta;
         $this->intIdPersona = $idpersona;
-        $this->intIdTipo = $tipo;
+        $this->intIdTipoDoc = $tipo;
 
         $where = " WHERE nro_expediente = ? and archivo = ? ";
         $request = $this->consultar(
@@ -238,7 +255,7 @@ class TramiteModel extends Mysql
                 $this->strAsunto,
                 $this->strRuta,
                 $this->intIdPersona,
-                $this->intIdTipo
+                $this->intIdTipoDoc
             );
             $request_insert = $this->registrar(
                 "documento",
@@ -277,6 +294,25 @@ class TramiteModel extends Mysql
 
         return $request;
     }
+    public function editarTramiteObs($expediente, $nrodoc, $folios, $asunto, $tipo)
+    {
+        $this->strExpediente = $expediente;
+        $this->strNroDoc = $nrodoc;
+        $this->intFolios = $folios;
+        $this->strAsunto = $asunto;
+        $this->intIdTipoDoc = $tipo;
+
+        $request = $this->editar(
+            "documento",
+            "nro_doc = ?, folios = ?, asunto = ?, idtipodoc = ?" ,
+            "nro_expediente = ?",
+            [$this->strNroDoc, $this->intFolios, $this->strAsunto, $this->intIdTipoDoc, $this->strExpediente]
+        );
+
+        $request = $this->strEstado . ' ' . $this->intIdDoc;
+
+        return $request;
+    }
     public function registrarHistorial($expediente, $dni, $desc, $idusuario, $accion = 'DERIVADO', $area = 'SECRETARÍA')
     {
         $this->strExpediente = $expediente;
@@ -291,6 +327,7 @@ class TramiteModel extends Mysql
         $rol_aux = '-';
         $area_aux = '-';
 
+        //si es usuario registrado 
         if ($idusuario != '0') {
             $sql = "SELECT idusuarios,u.dni , concat(nombres,' ',ap_paterno,' ',ap_materno) datos,
                      rol, IFNULL(area, 'N/A') as area

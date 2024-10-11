@@ -1,9 +1,8 @@
 <!-- url base -->
 <script>
   const base_url = "<?= base_url(); ?>";
-</script>
-<script>
   const modulo = "<?= $_SESSION['permisosMod']['idmodulo'] ?>";
+  const page_id = "15";
 </script>
 <!-- jQuery -->
 <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>
@@ -30,4 +29,4 @@
 <script src="<?= media() ?>/templates/AdminLTE/dist/js/adminlte.js"></script>
 
 <!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
