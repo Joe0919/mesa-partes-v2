@@ -2,11 +2,28 @@
 <html lang="es">
 
 <head>
-    <link rel="icon" type="image/png" href="<?php echo media() ?>/images/logo.wepb">
-    <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="<?= media() ?>/icons/ionicons.css">
+    <!-- Feather Icons -->
+    <link rel="stylesheet" href="<?= media() ?>/icons/feather.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="<?= media() ?>/css/style.css">
 
-    <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
-
+    <link rel="icon" type="image/png" href="<?= media() ?>/images/logo.png">
+    <title><?= ($data["page_title"]) ?></title>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed body">
@@ -265,7 +282,7 @@
     <script src="<?= media() ?>/js/funciones.js"></script>
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
     <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
 
 </body>
 

@@ -45,10 +45,9 @@ class BusquedaController extends Controllers
                     : ['status' => true, 'title' => 'ok', 'data' => $arrData];
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-            die();
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
-
-        echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         die();
     }
 
@@ -146,6 +145,4 @@ class BusquedaController extends Controllers
     {
         return in_array($accion, ['ACEPTADO', 'RECHAZADO', 'ARCHIVADO']) ? "en" : "a";
     }
-
-
 }

@@ -1,5 +1,5 @@
 <?php
-// El idioma predeterminado para la conversación es español, a menos que se mencione un idioma específico.
+
 class TramitesRecibidosController extends Controllers
 {
     public function __construct()
@@ -9,7 +9,7 @@ class TramitesRecibidosController extends Controllers
             session_start();
         }
         if (empty($_SESSION['login'])) {
-            header('Location: ' . base_url() . '/acceso');
+            header('Location: ' . base_url() . '/acceso'); 
             exit();
         }
         getPermisos(8);
@@ -43,7 +43,6 @@ class TramitesRecibidosController extends Controllers
             echo json_encode($arrData, JSON_UNESCAPED_UNICODE);
         } else {
             echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
-            die();
         }
         die();
     }
@@ -58,18 +57,6 @@ class TramitesRecibidosController extends Controllers
         $item['Fecha'] = $this->getFechaBadge($item['Fecha']);
         $item['opciones'] = '<div class="text-center"><div class="btn-group">' . $botones . '</div></div>';
         return $item;
-    }
-
-    // Método para obtener colores de estado
-    private function getEstadoColors()
-    {
-        return [
-            'PENDIENTE' => 'bg-black font-p',
-            'ACEPTADO'  => 'bg-success font-p',
-            'DERIVADO'  => 'bg-primary font-p',
-            'RECHAZADO' => 'bg-danger font-p',
-            'DEFAULT'   => 'bg-info font-p'
-        ];
     }
 
     // Método para generar botones de trámite

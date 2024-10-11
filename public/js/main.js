@@ -13,7 +13,8 @@ $(document).ready(function () {
     iddocumento,
     dni,
     descripcion,
-    idBoton;
+    idBoton,
+    accion_aux = 0;
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
@@ -444,7 +445,27 @@ $(document).ready(function () {
     }
   });
 
-  //Realizar Accion de ACEPTAR o RECHAZAR el Tramite sea el Caso
+  //Cambiar el color del boton Observar/Rechazar y el valor del input
+  $(".dropdown-item").on("click", function () {
+    var action = $(this).data("action"); // Obtiene la acción seleccionada (Observar o Rechazar)
+    var colorClass = $(this).data("color"); // Obtiene la clase de color correspondiente (info o danger)
+    var value = $(this).data("value"); // Obtiene el valor del input hidden (0 o 1)
+
+    $("#btnObservarRechazarDoc").text(action);
+
+    // Cambiar las clases de color del botón y el dropdown
+    $("#btnObservarRechazarDoc")
+      .removeClass("btn-danger btn-info")
+      .addClass("btn-" + colorClass);
+    $("#btnObservarRechazarDoc")
+      .next(".dropdown-toggle")
+      .removeClass("btn-danger btn-info")
+      .addClass("btn-" + colorClass);
+
+    accion_aux = value;
+  });
+
+  //Realizar Accion de ACEPTAR , OBSERVAR o RECHAZAR el Tramite sea el Caso
   $(".btnGestion").click(function () {
     idBoton = $(this).attr("id");
 
@@ -454,7 +475,13 @@ $(document).ready(function () {
     idni = $("#idnir").val();
     idderivacion = $("#idderivacion").val();
 
-    idBoton === "btnAceptarDoc" ? (accion = "ACEPTAR") : (accion = "RECHAZAR");
+    idBoton === "btnAceptarDoc"
+      ? (accion = "ACEPTAR")
+      : $(".dropdown-item").data("action") == "Rechazar"
+      ? (accion = "RECHAZAR")
+      : (accion = "OBSERVAR");
+
+    console.log(accion_aux);
 
     Swal.fire({
       title: "¿Está seguro?",

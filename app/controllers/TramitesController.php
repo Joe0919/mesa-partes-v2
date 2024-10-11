@@ -16,7 +16,7 @@ class TramitesController extends Controllers
         }
         getPermisos(6);
     }
-    
+
     public function index()
     {
         if (empty($_SESSION['permisosMod']['rea'])) {
@@ -37,13 +37,7 @@ class TramitesController extends Controllers
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectTramites($idarea, $area, $estado);
 
-            $estadoColors = [
-                'PENDIENTE' => 'bg-black font-p',
-                'ACEPTADO'  => 'bg-success font-p',
-                'DERIVADO'  => 'bg-primary font-p',
-                'RECHAZADO' => 'bg-danger font-p',
-                'DEFAULT'   => 'bg-info font-p'
-            ];
+            $estadoColors = $this->getEstadoColors();
 
             foreach ($arrData as &$item) {
                 $item['expediente'] = '<b>' . $item['expediente'] . '</b>';
@@ -224,7 +218,7 @@ class TramitesController extends Controllers
 
                 if ($idpersona != "") {
 
-                    $ruta_aux = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
+                    $ruta_raiz = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
                     $rutaFecha = date('Y') . '/' . date('m') . '/' . date('d') . '/'; // 1/
                     $file_tmp_name = $documento['tmp_name'];
 
@@ -234,13 +228,13 @@ class TramitesController extends Controllers
                     // Acceder al número de expediente
                     $expediente = $expedienteData['Expediente'];
 
-                    $nuevo_nombre = $ruta_aux . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
+                    $nuevo_nombre = $ruta_raiz . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
 
-                    if (!file_exists($ruta_aux)) {
-                        mkdir($ruta_aux, 0777, true);
+                    if (!file_exists($ruta_raiz)) {
+                        mkdir($ruta_raiz, 0777, true);
                     }
-                    if (!file_exists($ruta_aux . $rutaFecha)) {
-                        mkdir($ruta_aux . $rutaFecha, 0777, true);
+                    if (!file_exists($ruta_raiz . $rutaFecha)) {
+                        mkdir($ruta_raiz . $rutaFecha, 0777, true);
                     }
 
                     if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
@@ -300,9 +294,9 @@ class TramitesController extends Controllers
                                     </tr>
                                 </table>
                             </div>                   
-                            <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
+                            <p>Para realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
                                     Virtual</b> en
-                                la pestaña <b><i>Seguimiento</i></b>
+                                la pestaña <b><a href='" . base_url() . "/seguimiento'>Seguimiento</a></b>
                             </p>";
 
                             $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html);
@@ -317,6 +311,8 @@ class TramitesController extends Controllers
                 }
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+        } else {
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
     }
     public function putTramiteAceptacion()
@@ -360,6 +356,33 @@ class TramitesController extends Controllers
                 // Cambiamos el estado del documento a RECHAZADO
                 $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
                 $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
+            } else {
+                $request = $this->model->editarDocumento($expediente, 'OBSERVADO');
+                // Guardamos la Aceptacion en el historial del doc
+                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'OBSERVADO', $origen);
+                $arrData = $this->model->selectTramite($expediente, "");
+
+                $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
+                        <hr>
+                        <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual.</b>
+                            Para informarle que su trámite con Nro. Expediente <b>" . $arrData['nro_expediente'] . "</b>, 
+                            con fecha de Registro: <b>" . $arrData['Fecha'] . "</b>
+                            ha sido <b>OBSERVADO</b> por las siguiente observaciones:
+                        </p>
+
+                        <div class='div-msg'>
+                            <ul>
+                                <li class='li-msg'><b>Observaciones:</b> <span> " . $descripcion . "</span></li>
+                            </ul>
+                        </div>
+
+                        <p>Puede levantar las observaciones ingresando <a href='" . base_url() . "/tramite/consultar/" . $expediente . "'>aqui</a> o puede volver a presentar nuevamente su
+                            trámite una vez subsanado el motivo de la observación.
+                        </p>";
+
+                $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $arrData['email'], "TRÁMITE OBSERVADO", $html);
+                // Cambiamos el estado del documento a observado
+                $arrResponse = array('status' => true, 'title' => 'Trámite Observado', "msg" => 'La acción se realizó con exito.', 'data' => $response);
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         } else {
@@ -419,7 +442,7 @@ class TramitesController extends Controllers
 
 //         $ruta = "files/docs/"; // Prefijo de la ruta
 
-//         $ruta_aux = $a . $ruta; //Unimos la ruta para verificar existencia
+//         $ruta_raiz = $a . $ruta; //Unimos la ruta para verificar existencia
 
 //         $expediente = $tramite->generarNroExpediente(); //Consulamos nuevo expediente para el nombre del doc
 
@@ -428,8 +451,8 @@ class TramitesController extends Controllers
 //         $nuevo = $ruta . $expediente . '_' . date('Y') . '_' . $dni . '.pdf'; //Nombre para el registro de la BD
 
 //         Verificar si el directorio existe para crearlo
-//         if (!file_exists($ruta_aux)) {
-//             mkdir($ruta_aux);
+//         if (!file_exists($ruta_raiz)) {
+//             mkdir($ruta_raiz);
 //         }
 
 //         Copiamos el archivo al directorio

@@ -126,7 +126,6 @@ class Controllers
             'results' => $request_area
         ];
     }
-    // Método para manejar respuesta de permisos denegados
     public function responseDenegado()
     {
         return [
@@ -137,6 +136,7 @@ class Controllers
         ];
     }
 
+    //Plantilla del mensaje al correo
     public function cargarPlantilla($body)
     {
         $plantilla = file_get_contents('app/templates/plantilla_tramite.html');
@@ -147,10 +147,21 @@ class Controllers
         return $plantilla;
     }
 
-    // Método para enviar correos
     public function enviarCorreo($titulo, $nombre, $correo, $asunto, $cuerpo)
     {
         $enviarEmail = new clsMail(); // Instanciar la clase clsMail
         return $enviarEmail->metEnviar($titulo, $nombre, $correo, $asunto, $cuerpo);
+    }
+
+    // Método para obtener colores de estado
+    public function getEstadoColors()
+    {
+        return [
+            'PENDIENTE' => 'bg-gray-dark font-p',
+            'ACEPTADO'  => 'bg-success font-p',
+            'DERIVADO'  => 'bg-primary font-p',
+            'RECHAZADO' => 'bg-danger font-p',
+            'DEFAULT'   => 'bg-info font-p'
+        ];
     }
 }

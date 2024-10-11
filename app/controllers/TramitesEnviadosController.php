@@ -59,18 +59,6 @@ class TramitesEnviadosController extends Controllers
         return $item;
     }
 
-    // Método para obtener colores de estado
-    private function getEstadoColors()
-    {
-        return [
-            'PENDIENTE' => 'bg-black font-p',
-            'ACEPTADO'  => 'bg-success font-p',
-            'DERIVADO'  => 'bg-primary font-p',
-            'RECHAZADO' => 'bg-danger font-p',
-            'DEFAULT'   => 'bg-info font-p'
-        ];
-    }
-
     // Método para generar botones de trámite
     private function generateTramiteButtons()
     {
