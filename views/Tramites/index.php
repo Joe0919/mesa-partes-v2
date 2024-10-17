@@ -10,7 +10,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
-<?php require_once "views/inc/Loader/Loader.php" ?>
+    <?php require_once "views/inc/Loader/Loader.php" ?>
 
     <div class="wrapper" id="wrapper_content">
 
@@ -25,12 +25,10 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0 ">Gestión de Trámites</h4>
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-pdf"></i><?= $data['page_title'] ?></li>
+                                <li class="li-nav-info"><i class="nav-icon fas fa-file-pdf"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>
@@ -44,42 +42,64 @@
                         <section class="col-lg-12 ">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
-                                    <div class="row">
-                                        <div class="col-md-4 row">
-                                            <h3 class="card-title font-weight-bold card-header-title">Tabla General de Trámites</h3>
+                                    <div class="row row-cols-3">
+                                        <div class="col-6">
+                                            <h3 class="card-title font-weight-bold card-header-title mb-1">Lista de Trámites</h3>
                                         </div>
-                                        <div class="col-md-8 text-right">
-                                            <span>Fecha de registro:</span>
+                                        <div class="col-6 text-right">
+                                            <button type="button" class="btn bg-gradient-success" id="btnMostrarFiltro" title="Mostrar Filtro">
+                                                <i class="nav-icon fas fa-filter" id="iconFiltro"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-12 d-none d-md-block">
+                                            <span>Fecha Registro:</span>
                                             <small class="badge badge-danger"><i class="far fa-clock"></i> 0-1 días</small>
                                             <small class="badge badge-warning"><i class="far fa-clock"></i> 2-4 días</small>
                                             <small class="badge badge-info"><i class="far fa-clock"></i> 5-7 días</small>
-                                            <small class="badge badge-success"><i class="far fa-clock"></i> Hace 1 sem.</small>
-                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> Hace 1 mes</small>
-                                            <small class="badge bg-purple"><i class="far fa-clock"></i> Hace 6 meses</small>
-                                            <small class="badge bg-dark"><i class="far fa-clock"></i> Más de 1 año</small>
+                                            <small class="badge badge-success"><i class="far fa-clock"></i> + 1 sem.</small>
+                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> + 1 mes</small>
+                                            <small class="badge bg-purple"><i class="far fa-clock"></i> + 6 meses</small>
+                                            <small class="badge bg-dark"><i class="far fa-clock"></i> + 1 año</small>
                                         </div>
                                     </div>
-                                    <hr>
-                                    <div class="row d-flex align-items-center justify-content-end">
-                                        <span class="mr-3 mb-0">Mostrar por: </span>
-                                        <strong class="mr-2 mb-0">Área: </strong>
-                                        <select class="custom-select select-tramite" id="selectAreas">
-                                        </select>
-                                        <strong class="mx-2 mb-0">Estado: </strong>
-                                        <select class="custom-select select-tramite" id="selectEstados">
-                                            <option value="0">TODOS</option>
-                                            <option value="PENDIENTE">PENDIENTE</option>
-                                            <option value="ACEPTADO">ACEPTADO</option>
-                                            <option value="RECHAZADO">RECHAZADO</option>
-                                            <option value="ARCHIVADO">ARCHIVADO</option>
-                                        </select>
-                                        <button type="button" class="btn btn-success ml-2" id="btnFiltrar" title="Filtrar trámites">
-                                            <i class="nav-icon fas fa-filter mr-1"></i>Filtrar
-                                        </button>
+                                    <div class="collapse" id="divFiltro">
+                                        <hr>
+                                        <div class="row row-cols-2 d-flex align-items-center">
+                                            <div class="col-12 mb-1">
+                                                <span>Mostrar por: </span>
+                                            </div>
+                                            <div class="row col-12 col-sm-6 mb-2">
+                                                <div class="col-12 col-lg-2 d-flex align-items-center">
+                                                    <strong>Área: </strong>
+                                                </div>
+                                                <div class="col-12 col-lg-10">
+                                                    <select class="custom-select text-center form-control" id="selectAreas">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row col-12 col-sm-6 mb-2">
+                                                <div class="col-12 col-lg-2 d-flex align-items-center">
+                                                    <strong>Estado: </strong>
+                                                </div>
+                                                <div class="col-12 col-lg-10">
+                                                    <select class="custom-select text-center form-control" id="selectEstados">
+                                                        <option value="0">TODOS</option>
+                                                        <option value="PENDIENTE">PENDIENTE</option>
+                                                        <option value="ACEPTADO">ACEPTADO</option>
+                                                        <option value="RECHAZADO">RECHAZADO</option>
+                                                        <option value="ARCHIVADO">ARCHIVADO</option>
+                                                        <option value="OBSERVADO">OBSERVADOS</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 text-center mt-1">
+                                                <button type="button" class="btn bg-gradient-success" id="btnFiltrar" title="Filtrar trámites">
+                                                    <i class="nav-icon fas fa-filter mr-1"></i>Filtrar
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 </div>
-
                                 <div class="card-body">
                                     <table id="tablaTramites" class="table table-hover table-data">
                                         <thead>

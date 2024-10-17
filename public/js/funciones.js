@@ -11,6 +11,8 @@ function MostrarAlertaxTiempo(titulo, descripcion, tipoalerta) {
     icon: tipoalerta,
     showConfirmButton: false,
     timer: 2000,
+    confirmButtonText: "Entendido",
+
   });
 }
 function MostrarAlertaHtml(titulo, html, tipoalerta) {
@@ -19,6 +21,8 @@ function MostrarAlertaHtml(titulo, html, tipoalerta) {
     html: html,
     icon: tipoalerta,
     showConfirmButton: true,
+    confirmButtonText: "Entendido",
+
   });
 }
 
@@ -54,7 +58,7 @@ function MostrarAlerta(titulo, descripcion, tipoalerta) {
     title: titulo,
     text: descripcion,
     icon: tipoalerta,
-    confirmButtonText: "Entendido", // Cambia el texto del botón de confirmación
+    confirmButtonText: "Entendido",
   });
 }
 
@@ -108,6 +112,23 @@ function validarArchivo(input) {
   }
 
   return 1; // Retorna 1 si el archivo es un PDF y cumple con el tamaño
+}
+
+function validarCampos(formulario) {
+  let valido = true; // Variable para determinar si el formulario es válido
+
+  // Selecciona todos los inputs requeridos dentro del formulario
+  formulario.find("input[required]").each(function () {
+    // Elimina espacios en blanco al inicio y al final
+    const valor = $(this).val().trim();
+
+    // Verifica si el valor está vacío después de eliminar espacios
+    if (valor === "") {
+      valido = false; // Si algún campo está vacío, cambia a false
+    }
+  });
+
+  return valido; // Devuelve el resultado de la validación
 }
 
 // Agregar el evento change al input

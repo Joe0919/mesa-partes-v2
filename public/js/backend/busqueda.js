@@ -1,7 +1,8 @@
 $(document).ready(function () {
   $("#loader").hide();
 
-  $("#div_no_encontrado").hide();
+  let expediente;
+
   $("#datos_buscados").hide();
   $("#linea_tiempo").hide();
 
@@ -26,28 +27,47 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
+        console.log(response);
         objData = $.parseJSON(response);
         if (objData.status) {
-          $("#celdaexpe").text(objData.data.nro_expediente);
-          $("#celdanro").text(objData.data.nro_doc);
-          $("#celdatipo").text(objData.data.tipodoc);
-          $("#celdasunto").text(objData.data.asunto);
+          $("#tdExpediente").text(objData.data.nro_expediente);
+          expediente = objData.data.nro_expediente;
+          $("#tdFecha").text(objData.data.Fecha);
+          $("#tdNroDoc").text(objData.data.nro_doc);
+          $("#tdTipoDoc").text(objData.data.tipodoc);
+          $("#tdAsunto").text(objData.data.asunto);
+          $("#tdArea").text(objData.data.area);
+          $("#tdEstado").text(objData.data.estado);
 
-          $("#celdadni").text(objData.data.dni);
-          $("#celdadatos").text(objData.data.Datos);
-          $("#celdaruc").text(objData.data.ruc_institu);
-          $("#celdaenti").text(objData.data.institucion);
+          $("#tdDNI").text(objData.data.dni);
+          $("#tdRemitente").text(objData.data.Datos);
+          $("#tdTel").text(objData.data.telefono);
+          $("#tdRUC").text(objData.data.ruc_institu);
+          $("#tdEntidad").text(objData.data.institucion);
+          $("#tdDireccion").text(objData.data.direccion);
+          $("#tdCorreo").text(objData.data.email);
           $("#div_form").hide();
-          $("#div_no_encontrado").hide();
           $("#btnhistorial").prop("disabled", false);
           $("#datos_buscados").show();
         } else {
-          $("#expediente-info").text($("#expediente_b").val());
-          $("#dni-info").text($("#dni_b").val());
-          $("#anio-info").text($("#select-año").val());
-          $("#div_no_encontrado").show();
-          $("#expediente_b").focus();
+          MostrarAlertaHtml(
+            "Trámite No encontrado",
+            `<p class='lh-base'>
+                No se encontró el trámite con Expediente: <b>` +
+              $("#expediente_b").val() +
+              `</b>
+                , DNI del Firmante: <b>` +
+              $("#dni_b").val() +
+              `</b> y año de Registro: <b>` +
+              $("#select-año").val() +
+              `</b>,
+                <br>
+                <b>Por favor, intente realizar nuevamente la búsqueda ingresando los datos correctos.<b>
+            </p>`,
+            "error"
+          );
           $("#form_busqueda")[0].reset();
+          $("#expediente_b").focus();
         }
 
         $("#loader").hide();
@@ -70,10 +90,9 @@ $(document).ready(function () {
   });
 
   $("#btnHistorial").click(function () {
-    if ($("#celdaexpe").text().length < 6) {
+    if (expediente.length < 6) {
       MostrarAlerta("Error", "No se puede realizar esta acción", "error");
     } else {
-      expediente = $.trim($("#expediente_b").val());
       dni = $("#dni_b").val();
       anio = $("#select-año").val();
       $.ajax({
@@ -123,7 +142,6 @@ $(document).ready(function () {
     $("#celdadatos").text("");
     $("#celdaruc").text("");
     $("#celdaenti").text("");
-    $("#div_no_encontrado").hide();
     $("#btnHistorial").prop("disabled", false);
   }
 });

@@ -18,7 +18,7 @@
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 
         <!-- Menu de Navegacion  -->
-        <?php require_once "views/inc/MainSidebar/MainSidebar.php" ?>   
+        <?php require_once "views/inc/MainSidebar/MainSidebar.php" ?>
 
         <!-- CONTENIDO PRINCIPAL -->
         <div class="content-wrapper">
@@ -26,13 +26,11 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-                        <div class="col-sm-2">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-upload"></i><?= $data['page_title'] ?></li>
-                            </ol>
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0">Registro de Nuevo Trámite</h3>
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="li-nav-info"><i class="nav-icon fas fa-file-upload"></i><?= $data['page_title'] ?></li>
+                                </ol>
                         </div>
                     </div>
                 </div>
@@ -42,21 +40,15 @@
             <main class="content">
 
                 <div class="container-fluid">
-                    <div class="d-flex mb-3">
-                        <!-- <button type="button" id="btnNuevoT" class="btn btn2 bg-gradient-success mr-2" title="Registrar nuevo Trámite"><i class="fa fa-plus"></i>Nuevo Trámite</button>
-                        <button type="button" id="btnLimpiar" class="btn btn-block btn2 bg-gradient-danger mr-2" title="Borrar datos ingresados"><i class="fa fa-eraser"></i>Limpiar Campos</button>
-                        <button type="button" id="btnSeguir" class="btn btn2 bg-gradient-purple mr-2" title="Hacer seguimiento de su tramite"><i class="fa fa-search"></i>Seguimiento</button> -->
-                    </div>
-
                     <div class="row">
                         <div class="col-12">
-                            <div class="card card-danger">
-                                <div class="card-header py-2">
+                            <div class="card">
+                                <div class="card-header bg-color-header2 py-3 py-md-2">
                                     <div class="row">
-                                        <div class="col-sm-9 d-flex align-items-center">
-                                            <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>NUEVO TRÁMITE</b></h3>
+                                        <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
+                                            <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>DATOS DEL TRAMITE TRÁMITE</b></h3>
                                         </div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-2">
                                             <button type="button" id="btnLimpiar" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>
@@ -67,7 +59,7 @@
                                 <form id="form_tramite" enctype="multipart/form-data" method="post">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div class="col-sm-6">
+                                            <div class="col-lg-6">
                                                 <div class="card card-primary">
                                                     <div class="card-header">
                                                         <h3 class="card-title text-bold">DATOS DEL REMITENTE</h3>
@@ -75,13 +67,13 @@
                                                     <div class="card-body">
                                                         <label>Tipo de Persona: </label><span class="span-red"> (*)</span>
                                                         <div class="row mb-2">
-                                                            <div class="col-sm-6">
+                                                            <div class="col-6">
                                                                 <div class="custom-control custom-radio">
                                                                     <input class="custom-control-input" type="radio" id="radio_natural" name="customRadio" checked value="natural">
                                                                     <label for="radio_natural" class="custom-control-label">Natural</label>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-6">
+                                                            <div class="col-6">
                                                                 <div class="custom-control custom-radio">
                                                                     <input class="custom-control-input" type="radio" id="radio_juridica" name="customRadio" value="juridica">
                                                                     <label for="radio_juridica" class="custom-control-label">Jurídica</label>
@@ -148,7 +140,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <div class="col-lg-6">
                                                 <div class="card card-info">
                                                     <div class="card-header">
                                                         <h3 class="card-title text-bold">DATOS DEL DOCUMENTO</h3>
@@ -180,14 +172,35 @@
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label>Adjuntar archivo (pdf.)</label><span class="span-red"> (*)</span>
+                                                            <label>Adjuntar archivo (Solamente PDFs).</label><span class="span-red"> (*)</span>
                                                             <div class="file">
-                                                                <p id="nom_pdf">
-                                                                    <img src="<?= media() ?>/images/pdf.png" width="25px">
-                                                                    <span id="alias"></span>
-                                                                </p>
-                                                                <label for="idfile" id="archivo"><i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...</label>
-                                                                <input type="file" id="idfile" name="ifile" accept="application/pdf">
+                                                                <label for="idfile" id="archivo">
+                                                                    <i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...
+                                                                </label>
+                                                                <input type="file" class="d-none" id="idfile" name="ifile" accept="application/pdf">
+                                                            </div>
+
+                                                            <div id="fileInfo" class="d-none p-2 bg-color-gray">
+                                                                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row my-2">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p id="nom_pdf" class="m-0 text-truncate" style="max-width: 330px;">
+                                                                            <img src="<?= media() ?>/images/pdf.png" width="25px">
+                                                                            <a id="link_doc" class="ml-1 d-block">
+                                                                                <span id="fileSize">(<strong>0.0</strong> MB)</span>
+                                                                                <span id="alias"></span>
+                                                                            </a>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="mt-2 mt-sm-0">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="btn-group">
+                                                                                <button id="btnEliminar" type="button" class="btn btn-danger delete" title="Eliminar">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="custom-control custom-checkbox div-check">
@@ -195,7 +208,7 @@
 
                                                             <label for="check" class="form-check-label ml-1">Declaro que la
                                                                 información proporcionada es válida y verídica.
-                                                                Y Acepto que las comunicaciones sean enviadas a la dirección de correo y
+                                                                Y Acepto que las notificaciones sean enviadas a la dirección de correo y
                                                                 celular que proporcione.<span class="span-red"> (*)</span></label>
 
                                                         </div>

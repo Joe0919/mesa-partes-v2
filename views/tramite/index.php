@@ -56,7 +56,7 @@
                                 <div class="card-header bg-success py-2">
                                     <div class="row">
                                         <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
-                                            <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>DATOS DEL TRÁMITE</b></h3>
+                                            <h3 class="title-content-h3 m-0"><i class="fas fa-edit mr-1"></i><b>SUBSANAR OBSERVACIONES</b></h3>
                                         </div>
                                     </div>
                                 </div>
@@ -64,10 +64,14 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col">
-                                                <p>Bienvenido a la vista <b>Datos del Trámite</b>, puede editar los datos del documento registrado para elevar cualquier observación</p>
+                                                <p>Bienvenido a la vista <b>Datos del Trámite</b>,
+                                                    puede editar los datos del documento registrado para elevar cualquier observación.
+                                                    Puede visualizar el PDF que subió dando click en el nombre del archivo o descargarlo
+                                                    <strong>Recuerde</strong> que debe subir un nuevo archivo PDF y editar los datos si fuera necesario.
+                                                </p>
                                                 <div class="card card-info">
                                                     <div class="card-header">
-                                                        <h3 class="card-title text-bold">DATOS DEL TRÁMITE</h3>
+                                                        <h3 class="card-title text-bold">DETALLES DEL TRÁMITE</h3>
                                                     </div>
 
                                                     <div class="card-body">

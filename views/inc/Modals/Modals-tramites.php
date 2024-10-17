@@ -2,9 +2,9 @@
 <div class="modal fade" id="modalmas">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header" id="modal-header">
+            <div class="modal-header d-flex flex-column flex-lg-row" id="modal-header">
                 <h4 class="modal-title modal-title-h4" id="n_tramite"></h4>
-                <div class=".col-md-4 .ms-auto">
+                <div class="mt-2 mt-lg-0">
                     <a id="btn_tramite" class="btn a-link btn-primary">Documento</a>
                     <a id="btn_remitente" class="btn a-link btn-light">Remitente</a>
                     <a id="btn_vistaprevia" class="btn a-link btn-light">Vista previa</a>
@@ -70,13 +70,13 @@
                                 <div class="form-group">
                                     <label>Tipo de Persona: </label>
                                     <div class="row">
-                                        <div class="col-sm-6">
+                                        <div class="col-6">
                                             <div class="custom-control custom-radio">
                                                 <input disabled class="custom-control-input" type="radio" id="radio_natural" name="natural" value="natural">
                                                 <label for="radio_natural" class="custom-control-label">Natural</label>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-6">
                                             <div class="custom-control custom-radio">
                                                 <input disabled class="custom-control-input" type="radio" id="radio_juridica" name="juridica" value="juridica">
                                                 <label for="radio_juridica" class="custom-control-label">Jurídica</label>
@@ -253,11 +253,11 @@
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn1 btn-primary" data-dismiss="modal" title="Cerrar la ventana">Cerrar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" title="Cerrar la ventana">Cerrar</button>
                 <div>
-                    <button type="button" class="btn btn1 btn-success btnGestion" id="btnAceptarDoc" title="Aceptar el documento">Aceptar</button>
+                    <button type="button" class="btn btn-success btnGestion" id="btnAceptarDoc" title="Aceptar el documento">Aceptar</button>
                     <div class="btn-group">
-                        <button id="btnObservarRechazarDoc" type="button" class="btn btn1 btn-info btnGestion">Observar</button>
+                        <button id="btnObservarRechazarDoc" type="button" class="btn btn-info btnGestion">Observar</button>
                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">Desplegar menú</span>

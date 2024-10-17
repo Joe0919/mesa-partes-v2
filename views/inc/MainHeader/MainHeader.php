@@ -6,7 +6,7 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-flex align-items-center">
-                    <h3 class="font-weight-bold h6 m-0">
+                    <h3 class="font-weight-bold h6 m-0 d-none d-md-block">
                         USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['datos'] ?></span>
                     </h3>
                     <input id="id_areaid" type="hidden" value="<?= $_SESSION['userData']['idareainstitu'] ?>">
@@ -17,7 +17,10 @@
                     <input id="foto_user" name="foto_user" type="hidden" value="<?= $_SESSION['userData']['foto'] ?>">
                 </li>
                 <li class="nav-item d-flex align-items-center ml-5">
-                    <h3 class="font-weight-bold h6 m-0">ÁREA: <span id="info-area1" class="font-weight-normal"><?= $_SESSION['userData']['area'] ?></span></h3>
+                    <h3 class="font-weight-bold h6 m-0 d-none d-md-block">
+                        ÁREA:
+                        <span id="info-area1" class="font-weight-normal"><?= $_SESSION['userData']['area'] ?></span>
+                    </h3>
                 </li>
             </ul>
 

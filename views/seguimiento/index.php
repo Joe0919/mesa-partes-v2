@@ -65,7 +65,7 @@
                                         <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
                                             <h3 class="title-content-h3 m-0"><i class="fas fa-search mr-2"></i><b>SEGUIMIENTO DE TRÁMITES</b></h3>
                                         </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-1">
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0">
                                             <button type="button" id="btnLimpiarB" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>
@@ -113,7 +113,7 @@
                                                         </div>
                                                         <br>
                                                         <div class="d-flex justify-content-center">
-                                                            <div class="col-12">
+                                                            <div class="col-sm-5 col-md-4">
                                                                 <button type="submit" class="btn btn-block bg-gradient-blue">
                                                                     <i class="nav-icon fas fa-search mr-1"></i><b>Buscar Trámite</b></button>
                                                             </div>
@@ -126,26 +126,6 @@
                                 </form>
                             </div>
 
-                            <div id="div_no_encontrado">
-                                <div class="callout callout-warning">
-                                    <div class="row">
-                                        <div class="col-sm-3" align="right">
-                                            <img class="img-no-search" src="<?= media() ?>/images/error-404.png">
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <br>
-                                            <h2><i class="fas fa-exclamation-triangle text-warning"></i> TRÁMITE NO ENCONTRADO.</h2>
-
-                                            <p class="lh-base">
-                                                No se encontró el trámite con el expediente <b id="expediente-info"></b>
-                                                y el DNI <b id="dni-info"></b> presentado el <b id="anio-info"></b>,
-                                                tal vez colocó datos que no son los correctos.<br>
-                                                <b>Por favor, intente realizar nuevamente la búsqueda ingresando los datos correctos.<b>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="card card-info" id="datos_buscados">
                                 <div class="card-header">
@@ -155,95 +135,108 @@
                                 <!-- TABLA CON INFORMACION -->
                                 <div class="card-body">
                                     <div class="row">
-
-                                        <div class="col d-flex justify-content-end">
-                                            <button type="button" class="btn bg-gradient-danger ml-2" id="btnNuevaBusqueda"><i class="fa fa-search mr-2"></i>Nueva Búsqueda</button>
-                                            <button type="button" class="btn bg-gradient-purple ml-2" id="btnHistorial"><i class="fa fa-plus mr-2"></i>Mostrar Historial</button>
+                                        <div class="col d-flex justify-content-end flex-column flex-sm-row">
+                                            <button type="button" class="btn bg-gradient-danger" id="btnNuevaBusqueda">
+                                                <i class="fa fa-search mr-2"></i>Nueva Búsqueda</button>
+                                            <button type="button" class="btn bg-gradient-purple ml-0 ml-sm-2 mt-2 mt-sm-0" id="btnHistorial">
+                                                <i class="fa fa-plus mr-2"></i>Mostrar Historial</button>
                                         </div>
-
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-lg-6">
-                                            <div class="callout callout-success">
-
-                                                <table border="2" class="table-doc table-data" cellspacing="0" cellpadding="5" id="tableDoc">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colspan="2">
-                                                                <p class="font-w-600">DATOS DEL DOCUMENTO</p>
-                                                                </font>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>Expediente</th>
-                                                            <td>
-                                                                <p id="celdaexpe"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>N° Documento</th>
-                                                            <td>
-                                                                <p id="celdanro"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Tipo</th>
-                                                            <td>
-                                                                <p id="celdatipo"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Asunto</th>
-                                                            <td>
-                                                                <p id="celdasunto"></p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
+                                            <div class="callout callout-success ">
+                                                <table class="table tabla">
+                                                    <tr>
+                                                        <th>
+                                                            Nro. Expediente :
+                                                        </th>
+                                                        <td id="tdExpediente"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Fecha Registro :
+                                                        </th>
+                                                        <td id="tdFecha"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Nro Documento :
+                                                        </th>
+                                                        <td id="tdNroDoc"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Tipo Documento :
+                                                        </th>
+                                                        <td id="tdTipoDoc"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Asunto :
+                                                        </th>
+                                                        <td id="tdAsunto"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Área Actual :
+                                                        </th>
+                                                        <td id="tdArea"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Estado Actual :
+                                                        </th>
+                                                        <td id="tdEstado"></td>
+                                                    </tr>
                                                 </table>
-
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <div class="callout callout-info">
-                                                <table border="2" class="table-remitente table-data" cellspacing="0" cellpadding="5" id="tableRemitente">
-                                                    <thead>
-                                                        <tr>
-                                                            <th colspan="2">
-                                                                <p class="font-w-600">DATOS DEL REMITENTE</p>
-
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>DNI</th>
-                                                            <td>
-                                                                <p id="celdadni"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Datos</th>
-                                                            <td>
-                                                                <p id="celdadatos"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>RUC</th>
-                                                            <td>
-                                                                <p id="celdaruc"></p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Entidad</th>
-                                                            <td>
-                                                                <p id="celdaenti"></p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
+                                            <div class="callout callout-warning ">
+                                                <table class="table tabla">
+                                                    <tr>
+                                                        <th>
+                                                            Remitente :
+                                                        </th>
+                                                        <td id="tdRemitente"> </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Nro. DNI :
+                                                        </th>
+                                                        <td id="tdDNI"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Nro. Teléfono :
+                                                        </th>
+                                                        <td id="tdTel"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            RUC :
+                                                        </th>
+                                                        <td id="tdRUC"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Entidad :
+                                                        </th>
+                                                        <td id="tdEntidad"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Dirección :
+                                                        </th>
+                                                        <td id="tdDireccion"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            Correo :
+                                                        </th>
+                                                        <td id="tdCorreo"></td>
+                                                    </tr>
                                                 </table>
-
                                             </div>
                                         </div>
                                     </div>
@@ -253,9 +246,7 @@
                             </div>
 
                             <!-- LINEA DE TIEMPO DEL DOCUMENTO -->
-                            <div id="linea_tiempo">
-
-                            </div>
+                            <div id="linea_tiempo"></div>
                         </div>
                     </div>
                 </div>

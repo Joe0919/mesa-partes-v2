@@ -16,6 +16,8 @@
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
+<!-- Sweet Alert -->
+<link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Estilos principales -->

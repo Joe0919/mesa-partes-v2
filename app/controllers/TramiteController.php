@@ -5,20 +5,42 @@ class TramiteController extends Controllers
 
     public function __construct()
     {
-        parent::__construct("Tramite"); //Importante tener Modelo
+        //Importante tener Modelo o solo colocar ''
+        parent::__construct("Tramite");
     }
 
     // Método para cargar la vista de acceso
-    public function consultar($expediente)
+    public function consultar($expediente = null)
     {
-        $data = [
-            'page_id' => 16,
-            'page_tag' => "Datos de Trámite",
-            'page_title' => "Datos de Trámite",
-            'file_js' => "tramite.js",
-            'param' => $expediente
-        ];
-        $this->views->getView("tramite", "index", $data);
+
+        if (!is_null($expediente)) {
+
+            $Expediente = limpiarCadena($expediente);
+            $arrData = $this->model->selectTramite($Expediente);
+
+            // Verificamos si $arrData es un arreglo antes de intentar acceder a sus índices
+            if (is_array($arrData) && isset($arrData['estado'])) {
+                if ($arrData['estado'] === 'OBSERVADO') {
+                    $data = [
+                        'page_id' => 16,
+                        'page_tag' => "Datos de Trámite",
+                        'page_title' => "Datos de Trámite",
+                        'file_js' => "tramite.js",
+                        'param' => $expediente
+                    ];
+                    $this->views->getView("tramite", "index", $data);
+                } else {
+                    require_once "app/controllers/ErrorController.php";
+                    exit();
+                }
+            } else {
+                require_once "app/controllers/ErrorController.php";
+                exit();
+            }
+        } else {
+            require_once "app/controllers/ErrorController.php";
+            exit();
+        }
     }
 
     public function getTramite(string $expediente)

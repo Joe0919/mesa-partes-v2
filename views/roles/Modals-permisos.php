@@ -32,24 +32,19 @@
                             $no = 1;
                             $modulos = $data['modulos'];
                             for ($i = 0; $i < count($modulos); $i++) {
-
                                 $permisos = $modulos[$i]['permisos'];
                                 $cCheck = $permisos['cre'] == 1 ? " checked " : "";
                                 $rCheck = $permisos['rea'] == 1 ? " checked " : "";
                                 $uCheck = $permisos['upd'] == 1 ? " checked " : "";
                                 $dCheck = $permisos['del'] == 1 ? " checked " : "";
-
                                 ($cCheck == "" || $rCheck == "" || $uCheck == "" || $dCheck == "") ? $rowCheck = "" : $rowCheck = " checked";
-
-
                                 $idmod = $modulos[$i]['idmodulo'];
                             ?>
                                 <tr>
                                     <td title="Marcar Todo los permisos">
-                                        <div class="toggle-flip">
-                                            <label>
-                                                <input type="checkbox" class="row-checkbox" title="Marcar Todo los permisos" <?= $rowCheck ?>><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
-                                            </label>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input row-checkbox custom-control-input custom-control-input-info" id="rowCheck<?= $i ?>" title="Marcar Todo los permisos" <?= $rowCheck ?>>
+                                            <label class="custom-control-label" for="rowCheck<?= $i ?>"> </label>
                                         </div>
                                     </td>
                                     <td>
@@ -60,31 +55,27 @@
                                         <?= $modulos[$i]['titulo']; ?>
                                     </td>
                                     <td>
-                                        <div class="toggle-flip">
-                                            <label>
-                                                <input type="checkbox" class="other_check" name="modulos[<?= $i; ?>][cre]" <?= $cCheck ?>><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
-                                            </label>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input other_check custom-control-input custom-control-input-info" name="modulos[<?= $i; ?>][cre]" id="creCheck<?= $i ?>" <?= $cCheck ?>>
+                                            <label class="custom-control-label" for="creCheck<?= $i ?>"> </label>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="toggle-flip">
-                                            <label>
-                                                <input type="checkbox" class="other_check" name="modulos[<?= $i; ?>][rea]" <?= $rCheck ?>><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
-                                            </label>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input other_check custom-control-input custom-control-input-info" name="modulos[<?= $i; ?>][rea]" id="reaCheck<?= $i ?>" <?= $rCheck ?>>
+                                            <label class="custom-control-label" for="reaCheck<?= $i ?>"> </label>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="toggle-flip">
-                                            <label>
-                                                <input type="checkbox" class="other_check" name="modulos[<?= $i; ?>][upd]" <?= $uCheck ?>><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
-                                            </label>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input other_check custom-control-input custom-control-input-info" name="modulos[<?= $i; ?>][upd]" id="updCheck<?= $i ?>" <?= $uCheck ?>>
+                                            <label class="custom-control-label" for="updCheck<?= $i ?>"> </label>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="toggle-flip">
-                                            <label>
-                                                <input type="checkbox" class="other_check" name="modulos[<?= $i; ?>][del]" <?= $dCheck ?>><span class="flip-indecator" data-toggle-on="ON" data-toggle-off="OFF"></span>
-                                            </label>
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input other_check custom-control-input custom-control-input-info" name="modulos[<?= $i; ?>][del]" id="delCheck<?= $i ?>" <?= $dCheck ?>>
+                                            <label class="custom-control-label" for="delCheck<?= $i ?>"> </label>
                                         </div>
                                     </td>
                                 </tr>

@@ -84,7 +84,6 @@ $(function () {
         "error"
       );
     } else {
-      console.log(validarCampos(formulario));
       if (!validarCampos(formulario)) {
         MostrarAlerta(
           "Advertencia",
@@ -236,21 +235,4 @@ function llenarSelectTipo() {
       $("#loader").hide();
     },
   });
-}
-
-function validarCampos(formulario) {
-  let valido = true; // Variable para determinar si el formulario es válido
-
-  // Selecciona todos los inputs requeridos dentro del formulario
-  formulario.find("input[required]").each(function () {
-    // Elimina espacios en blanco al inicio y al final
-    const valor = $(this).val().trim();
-
-    // Verifica si el valor está vacío después de eliminar espacios
-    if (valor === "") {
-      valido = false; // Si algún campo está vacío, cambia a false
-    }
-  });
-
-  return valido; // Devuelve el resultado de la validación
 }

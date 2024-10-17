@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
   $("#fondo").css(
     "background-image",
     "url(" + base_url + "/public/images/fondo.webp)"

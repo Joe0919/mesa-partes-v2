@@ -25,12 +25,10 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0 ">Gestión de Trámites Recibidos</h4>
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-archive"></i><?= $data['page_tag'] ?></li>
+                                <li class="li-nav-info"><i class="nav-icon fas fa-file-archive"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>
@@ -44,33 +42,30 @@
                         <section class="col-lg-12 ">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
-                                    <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <div class="col-xl-8 row">
-                                            <div>
-                                                <h3 class="card-title font-weight-bold card-header-title mb-1">Tabla de Trámites Recibidos</h3>
-                                            </div>
-                                            <div class="text-right">
-                                                <span>Fecha de registro:</span>
-                                                <small class="badge badge-danger"><i class="far fa-clock"></i> 0-1 días</small>
-                                                <small class="badge badge-warning"><i class="far fa-clock"></i> 2-4 días</small>
-                                                <small class="badge badge-info"><i class="far fa-clock"></i> 5-7 días</small>
-                                                <small class="badge badge-success"><i class="far fa-clock"></i> Hace 1 sem.</small>
-                                                <small class="badge badge-secondary"><i class="far fa-clock"></i> Hace 1 mes</small>
-                                                <small class="badge bg-purple"><i class="far fa-clock"></i> Hace 6 meses</small>
-                                                <small class="badge bg-dark"><i class="far fa-clock"></i> Más de 1 año</small>
-                                            </div>
+                                    <div class="row row-cols-3">
+                                        <div class="col-12 col-lg-7">
+                                            <h3 class="card-title font-weight-bold card-header-title">Lista de Trámites en <?= $_SESSION['userData']['area'] ?></span></h3>
                                         </div>
-
-                                        <div class="col-xl-4 text-right">
-                                            <strong class="mx-2 mb-0">Listar por: </strong>
-                                            <select class="select-reporte select-tipo-estado custom-select" name="select_estado" id="select_estado">
+                                        <div class="col-12 col-lg-5 my-2 my-lg-0 text-center text-lg-right">
+                                            <span>Listar por: </span>
+                                            <select class="select-reporte custom-select text-center" name="select_estado" id="select_estado">
                                                 <option value="PENDIENTE">PENDIENTES</option>
                                                 <option value="ACEPTADO">ACEPTADOS</option>
                                                 <option value="RECHAZADO">RECHAZADOS</option>
                                                 <option value="ARCHIVADO">ARCHIVADOS</option>
+                                                <option value="OBSERVADO">OBSERVADOS</option>
                                             </select>
                                         </div>
-
+                                        <div class="col-12 d-none d-md-block">
+                                            <span>Fecha Registro:</span>
+                                            <small class="badge badge-danger"><i class="far fa-clock"></i> 0-1 días</small>
+                                            <small class="badge badge-warning"><i class="far fa-clock"></i> 2-4 días</small>
+                                            <small class="badge badge-info"><i class="far fa-clock"></i> 5-7 días</small>
+                                            <small class="badge badge-success"><i class="far fa-clock"></i> + 1 sem.</small>
+                                            <small class="badge badge-secondary"><i class="far fa-clock"></i> + 1 mes</small>
+                                            <small class="badge bg-purple"><i class="far fa-clock"></i> + 6 meses</small>
+                                            <small class="badge bg-dark"><i class="far fa-clock"></i> + 1 año</small>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">

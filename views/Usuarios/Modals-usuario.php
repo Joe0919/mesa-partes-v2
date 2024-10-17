@@ -1,6 +1,6 @@
 <!-- MODAL USUARIO -->
 <div class="modal fade" id="modal_user">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-variant">
         <div class="modal-content">
             <form id="form_user" method="post">
                 <div class="modal-header" id="modal-header">
@@ -14,7 +14,7 @@
                     <input type="hidden" class="form-control" name="idpersona" id="idpersona" value="0">
                     <input type="hidden" class="form-control" name="estado" id="iestado" value="INACTIVO">
                     <div class="row d-flex flex-row align-items-center">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             <h1 class="modal-body-title mb-2">Foto de perfil
                                 <span class="span-gray font-weight-normal"> (Opcional)</span>
                             </h1>
@@ -27,7 +27,7 @@
                             <input type="file" class="input_foto" id="input_photo" name="foto" accept="image/jpeg, image/png">
                             <input type="hidden" name="bdr-photo" id="bdr-photo" value="0">
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -138,4 +138,3 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-

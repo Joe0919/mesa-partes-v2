@@ -25,12 +25,10 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div><!-- /.col -->
-                        <div class="col-sm-2">
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0 font-weight-bold">Gestión de Usuarios</h3>
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user"></i><?= $data['page_title'] ?></li>
+                                <li class="li-nav-info"><i class="nav-icon fas fa-list"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>
@@ -41,17 +39,19 @@
             <main class="content">
                 <div class="container-fluid">
                     <div class="row">
-                        <section class="col-lg-12 ">
+                        <section class="col-12">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
-                                    <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Usuarios</h3>
-                                        <div>
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-5 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+                                            <h3 class="card-title text-bold card-header-title">Lista de Usuarios</h3>
+                                        </div>
+                                        <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
                                             <?php if ($_SESSION['permisosMod']['cre']) { ?>
-                                                <button type="button" class="btn btn-success" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
+                                                <button type="button" class="btn bg-gradient-success ml-2" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
                                                     <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                                 </button>
-                                                <button type="button" class="btn btn-dark" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
+                                                <button type="button" class="btn bg-gradient-dark ml-2" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
                                                     <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
                                                 </button>
                                             <?php } ?>

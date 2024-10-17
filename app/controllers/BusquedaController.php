@@ -102,10 +102,14 @@ class BusquedaController extends Controllers
             $timelineHtml .= <<<HTML
                 <div>
                     {$icono}
+                    
                     <div class="timeline-item">
-                        <span style="font-size:18px" class="time"><i class="fas fa-clock"></i> {$data['hora']}</span>
-                        <h3 style="font-size:18px" class="timeline-header">El trámite fue <b class="text-primary">{$data['accion']}</b> {$preposicion}
-                            <b class="text-primary">{$data['area']}</b> el <b class="text-muted">{$data['fecha1']}</b></h3>
+                        <div class="timeline-header d-flex justify-content-start justify-content-sm-between align-items-center flex-column flex-sm-row">
+                            <h3 style="font-size:17px" class="m-0">El trámite fue <b class="text-primary">{$data['accion']}</b> {$preposicion}
+                                <b class="text-primary">{$data['area']}</b> el <b class="text-muted">{$data['fecha1']}</b></h3>
+                            <span style="font-size:17px" class="time text-muted"><i class="fas fa-clock"></i> {$data['hora']}</span>
+                        </div>
+                        
                         <div style="font-size:15px" class="timeline-body">
                             {$data['descrip']}
                         </div>

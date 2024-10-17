@@ -16,9 +16,11 @@ if (file_exists($controllerFile)) {
         }
     } else {
         // Manejo de error si el método no existe
-        echo "No existe el método '{$method}' en el controlador '{$controller}'.";
+        // echo "No existe el método '{$method}' en el controlador '{$controller}'.";
+        require_once "app/controllers/ErrorController.php";
     }
 } else {
     // Manejo de error si el controlador no existe
-    echo "No existe el controlador '{$controller}'.";
+    // echo "No existe el controlador '{$controller}'.";
+    require_once "app/controllers/ErrorController.php";
 }

@@ -1,6 +1,6 @@
 let controlador;
 
-$(document).ready(function () {
+$(function () {
   $("#loader").hide();
 
   let idusuario = $("#iduser").length > 0 ? $("#iduser").val() : "0";
@@ -15,7 +15,7 @@ $(document).ready(function () {
   $("#idam").prop("readonly", true);
   $("#idcel").prop("readonly", true);
   $("#iddirec").prop("readonly", true);
-  $("#idcorre").prop("readonly", true);
+  $("#idemail").prop("readonly", true);
   $("#idni").focus();
 
   llenarSelectTipo();
@@ -32,8 +32,46 @@ $(document).ready(function () {
   });
   // COLOCAR NOMBRE DEL ARCHIVO Y MOSTRAR
   $("#idfile").change(function () {
-    $("#nom_pdf").show();
-    $("#alias").text($(this).prop("files")[0].name);
+    let resultado = validarArchivo(this); // Validar el archivo
+
+    if (resultado === 0) {
+      MostrarAlerta("Archivo Incorrecto", "Solo se aceptan PDFs", "error");
+      $(this).val("");
+    } else if (resultado === 2) {
+      MostrarAlerta(
+        "Demasiado grande",
+        "El PDF debe tener menos de 10MB",
+        "error"
+      );
+      $(this).val("");
+    } else if (resultado === 1) {
+      // Si el archivo es válido, continuar con la lógica
+      let file = $(this).prop("files")[0];
+      $("#archivo").addClass("d-none");
+
+      // Mostrar la información del archivo
+      let fileName = file.name;
+      let fileSize = (file.size / 1024 / 1024).toFixed(2); // Convertir a MB
+      console.log(fileName, fileSize);
+      $("#alias").text(fileName);
+      $("#fileSize strong").text(fileSize);
+      $("#fileInfo").removeClass("d-none"); // Mostrar el contenedor de información del archivo
+      $("#fileSize").removeClass("d-none");
+      $("#alias").removeAttr("title");
+      $("#nom_pdf").show();
+      $("#link_doc").attr({ title: file.name });
+      ok = true;
+      archivo = "";
+    }
+  });
+
+  $("#btnEliminar").click(function () {
+    // Limpiar el input de archivo
+    $("#idfile").val("");
+    $("#fileInfo").addClass("d-none");
+    $("#alias").text("Documento");
+    $("#fileSize strong").text("0.0");
+    $("#archivo").removeClass("d-none");
   });
   // VALIDAMOS EXISTENCIA DE PERSONA
   $("#btn_validar").click(function () {
@@ -62,6 +100,7 @@ $(document).ready(function () {
             $("#idam").val(objData.data.ap_materno);
             $("#idnombre").val(objData.data.nombres);
             $("#idemail").val(objData.data.email);
+            $("#idemail").prop("readonly", false);
             $("#idcel").val(objData.data.telefono);
             $("#iddirec").val(objData.data.direccion);
 
@@ -109,38 +148,50 @@ $(document).ready(function () {
   // REGISTRAMOS EL TRAMITE
   $("#form_tramite").on("submit", function (e) {
     e.preventDefault();
-
-    if (ValidarPDF()) {
-      Swal.fire({
-        title: "¿Estás seguro?",
-        text: "Se registrará su trámite",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        cancelButtonText: "Cancelar",
-        confirmButtonText: "Registrar Trámite",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          let formData = new FormData(this);
-          formData.append("idusuario", idusuario);
-          $("#loader").show();
-          $.ajax({
-            url: `${base_url}/${controlador}/setTramite`,
-            type: "POST",
-            datatype: "json",
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforesend: function () {
-              $("#loader").show();
-            },
-            success: function (response) {
-              objData = $.parseJSON(response);
-              if (objData.status) {
-                MostrarAlertaHtml(
-                  objData.title,
-                  `<p>Guarde la siguiente información para realizar el seguimiento de su trámite:</p>
+    if ($("#idfile").val() == "") {
+      MostrarAlerta(
+        "Observaciones no Subsanadas",
+        "Seleccione un nuevo PDF valido",
+        "error"
+      );
+    } else {
+      if (!validarCampos(formulario)) {
+        MostrarAlerta(
+          "Advertencia",
+          "Por favor, complete todos los campos requeridos.",
+          "error"
+        );
+      } else {
+        Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Se registrará su trámite",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Cancelar",
+          confirmButtonText: "Registrar Trámite",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            let formData = new FormData(this);
+            formData.append("idusuario", idusuario);
+            $("#loader").show();
+            $.ajax({
+              url: `${base_url}/${controlador}/setTramite`,
+              type: "POST",
+              datatype: "json",
+              data: formData,
+              processData: false,
+              contentType: false,
+              beforesend: function () {
+                $("#loader").show();
+              },
+              success: function (response) {
+                objData = $.parseJSON(response);
+                if (objData.status) {
+                  MostrarAlertaHtml(
+                    objData.title,
+                    `<p>Guarde la siguiente información para realizar el seguimiento de su trámite:</p>
                   <table style="border-collapse: collapse; width: 100%;">
                       <tr>
                           <td style="padding: 8px; text-align: left;">Expediente</td>
@@ -163,42 +214,37 @@ $(document).ready(function () {
                           <td style="padding: 8px; text-align: left;"><b>: ${objData.data.Fecha}</b></td>
                       </tr>
                   </table>`,
-                  "success"
-                );
+                    "success"
+                  );
+                  $("#loader").hide();
+                  $("#form_tramite")[0].reset();
+                  $("#nom_pdf").hide();
+                  $("#div_juridica").hide();
+                  $("#btn_validar").prop("disabled", false);
+                  $("#idni").prop("readonly", false);
+                  $("#idnombre").prop("readonly", true);
+                  $("#idap").prop("readonly", true);
+                  $("#idam").prop("readonly", true);
+                  $("#idcel").prop("readonly", true);
+                  $("#iddirec").prop("readonly", true);
+                  $("#idemail").prop("readonly", true);
+                  $("#idpersona").val("0");
+                } else {
+                  MostrarAlerta(objData.title, objData.msg, "error");
+                }
+              },
+              error: function (error) {
+                MostrarAlerta("Error", "Error al cargar los datos", "error");
+                console.error("Error: " + error);
                 $("#loader").hide();
-                $("#form_tramite")[0].reset();
-                $("#nom_pdf").hide();
-                $("#div_juridica").hide();
-                $("#btn_validar").prop("disabled", false);
-                $("#idni").prop("readonly", false);
-                $("#idnombre").prop("readonly", true);
-                $("#idap").prop("readonly", true);
-                $("#idam").prop("readonly", true);
-                $("#idcel").prop("readonly", true);
-                $("#iddirec").prop("readonly", true);
-                $("#idemail").prop("readonly", true);
-                $("#idpersona").val("0");
-              } else {
-                MostrarAlerta(objData.title, objData.msg, "error");
-              }
-            },
-            error: function (error) {
-              MostrarAlerta("Error", "Error al cargar los datos", "error");
-              console.error("Error: " + error);
-              $("#loader").hide();
-            },
-            complete: function () {
-              $("#loader").hide();
-            },
-          });
-        }
-      });
-    } else {
-      MostrarAlerta(
-        "Error de Archivo Subido",
-        "Por favor, seleccione un archivo PDF.",
-        "error"
-      );
+              },
+              complete: function () {
+                $("#loader").hide();
+              },
+            });
+          }
+        });
+      }
     }
   });
 
@@ -254,14 +300,4 @@ function llenarSelectTipo() {
       $("#loader").hide();
     },
   });
-}
-
-function ValidarPDF() {
-  var archivo = document.getElementById("idfile").value;
-  var extensiones = archivo.substring(archivo.lastIndexOf("."));
-  if (extensiones != ".pdf") {
-    return false;
-  } else {
-    return true;
-  }
 }

@@ -26,13 +26,11 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-                        <div class="col-sm-2">
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-user-friends"></i><?= $data['page_title'] ?></li>
-                            </ol>
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0 font-weight-bold">Gestión de Empleados</h3>
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="li-nav-info"><i class="nav-icon fas fa-user-friends"></i><?= $data['page_title'] ?></li>
+                                </ol>
                         </div>
                     </div>
                 </div>
@@ -45,17 +43,21 @@
                         <section class="col-lg-12 ">
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
-                                    <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Tabla General de Empleados</h3>
-                                        <div>
-                                            <?php if ($_SESSION['permisosMod']['cre']) { ?>
-                                                <button type="button" class="btn btn-success" data-toggle="modal" id="nuevo_empleado" title="Agregar nuevo registro">
-                                                    <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
-                                                </button>
-                                                <button type="button" class="btn btn-dark" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
-                                                    <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
-                                                </button>
-                                            <?php } ?>
+                                    <div class="row d-flex align-items-center">
+                                        <div class="col-md-5 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
+                                            <h3 class="card-title text-bold card-header-title">Lista de Empleados</h3>
+                                        </div>
+                                        <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
+                                            <div>
+                                                <?php if ($_SESSION['permisosMod']['cre']) { ?>
+                                                    <button type="button" class="btn btn-success" data-toggle="modal" id="nuevo_empleado" title="Agregar nuevo registro">
+                                                        <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
+                                                    </button>
+                                                    <button type="button" class="btn btn-dark" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
+                                                        <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
+                                                    </button>
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

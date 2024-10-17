@@ -33,7 +33,7 @@ class Controllers
             } else {
                 throw new Exception("La clase $model no existe.");
             }
-        } else {
+        } elseif ($controler !== '') {
             throw new Exception("El archivo del modelo $routClass no existe.");
         }
     }
