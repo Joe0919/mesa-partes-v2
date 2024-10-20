@@ -244,7 +244,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label>Descripción: </label><span class="span-gray">(Opcional)</span>
+                                <label>Observación: </label>
                                 <textarea class="form-control text-uppercase" rows="3" id="idescripcion" name="idescripcion" placeholder="Ingrese la descripción..." style=" resize: none;"></textarea>
                             </div>
                         </div>
@@ -296,7 +296,7 @@
                             <div class="form-group">
                                 <input type="hidden" class="form-control" name="expediente" id="expediente_d">
                                 <input type="hidden" class="form-control" name="idni" id="dni_d">
-                                <label>Fecha: </label><span class="span-red"> (*)</span>
+                                <label>Fecha: </label><span class="span-required"></span>
                                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                     <input class="form-control input-date" readonly type="text" id="datepicker1" value="<?php echo date('d/m/Y') ?>">
                                     <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
@@ -309,7 +309,7 @@
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Acción: </label><span class="span-red"> (*)</span>
+                                <label>Acción: </label><span class="span-required"></span>
                                 <select class="form-control select-new" name="accion" id="idaccion">
                                     <option value="1">DERIVAR</option>
                                     <option value="2">ARCHIVAR</option>
@@ -320,13 +320,13 @@
                     <div id="column" class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Área Origen: </label><span class="span-red"> (*)</span>
+                                <label>Área Origen: </label><span class="span-required"></span>
                                 <input type="text" class="form-control text-center" id="idorigen" readonly name="origen">
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label>Área Destino: </label><span class="span-red"> (*)</span>
+                                <label>Área Destino: </label><span class="span-required"></span>
                                 <select class="form-control select-tipo text-bold text-center" name="iddestino" id="select-destino"></select>
                             </div>
                         </div>
@@ -339,7 +339,7 @@
                             </div>
                         </div>
                     </div>
-
+                    <span class="span-red span-required-description"> Obligatorio </span>
 
                 </div>
                 <div class="modal-footer justify-content-between">

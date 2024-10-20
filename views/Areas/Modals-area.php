@@ -19,11 +19,10 @@
 
                     <div class="form-group">
                         <label for="inputName">Área</label><span class="span-required"></span>
-                        <input type="text" class="form-control text-uppercase" name="iarea" id="iarea" required>
+                        <input type="text" class="form-control text-uppercase" name="iarea" id="iarea" required placeholder="Ingrese nombre del Área">
                     </div>
                     <div class="form-group">
                         <label for="inst">Institución</label><span class="span-required"></span>
-                        <!-- <a class="btn btn-flat bg-success btn-a1">...</a> -->
                         <select class="form-control select-inst" name="id_inst" id="select_inst" required></select>
                     </div>
                     <span class="span-red span-required-description"> Obligatorio </span>

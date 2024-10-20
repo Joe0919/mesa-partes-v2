@@ -37,6 +37,8 @@ $(document).ready(function () {
     accion = "guardarán";
   });
 
+  validarCamposRequeridos("#form_area");
+
   //Registrar o Editar los datos del formulario
   $("#form_area").on("submit", function (e) {
     e.preventDefault();
@@ -65,7 +67,6 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");

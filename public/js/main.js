@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
   let idinst,
     idusu,
     idni,
@@ -13,8 +13,7 @@ $(document).ready(function () {
     iddocumento,
     dni,
     descripcion,
-    idBoton,
-    accion_aux = 0;
+    idBoton;
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
@@ -100,6 +99,8 @@ $(document).ready(function () {
   $("#logo").on("click", function () {
     $("#input_logo").click();
   });
+
+  validarCamposRequeridos("#form_institucion");
 
   //Editar datos Institucion general
   $("#form_institucion").on("submit", function (e) {
@@ -233,6 +234,8 @@ $(document).ready(function () {
     $("#input_photoP").click();
   });
 
+  validarCamposRequeridos("#form_EditUser");
+
   //Editar los datos de usuario logeado
   $("#form_EditUser").on("submit", function (e) {
     e.preventDefault();
@@ -299,6 +302,24 @@ $(document).ready(function () {
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
   });
 
+  //Mostrar/Ocultar contraseña En General
+  $(".toggle-password").click(function () {
+    // Encuentra el input más cercano
+    const passwordInput = $(this)
+      .closest(".form-group")
+      .find('input[type="password"], input[type="text"]');
+    const eyeIcon = $(this).find("i");
+
+    // Alternar el tipo de input entre password y text
+    if (passwordInput.attr("type") === "password") {
+      passwordInput.attr("type", "text");
+      eyeIcon.removeClass("fa-eye").addClass("fa-eye-slash");
+    } else {
+      passwordInput.attr("type", "password");
+      eyeIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+    }
+  });
+
   // Validar similitud de ingreso de contraseñas
   $("#iconfirmpswU").blur(function () {
     if ($("#inewcontraU").val().length < 8) {
@@ -331,6 +352,8 @@ $(document).ready(function () {
         .css("color", "red");
     }
   });
+
+  validarCamposRequeridos("#form_edit_psw");
 
   //Enviar para cambiar contraseña del usuario logeado
   $("#form_edit_psw").on("submit", function (e) {
@@ -447,13 +470,12 @@ $(document).ready(function () {
 
   //Cambiar el color del boton Observar/Rechazar y el valor del input
   $(".dropdown-item").on("click", function () {
-    var action = $(this).data("action"); // Obtiene la acción seleccionada (Observar o Rechazar)
-    var colorClass = $(this).data("color"); // Obtiene la clase de color correspondiente (info o danger)
-    var value = $(this).data("value"); // Obtiene el valor del input hidden (0 o 1)
+    var action = $(this).data("action");
+    var colorClass = $(this).data("color");
+    var value = $(this).data("value");
 
     $("#btnObservarRechazarDoc").text(action);
 
-    // Cambiar las clases de color del botón y el dropdown
     $("#btnObservarRechazarDoc")
       .removeClass("btn-danger btn-info")
       .addClass("btn-" + colorClass);
@@ -461,8 +483,6 @@ $(document).ready(function () {
       .next(".dropdown-toggle")
       .removeClass("btn-danger btn-info")
       .addClass("btn-" + colorClass);
-
-    accion_aux = value;
   });
 
   //Realizar Accion de ACEPTAR , OBSERVAR o RECHAZAR el Tramite sea el Caso
@@ -481,60 +501,71 @@ $(document).ready(function () {
       ? (accion = "RECHAZAR")
       : (accion = "OBSERVAR");
 
-    console.log(accion_aux);
-
-    Swal.fire({
-      title: "¿Está seguro?",
-      text: `Al ${accion} el documento no podrá deshacer la acción`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancelar",
-      confirmButtonText: "Si, Continuar",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        $.ajax({
-          url: base_url + "/Tramites/putTramiteAceptacion",
-          type: "POST",
-          datatype: "json",
-          data: {
-            origen: area,
-            descripcion: descripcion,
-            iddocumento: iddocumento,
-            expediente: expediente,
-            dni: dni,
-            idderivacion: idderivacion,
-            accion: accion,
-            idusuario: idusuario,
-          },
-          beforeSend: function () {
-            $("#loader").show();
-          },
-          success: function (response) {
-            objData = $.parseJSON(response);
-            if (objData.status) {
-              $("#form_aceptacion")[0].reset();
-              $("#modal_aceptacion").modal("hide");
-              inicializarTablaTramites(tabla, controlador);
-              MostrarAlertaxTiempo(objData.title, objData.msg, "success");
-            } else {
-              MostrarAlerta(
-                "Error",
-                "Hubo problemas al realizar la accion",
-                "error"
-              );
-            }
-            $("#loader").hide();
-          },
-          error: function (error) {
-            MostrarAlerta("Error", "Error al realizar accion.", "error");
-            $("#loader").hide();
-            console.error("Error: " + error);
-          },
-        });
-      }
-    });
+    if (
+      (accion === "OBSERVAR" || accion === "RECHAZAR") &&
+      $("#idescripcion").val().trim() === ""
+    ) {
+      MostrarAlerta(
+        "Advertencia",
+        "Ingrese una descripción por la cual realiza este acción",
+        "error"
+      );
+      $("#idescripcion").val("");
+      $("#idescripcion").focus();
+    } else {
+      Swal.fire({
+        title: "¿Está seguro?",
+        text: `Al ${accion} el documento no podrá deshacer la acción`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Si, Continuar",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: base_url + "/Tramites/putTramiteAceptacion",
+            type: "POST",
+            datatype: "json",
+            data: {
+              origen: area,
+              descripcion: descripcion,
+              iddocumento: iddocumento,
+              expediente: expediente,
+              dni: dni,
+              idderivacion: idderivacion,
+              accion: accion,
+              idusuario: idusuario,
+            },
+            beforeSend: function () {
+              $("#loader").show();
+            },
+            success: function (response) {
+              objData = $.parseJSON(response);
+              if (objData.status) {
+                $("#form_aceptacion")[0].reset();
+                $("#modal_aceptacion").modal("hide");
+                inicializarTablaTramites(tabla, controlador);
+                MostrarAlertaxTiempo(objData.title, objData.msg, "success");
+              } else {
+                MostrarAlerta(
+                  "Error",
+                  "Hubo problemas al realizar la accion",
+                  "error"
+                );
+              }
+              $("#loader").hide();
+            },
+            error: function (error) {
+              MostrarAlerta("Error", "Error al realizar accion.", "error");
+              $("#loader").hide();
+              console.error("Error: " + error);
+            },
+          });
+        }
+      });
+    }
   });
 
   //Mostrar modal para Derivar o Archivar
@@ -870,7 +901,6 @@ function llenarSelectDestino(area) {
       $("#loader").show();
     },
     success: function (response) {
-      console.log(response);
       data = $.parseJSON(response);
       let select = $("#select-destino");
       select.empty();

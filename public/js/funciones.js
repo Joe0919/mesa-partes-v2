@@ -12,7 +12,6 @@ function MostrarAlertaxTiempo(titulo, descripcion, tipoalerta) {
     showConfirmButton: false,
     timer: 2000,
     confirmButtonText: "Entendido",
-
   });
 }
 function MostrarAlertaHtml(titulo, html, tipoalerta) {
@@ -22,7 +21,6 @@ function MostrarAlertaHtml(titulo, html, tipoalerta) {
     icon: tipoalerta,
     showConfirmButton: true,
     confirmButtonText: "Entendido",
-
   });
 }
 
@@ -83,52 +81,45 @@ function ValidarCorreo(correo) {
 function extraerSubstring(texto) {
   let ultimaPosicion = texto.lastIndexOf("/");
 
-  // Si no se encuentra el carácter '/', retornar null o un mensaje
   if (ultimaPosicion === -1) {
-    return null; // O puedes retornar un mensaje como "No se encontró '/'"
+    return null;
   }
-
-  // Extraer el substring a partir de la posición siguiente al '/'
   return texto.substring(ultimaPosicion + 1);
 }
 
 function validarArchivo(input) {
-  // Obtener el archivo seleccionado
   const archivo = input.files[0];
 
-  // Si no se seleccionó ningún archivo (se canceló)
   if (!archivo) {
-    return; // No hacer nada
+    return;
   }
 
-  // Validar si el archivo es un PDF
   if (archivo.type !== "application/pdf") {
-    return 0; // Retorna 0 si el archivo no es un PDF
+    return 0;
   }
 
-  // Validar el tamaño del archivo (10 MB = 10 * 1024 * 1024 bytes)
   if (archivo.size > 10 * 1024 * 1024) {
-    return 2; // Retorna 2 si el archivo es mayor a 10 MB
+    return 2;
   }
 
-  return 1; // Retorna 1 si el archivo es un PDF y cumple con el tamaño
+  return 1;
 }
 
 function validarCampos(formulario) {
-  let valido = true; // Variable para determinar si el formulario es válido
+  let valido = true;
 
-  // Selecciona todos los inputs requeridos dentro del formulario
   formulario.find("input[required]").each(function () {
-    // Elimina espacios en blanco al inicio y al final
     const valor = $(this).val().trim();
 
-    // Verifica si el valor está vacío después de eliminar espacios
     if (valor === "") {
-      valido = false; // Si algún campo está vacío, cambia a false
+      valido = false;
+      $(this).removeClass("is-valid").addClass("is-invalid");
+    } else {
+      $(this).removeClass("is-invalid").addClass("is-valid");
     }
   });
 
-  return valido; // Devuelve el resultado de la validación
+  return valido;
 }
 
 // Agregar el evento change al input
@@ -138,5 +129,65 @@ if (archivoInput) {
   archivoInput.addEventListener("change", function (event) {
     const resultado = validarArchivo(event.target);
     // Aquí puedes manejar el resultado como desees
+  });
+}
+
+function generarNombreUsuario(nombre, apellido1, apellido2, numero) {
+  nombre = nombre.trim();
+  apellido1 = apellido1.trim();
+  apellido2 = apellido2.trim();
+  numero = numero.trim();
+
+  let nombreUsuario = nombre.split(" ")[0];
+
+  let iniciales =
+    apellido1.charAt(0).toUpperCase() + apellido2.charAt(0).toUpperCase();
+
+  let ultimosDigitos = numero.slice(-2);
+
+  nombreUsuario =
+    nombreUsuario.charAt(0).toUpperCase() +
+    nombreUsuario.slice(1).toLowerCase();
+  let resultado = nombreUsuario + iniciales + ultimosDigitos;
+
+  return resultado;
+}
+
+function validarCamposRequeridos(formularioID) {
+  $(
+    `${formularioID} input[required], ${formularioID} select[required], ${formularioID} textarea[required]`
+  ).on("blur", function () {
+    // Ignorar checkboxes
+    if ($(this).attr("type") === "checkbox") {
+      return; // Si es un checkbox, no hacer nada
+    }
+
+    const valor =
+      $(this).is("input") || $(this).is("textarea")
+        ? $(this).val().trim()
+        : $(this).val();
+
+    // Validación para inputs de tipo email
+    if ($(this).attr("type") === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar el formato del email
+      if (!emailPattern.test(valor)) {
+        $(this).removeClass("is-valid").addClass("is-invalid"); // Cambia a is-invalid
+        return; // Salir de la función si no cumple
+      }
+    }
+
+    // Validación para minlength
+    const minlength = $(this).attr("minlength");
+    if (minlength && valor.length < minlength) {
+      $(this).removeClass("is-valid").addClass("is-invalid");
+      return;
+    }
+
+    // Verifica si el valor está vacío
+    if (valor === "" || valor === null) {
+      $(this).removeClass("is-valid").addClass("is-invalid");
+    } else {
+      $(this).removeClass("is-invalid").addClass("is-valid");
+    }
   });
 }

@@ -79,38 +79,42 @@ class SeguimientoController extends Controllers
     private function generateTimelineHtml($arrData, $expediente)
     {
         $timelineHtml = <<<HTML
-                <div class="timeline" id="div_historial">
-                    <div class="time-label">
-                        <span class="bg-red">HISTORIAL DEL TRÁMITE: </span>
-                    </div>
-                    <div class="time-label">
-                        <span class="bg-purple">EXPEDIENTE <b>{$expediente}</b></span>
-                    </div>
-            HTML;
+            <div class="timeline" id="div_historial">
+                <div class="time-label">
+                    <span class="bg-red">HISTORIAL DEL TRÁMITE: </span>
+                </div>
+                <div class="time-label">
+                    <span class="bg-purple">EXPEDIENTE <b>{$expediente}</b></span>
+                </div>
+        HTML;
 
         foreach ($arrData as $data) {
             $icono = $this->getIcono($data['accion']);
             $preposicion = $this->getPreposicion($data['accion']);
             $timelineHtml .= <<<HTML
-                    <div>
-                        {$icono}
-                        <div class="timeline-item">
-                            <span style="font-size:18px" class="time"><i class="fas fa-clock"></i> {$data['hora']}</span>
-                            <h3 style="font-size:18px" class="timeline-header">El trámite fue <b class="text-primary">{$data['accion']}</b> {$preposicion}
+                <div>
+                    {$icono}
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-header d-flex justify-content-start justify-content-sm-between align-items-center flex-column flex-sm-row">
+                            <h3 style="font-size:17px" class="m-0">El trámite fue <b class="text-primary">{$data['accion']}</b> {$preposicion}
                                 <b class="text-primary">{$data['area']}</b> el <b class="text-muted">{$data['fecha1']}</b></h3>
-                            <div style="font-size:15px" class="timeline-body">
-                                {$data['descrip']}
-                            </div>
+                            <span style="font-size:17px" class="time text-muted text-bold"><i class="fas fa-clock"></i> {$data['hora']}</span>
                         </div>
-                    </div>
-                HTML;
-        }
-        $timelineHtml .= <<<HTML
-                    <div>
-                        <i class="fas fa-clock bg-gray"></i>
+                        
+                        <div style="font-size:15px" class="timeline-body text-bold">
+                            {$data['descrip']}
+                        </div>
                     </div>
                 </div>
             HTML;
+        }
+        $timelineHtml .= <<<HTML
+                <div>
+                    <i class="fas fa-clock bg-gray"></i>
+                </div>
+            </div>
+        HTML;
 
         return $timelineHtml;
     }
@@ -128,13 +132,13 @@ class SeguimientoController extends Controllers
             case 'ARCHIVADO':
                 return '<i class="fas fa-save bg-blue"></i>';
             default:
-                return '';
+                return '<i class="fas fa-search-minus bg-info"></i>';
         }
     }
 
     // Método para obtener la preposición basada en la acción
     private function getPreposicion($accion)
     {
-        return in_array($accion, ['ACEPTADO', 'RECHAZADO', 'ARCHIVADO']) ? "en" : "a";
+        return in_array($accion, ['ACEPTADO', 'RECHAZADO', 'ARCHIVADO','OBSERVADO']) ? "en" : "a";
     }
 }

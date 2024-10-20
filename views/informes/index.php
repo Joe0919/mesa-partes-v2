@@ -57,7 +57,7 @@
                                                 <div class="row div_principal">
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label>Estado del Documento</label><span class="span-red"> (*)</span>
+                                                            <label>Estado del Documento</label><span class="span-required"></span>
                                                             <select class="form-control text-center font-w-600" name="estado" id="slct_estado" required>
                                                                 <option value="0">TODOS</option>
                                                                 <option value="PENDIENTE">PENDIENTES</option>
@@ -69,7 +69,7 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
-                                                            <label>Fechas</label><span class="span-red"> (*)</span>
+                                                            <label>Fechas</label><span class="span-required"></span>
                                                             <select class="form-control text-center font-w-600" name="fecha" id="select_fechas" required>
                                                             </select>
                                                         </div>
@@ -77,7 +77,7 @@
                                                 </div>
 
                                             </div>
-                                            <span class="span-red font-weight-normal">(*) Campos Obligatorios </span>
+                                            <span class="span-red span-required-description"> Obligatorio </span>
                                         </form>
                                     </div>
                                 </div>

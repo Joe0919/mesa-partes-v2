@@ -60,10 +60,17 @@ $(document).ready(function () {
           $("#span_cant_rechazados").text(objData[0].total_rechazado);
 
           const totals = objData[0];
-          const labels = ["Pendiente", "Aceptado", "Rechazado", "Archivado"];
+          const labels = [
+            "Pendiente",
+            "Aceptado",
+            "Observado",
+            "Rechazado",
+            "Archivado",
+          ];
           const values = [
             totals.total_pendiente,
             totals.total_aceptado,
+            totals.total_observado,
             totals.total_rechazado,
             totals.total_archivado,
           ];
@@ -262,7 +269,6 @@ $(document).ready(function () {
         } else {
           MostrarAlerta("Error", "No se envio", "error");
         }
-        console.log(response);
       },
       error: function (error) {
         MostrarAlerta("Error", "Error al cargar los datos", "error");
@@ -304,14 +310,15 @@ function crearGrafico(datos, tipoGrafico, canvas) {
     options: {
       scales: {
         y: {
-          beginAtZero: true,
+          beginAtZero: false,
+          max: Math.max(...datos.values) + 1, // Ajusta el valor máximo
           grid: {
-            display: false, // Ocultar líneas de la cuadrícula en el eje Y
+            display: false,
           },
         },
         x: {
           grid: {
-            display: false, // Ocultar líneas de la cuadrícula en el eje X
+            display: false,
           },
         },
       },

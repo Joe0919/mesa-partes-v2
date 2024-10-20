@@ -61,7 +61,7 @@ $(function () {
   });
 
   $("#btnDescargar").click(function () {
-    console.log(url);
+
     if (archivo !== "") {
       let a = document.createElement("a");
       a.href = url;
@@ -119,7 +119,7 @@ $(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                console.log(response);
+
                 objData = $.parseJSON(response);
                 if (objData.status) {
                   MostrarAlerta(objData.title, objData.msg, "success");

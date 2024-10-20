@@ -34,7 +34,7 @@ body {
   background-color: var(--color7);
 }
 .bg-gray-1 {
-  background-color: var(--color7);
+  background-color: var(--color4);
 }
 .bg-color-header {
   background-color: var(--color-header1);
@@ -281,6 +281,12 @@ body {
   margin-left: 2px;
   font-weight: bold;
 }
+.span-opcional::after {
+  content: "(Opcional)";
+  color: gray;
+  margin-left: 2px;
+  font-weight: bold;
+}
 .span-required-description::before {
   content: "(*)";
   color: red;
@@ -514,7 +520,7 @@ body {
   width: 50px;
 }
 
-.tabla tr th{
+.tabla tr th {
   width: 200px;
 }
 
@@ -639,9 +645,9 @@ body {
   vertical-align: middle; /* Centrar verticalmente */
 }
 
-.table td{
+.table td {
   font-weight: normal;
-}              
+}
 
 .table tbody td:last-child {
   vertical-align: baseline; /* No centrar en la última columna */
@@ -799,7 +805,27 @@ body {
   }
 }
 
+/* Modificar CSS de Plantilla */
+
 .modal-variant {
   max-width: 1200px;
   padding-left: 17px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 2px #80bdff;
+}
+
+.form-control.is-valid:focus,
+.was-validated .form-control:valid:focus {
+  box-shadow: 0 0 2px #28a745;
+}
+
+.form-control.is-invalid:focus,
+.was-validated .form-control:invalid:focus {
+  box-shadow: 0 0 2px #dc3545;
 }

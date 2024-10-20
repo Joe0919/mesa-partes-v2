@@ -71,17 +71,28 @@
                                 </span>
                             </span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-
-                            <a class="dropdown-item btn-general" id="conf-inst" data-toggle="modal">
-                                <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span></a>
-                            <a class="dropdown-item btn-general" id="conf-perfil" data-toggle="modal">
-                                <i class="feather icon-settings text-muted"></i><span class="ml-1">Datos del Perfil</span></a>
-                            <a class="dropdown-item btn-general" id="conf-psw" data-toggle="modal">
-                                <i class="feather icon-settings text-muted"></i><span class="ml-1">Cambiar Contraseña</span></a>
+                        <div class="dropdown-menu dropdown-menu-end" style="width: 330px;">
+                            <div class="dropdown-header text-center">
+                                <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" 
+                                alt="Foto perfil" class="img-thumbnail rounded-circle" style="width: 100px;">
+                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['datos'] ?></h5>
+                                <h6 class="text-muted text-bold"><?= $_SESSION['userData']['rol'] ?></h6>
+                                <h7 class="text-muted"><?= $_SESSION['userData']['area'] ?></h7>
+                            </div>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item btn-general" data-toggle="modal" href="#modal_salir">
-                                <i class="feather icon-power text-danger"></i><span class="ml-1">Salir</span></a>
+                            <a class="dropdown-item cursor-pointer" id="conf-inst" data-toggle="modal">
+                                <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span>
+                            </a>
+                            <a class="dropdown-item cursor-pointer" id="conf-perfil" data-toggle="modal">
+                                <i class="feather icon-user text-muted"></i><span class="ml-1">Datos del Perfil</span>
+                            </a>
+                            <a class="dropdown-item cursor-pointer" id="conf-psw" data-toggle="modal">
+                                <i class="feather icon-lock text-muted"></i><span class="ml-1">Cambiar Contraseña</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item cursor-pointer text-danger" data-toggle="modal" href="#modal_salir">
+                                <i class="feather icon-log-out text-danger"></i><span class="ml-1">Salir</span>
+                            </a>
                         </div>
 
                     </div>

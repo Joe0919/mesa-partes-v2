@@ -177,18 +177,59 @@
                         <p class="span-gray font-italic">IMPORTANTE: La nueva contraseña debe tener mas de 8 caracteres. Entre mayúsculas, minusculas, números y caracteres especiales (=?/&%$_)</p>
                         <input type="hidden" class="form-control" name="idusuario" id="idusuarioC">
                     </div>
-                    <div class="form-group">
-                        <label>Contraseña Actual<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="ioldpassword" id="icontraU" required minlength="8" />
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label>Contraseña Actual<span class="span-required"></span></label>
+                        </div>
+                        <div class="row col-12">
+                            <div class="col">
+                                <input type="password" class="form-control" name="ioldpassword" id="icontraU" required minlength="8" />
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                    <button class="btn bg-gradient-light toggle-password" type="button">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Contraseña Nueva<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="ipassword" id="inewcontraU" required minlength="8" />
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label>Contraseña Nueva</label><span class="span-required"></span>
+                        </div>
+                        <div class="row col-12">
+                            <div class="col">
+                                <input type="password" class="form-control" name="ipassword" id="inewcontraU" required minlength="8" />
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                    <button class="btn bg-gradient-light toggle-password" type="button">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Confirmar nueva contraseña<span class="span-required"></span></label>
-                        <input type="password" class="form-control" name="iconfirmpsw" id="iconfirmpswU" required minlength="8" />
-                        <p id="ErrorContraU" class="m-0 p-0 aviso"></p>
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <label>Confirmar nueva contraseña<span class="span-required"></span></label>
+                        </div>
+                        <div class="row col-12">
+                            <div class="col">
+                                <input type="password" class="form-control" name="iconfirmpsw" id="iconfirmpswU" required minlength="8" />
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                    <button class="btn bg-gradient-light toggle-password" type="button">
+                                        <i class="fas fa-eye" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <p id="ErrorContraU" class="m-0 p-0 aviso"></p>
+                            </div>
+                        </div>
                     </div>
                     <span class="span-red span-required-description"> Obligatorio </span>
                 </div>

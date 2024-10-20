@@ -26,7 +26,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col d-flex justify-content-between">
-                            <h4 class="m-0 ">Gestión de Trámites</h4>
+                            <h4 class="m-0">Gestión de Trámites</h4>
                             <ol class="breadcrumb float-sm-right">
                                 <li class="li-nav-info"><i class="nav-icon fas fa-file-pdf"></i><?= $data['page_title'] ?></li>
                             </ol>
@@ -45,6 +45,10 @@
                                     <div class="row row-cols-3">
                                         <div class="col-6">
                                             <h3 class="card-title font-weight-bold card-header-title mb-1">Lista de Trámites</h3>
+                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2"
+                                                data-card-widget="maximize" title="Maximizar">
+                                                <i class="fas fa-expand"></i>
+                                            </button>
                                         </div>
                                         <div class="col-6 text-right">
                                             <button type="button" class="btn bg-gradient-success" id="btnMostrarFiltro" title="Mostrar Filtro">

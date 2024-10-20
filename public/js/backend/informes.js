@@ -17,7 +17,7 @@ $(document).ready(function () {
                   <div class="row">
                       <div class="col-sm-6">
                           <div class="form-group">
-                              <label>Año</label><span class="span-red"> (*)</span>
+                              <label>Año</label><span class="span-required"></span>
                               <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
                           </div>
                       </div>
@@ -29,13 +29,13 @@ $(document).ready(function () {
                   <div class="row">
                       <div class="col-sm-6">
                           <div class="form-group">
-                              <label>Año</label><span class="span-red"> (*)</span>
+                              <label>Año</label><span class="span-required"></span>
                               <select class="form-control text-center font-w-600" name="anio" id="select_anio" required></select>
                           </div>
                       </div>
                       <div class="col-sm-6">
                           <div class="form-group">
-                              <label>Mes</label><span class="span-red"> (*)</span>
+                              <label>Mes</label><span class="span-required"></span>
                               <select class="form-control text-center font-w-600" name="mes" id="select_mes" required></select>
                           </div>
                       </div>
@@ -47,7 +47,7 @@ $(document).ready(function () {
                   <div class="row">
                       <div class="col-sm-12">
                           <div class="form-group" id="sandbox-container">
-                              <label>Rango de fechas</label><span class="span-red"> (*)</span>
+                              <label>Rango de fechas</label><span class="span-required"></span>
                               <div class="input-daterange input-group" id="datepicker">
                                   <span class="input-group-addon mr-2">Desde: </span>
                                   <input type="text" class="input-sm form-control font-w-600" name="desde" id="desde" required/>
@@ -133,7 +133,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
+
         data = $.parseJSON(response);
         let placeholderOption = $("<option></option>");
         placeholderOption.val("");

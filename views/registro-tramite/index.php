@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <!-- Sweet Alert -->
-        <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
+    <!-- Sweet Alert -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
     <!-- Estilos principales -->
     <link rel="stylesheet" href="<?= media() ?>/css/style.css">
 
@@ -81,7 +81,7 @@
                                                         <h3 class="card-title text-bold">DATOS DEL REMITENTE</h3>
                                                     </div>
                                                     <div class="card-body">
-                                                        <label>Tipo de Persona: </label><span class="span-red"> (*)</span>
+                                                        <label>Tipo de Persona: </label><span class="span-required"></span>
                                                         <div class="row mb-2">
                                                             <div class="col-6">
                                                                 <div class="custom-control custom-radio">
@@ -99,27 +99,33 @@
                                                         <div id="div_juridica">
                                                             <div class="form-group">
                                                                 <input type="hidden" class="form-control" id="idpersona" name="idpersona" value="0">
-                                                                <label>RUC </label><span class="span-red"> (*)</span>
+                                                                <label>RUC </label><span class="span-required"></span>
                                                                 <input type="text" class="form-control" id="idruc" name="iruc" onkeypress="return validaNumericos(event)" maxlength="11" minlength="11">
                                                             </div>
                                                             <div class="form-group">
-                                                                <label>Entidad </label><span class="span-red"> (*)</span>
+                                                                <label>Entidad </label><span class="span-required"></span>
                                                                 <input type="text" class="form-control text-uppercase" id="identidad" name="ientidad">
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label>DNI</label><span class="span-red"> (*)</span>
-                                                                    <input type="text" class="form-control" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required title="Valide su DNI">
+                                                            <div class="col-sm-6">
+                                                                <div class="row form-group ">
+                                                                    <div class="col-12">
+                                                                        <label>DNI</label><span class="span-required"></span>
+                                                                    </div>
+                                                                    <div class="row col-12 pr-0">
+                                                                        <div class="col">
+                                                                            <input type="text" class="form-control" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required title="Valide su DNI">
+                                                                        </div>
+                                                                        <div class="col-auto pr-0">
+                                                                            <input id="btn_validar" type="button" class="btn btn-success" value="Validar">
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-sm-2 form-group d-flex align-items-end mb-3">
-                                                                <input id="btn_validar" type="button" class="btn btn-success" value="Validar">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label>Nombres </label><span class="span-red"> (*)</span>
+                                                                    <label>Nombres </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control text-uppercase" id="idnombre" name="inombre" required>
                                                                 </div>
                                                             </div>
@@ -128,31 +134,31 @@
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label>Apellido Paterno </label><span class="span-red"> (*)</span>
+                                                                    <label>Apellido Paterno </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control text-uppercase" id="idap" name="iappat" required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label>Apellido Materno </label><span class="span-red"> (*)</span>
+                                                                    <label>Apellido Materno </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control text-uppercase" id="idam" name="iapmat" required>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>N° Celular </label><span class="span-red"> (*)</span>
+                                                            <label>N° Celular </label><span class="span-required"></span>
                                                             <input type="text" class="form-control" id="idcel" name="icel" onkeypress='return validaNumericos(event)' minlength="9" maxlength="9" required>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Dirección </label><span class="span-red"> (*)</span>
+                                                            <label>Dirección </label><span class="span-required"></span>
                                                             <input type="text" class="form-control text-uppercase" id="iddirec" required name="idir">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Correo</label><span class="span-red"> (*)</span>
+                                                            <label>Correo</label><span class="span-required"></span>
                                                             <input type="text" class="form-control" id="idemail" required name="iemail">
                                                             <i><b id="Vcorreo"></b></i>
                                                         </div>
-                                                        <span class="span-red">(*) Campos Obligatorios </span>
+                                                        <span class="span-red span-required-description"> Obligatorio </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,38 +170,58 @@
 
                                                     <div class="card-body">
                                                         <div class="form-group">
-                                                            <label>Tipo</label><span class="span-red"> (*)</span>
+                                                            <label>Tipo</label><span class="span-required"></span>
                                                             <select class="form-control select-tipo" name="itipo" id="select_tipo" required></select>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label>N° Documento </label><span class="span-red"> (*)</span>
+                                                                    <label>N° Documento </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control" id="idnrodoc" name="n_doc" onkeypress='return validaNumericos(event)' required>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label>N° Folios </label><span class="span-red"> (*)</span>
+                                                                    <label>N° Folios </label><span class="span-required"></span>
                                                                     <input type="number" class="form-control" id="idfolios" name="ifolios" required>
                                                                 </div>
                                                             </div>
 
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Asunto </label><span class="span-red"> (*)</span>
+                                                            <label>Asunto </label><span class="span-required"></span>
                                                             <textarea class="form-control text-uppercase" rows="3" id="idasunto" name="iasunto" placeholder="Ingrese el asunto del documento" required></textarea>
                                                         </div>
-
                                                         <div class="form-group">
-                                                            <label>Adjuntar archivo (pdf.)</label><span class="span-red"> (*)</span>
+                                                            <label>Adjuntar archivo (Solamente PDFs).</label><span class="span-required"></span>
                                                             <div class="file">
-                                                                <p id="nom_pdf">
-                                                                    <img src="<?= media() ?>/images/pdf.png" width="25px">
-                                                                    <span id="alias"></span>
-                                                                </p>
-                                                                <label for="idfile" id="archivo"><i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...</label>
-                                                                <input type="file" id="idfile" name="ifile" accept="application/pdf" required>
+                                                                <label for="idfile" id="archivo">
+                                                                    <i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...
+                                                                </label>
+                                                                <input type="file" class="d-none" id="idfile" name="ifile" accept="application/pdf">
+                                                            </div>
+
+                                                            <div id="fileInfo" class="d-none p-2 bg-color-gray">
+                                                                <div class="d-flex align-items-center justify-content-between flex-column flex-sm-row my-2">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p id="nom_pdf" class="m-0 text-truncate cursor-pointer" style="max-width: 330px;">
+                                                                            <img src="<?= media() ?>/images/pdf.png" width="25px">
+                                                                            <a id="link_doc" class="ml-1 d-block">
+                                                                                <span id="fileSize">(<strong>0.0</strong> MB)</span>
+                                                                                <span id="alias"></span>
+                                                                            </a>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="mt-2 mt-sm-0">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="btn-group">
+                                                                                <button id="btnEliminar" type="button" class="btn btn-danger delete" title="Eliminar">
+                                                                                    <i class="fas fa-trash"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="custom-control custom-checkbox div-check">
@@ -204,7 +230,7 @@
                                                             <label for="check" class="form-check-label ml-1">Declaro que la
                                                                 información proporcionada es válida y verídica.
                                                                 Y Acepto que las comunicaciones sean enviadas a la dirección de correo y
-                                                                celular que proporcione.<span class="span-red"> (*)</span></label>
+                                                                celular que proporcione.<span class="span-required"></span></label>
 
                                                         </div>
                                                         <br>

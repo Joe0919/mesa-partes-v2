@@ -36,6 +36,8 @@ $(document).ready(function () {
     accion = "guardarán";
   });
 
+  validarCamposRequeridos("#form_roles");
+
   //Registrar o Editar los datos del formulario
   $("#form_roles").on("submit", function (e) {
     e.preventDefault();

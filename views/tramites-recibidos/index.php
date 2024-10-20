@@ -45,6 +45,10 @@
                                     <div class="row row-cols-3">
                                         <div class="col-12 col-lg-7">
                                             <h3 class="card-title font-weight-bold card-header-title">Lista de Trámites en <?= $_SESSION['userData']['area'] ?></span></h3>
+                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2"
+                                                data-card-widget="maximize" title="Maximizar">
+                                                <i class="fas fa-expand"></i>
+                                            </button>
                                         </div>
                                         <div class="col-12 col-lg-5 my-2 my-lg-0 text-center text-lg-right">
                                             <span>Listar por: </span>

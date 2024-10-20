@@ -422,6 +422,7 @@ class TramiteModel extends Mysql
         $request = $this->consultarVarios(
             "SUM(CASE WHEN estado = 'PENDIENTE' THEN 1 ELSE 0 END) AS total_pendiente,
                 SUM(CASE WHEN estado = 'ACEPTADO' THEN 1 ELSE 0 END) AS total_aceptado,
+                SUM(CASE WHEN estado = 'OBSERVADO' THEN 1 ELSE 0 END) AS total_observado,
                 SUM(CASE WHEN estado = 'RECHAZADO' THEN 1 ELSE 0 END) AS total_rechazado,
                 SUM(CASE WHEN estado = 'ARCHIVADO' THEN 1 ELSE 0 END) AS total_archivado",
             "documento",

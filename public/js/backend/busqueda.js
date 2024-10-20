@@ -13,6 +13,8 @@ $(document).ready(function () {
 
   controlador = page_id == "14" ? "Seguimiento" : "Busqueda";
 
+  validarCamposRequeridos("#form_busqueda");
+
   $("#form_busqueda").on("submit", function (e) {
     e.preventDefault();
     let formData = new FormData(this);
@@ -27,7 +29,6 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
         objData = $.parseJSON(response);
         if (objData.status) {
           $("#tdExpediente").text(objData.data.nro_expediente);

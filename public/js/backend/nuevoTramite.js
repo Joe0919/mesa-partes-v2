@@ -52,7 +52,6 @@ $(function () {
       // Mostrar la información del archivo
       let fileName = file.name;
       let fileSize = (file.size / 1024 / 1024).toFixed(2); // Convertir a MB
-      console.log(fileName, fileSize);
       $("#alias").text(fileName);
       $("#fileSize strong").text(fileSize);
       $("#fileInfo").removeClass("d-none"); // Mostrar el contenedor de información del archivo
@@ -144,6 +143,8 @@ $(function () {
       });
     }
   });
+
+  validarCamposRequeridos("#form_tramite");
 
   // REGISTRAMOS EL TRAMITE
   $("#form_tramite").on("submit", function (e) {

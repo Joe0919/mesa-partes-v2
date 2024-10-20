@@ -84,6 +84,8 @@ $(document).ready(function () {
     });
   });
 
+  validarCamposRequeridos("#form_empleado");
+
   //Registrar o Editar los datos del formulario
   $("#form_empleado").on("submit", function (e) {
     e.preventDefault();
@@ -112,7 +114,6 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
@@ -154,7 +155,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        console.log(response);
+
         objData = $.parseJSON(response);
         if (objData.status) {
           $("#idempleado").val(objData.data.idempleado);
@@ -244,7 +245,7 @@ $(document).ready(function () {
       const data = await response.json();
       let select = $("#select_usuario");
       select.empty();
-      // console.log(data);
+
       if (data.length === 0) {
         // Si no hay usuarios, mostrar mensaje de no encontrado
         let noUserOption = $("<option></option>");

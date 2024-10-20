@@ -26,10 +26,10 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col d-flex justify-content-between">
-                            <h4 class="m-0 font-weight-bold">Gestión de Usuarios</h3>
-                            <ol class="breadcrumb float-sm-right">
-                                <li class="li-nav-info"><i class="nav-icon fas fa-list"></i><?= $data['page_title'] ?></li>
-                            </ol>
+                            <h4 class="m-0">Gestión de Usuarios</h3>
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="li-nav-info"><i class="nav-icon fas fa-list"></i><?= $data['page_title'] ?></li>
+                                </ol>
                         </div>
                     </div>
                 </div>
@@ -45,6 +45,10 @@
                                     <div class="row d-flex align-items-center">
                                         <div class="col-md-5 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
                                             <h3 class="card-title text-bold card-header-title">Lista de Usuarios</h3>
+                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2"
+                                                data-card-widget="maximize" title="Maximizar">
+                                                <i class="fas fa-expand"></i>
+                                            </button>
                                         </div>
                                         <div class="col-md-7 d-flex justify-content-center justify-content-md-end">
                                             <?php if ($_SESSION['permisosMod']['cre']) { ?>

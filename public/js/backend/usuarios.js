@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
   let idusuario = 0,
     accion = "",
     foto_bdr = 0,
@@ -48,7 +48,7 @@ $(document).ready(function () {
     $(".aviso").text("");
   });
 
-  //VISUALIZAR FOTO SELECCIONADA
+  //Visualizar Foto Seleccionada
   $("#input_photo").change(function (e) {
     let archivo = e.target.files[0];
     // Validamos si se seleccionó un archivo
@@ -78,11 +78,14 @@ $(document).ready(function () {
     }
   });
 
+  //Validar Campos requeridos y Cambiar Clases
+  validarCamposRequeridos("#form_user");
+
   //Registrar o editar los datos del usuario
   $("#form_user").on("submit", function (e) {
     e.preventDefault();
     let formulario = $(this);
-    if (verificarCampos(formulario)) {
+    if (validarCampos(formulario)) {
       if ($("#ipassco").val() !== $("#ipass").val()) {
         MostrarAlerta(
           "Advertencia",
@@ -221,7 +224,6 @@ $(document).ready(function () {
         "</b></p>"
     );
     $("#idusuarioC").val(idusuario);
-    console.log(idusuario);
     $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL USUARIO");
     $(".aviso").text("");
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
@@ -231,7 +233,7 @@ $(document).ready(function () {
   $("#form_edit_psw").on("submit", function (e) {
     e.preventDefault();
     let formulario = $(this);
-    if (verificarCampos(formulario)) {
+    if (validarCampos(formulario)) {
       if ($("#inewcontraU").val() === $("#iconfirmpswU").val()) {
         Swal.fire({
           title: "¿Estás seguro?",
@@ -335,165 +337,36 @@ $(document).ready(function () {
 
   /* =============================   VALIDACIONES DE CAMPOS  ================================= */
 
-  $("#idni").blur(function () {
-    //Consulta de disponibilidad de DNI al cambiar el click
-    idni = $(this).val();
-    if (idni.length == 8) {
-      opcion = 7;
-      $.ajax({
-        url: "../../app/controllers/usuario-controller.php",
-        type: "POST",
-        datatype: "json",
-        data: { opcion: opcion, idni: idni },
-        success: function (response) {
-          switch (response) {
-            case "0":
-              $("#ErrorDNI").text("DNI disponible").css("color", "green");
-              break;
-            case "1":
-              $("#ErrorDNI").text("DNI ya registrado").css("color", "red");
-              break;
-            default:
-              $("#ErrorDNI").text("Error").css("color", "red");
-              break;
-          }
-        },
-      });
-    } else {
-      $("#ErrorDNI").text("").css("color", "red");
-    }
-  });
-
-  $("#icel").blur(function () {
-    //Consulta de disponibilidad de EMAIL al cambiar el click
-    icel = $(this).val();
-    if (icel.length < 9) {
-      $("#ErrorCel").text("").css("color", "red");
-    } else {
-      opcion = 7;
-      $.ajax({
-        url: "../../app/controllers/usuario-controller.php",
-        type: "POST",
-        datatype: "json",
-        data: { opcion: opcion, icel: icel },
-        success: function (response) {
-          switch (response) {
-            case "0":
-              $("#ErrorCel").text("N° Telef. disponible").css("color", "green");
-              break;
-            case "1":
-              $("#ErrorCel").text("N° Telef. registrado").css("color", "red");
-              break;
-            default:
-              $("#ErrorCel").text("Error").css("color", "red");
-              break;
-          }
-        },
-      });
-    }
-  });
-
+  //Validar Formato de Email
   $("#iemail").blur(function () {
     let iemail = $.trim($(this).val());
     if (iemail.length == 0) {
       $("#ErrorEmail").text("").css("color", "red");
     } else {
-      if (!ValidarCorreo(iemail)) {
-        $("#ErrorEmail")
-          .text("Formato de Email incorrecto")
-          .css("color", "red");
-      } else {
-        opcion = 7;
-        $.ajax({
-          url: "../../app/controllers/usuario-controller.php",
-          type: "POST",
-          datatype: "json",
-          data: { opcion: opcion, iemail: iemail },
-          success: function (response) {
-            switch (response) {
-              case "0":
-                $("#ErrorEmail")
-                  .text("Correo disponible")
-                  .css("color", "green");
-                break;
-              case "1":
-                $("#ErrorEmail")
-                  .text("Correo ya registrado")
-                  .css("color", "red");
-                break;
-              default:
-                $("#ErrorEmail").text("Error").css("color", "red");
-                break;
-            }
-          },
-        });
-      }
+      !ValidarCorreo(iemail)
+        ? $("#ErrorEmail")
+            .text("Formato de Email incorrecto")
+            .css("color", "red")
+        : $("#ErrorEmail").text("").css("color", "green");
     }
   });
 
-  $("#inomusu").blur(function () {
-    //Consulta de disponibilidad de EMAIL al cambiar el click
-    inomusu = $.trim($(this).val());
-    if (inomusu.length < 4) {
-      $("#ErrorNomUsu").text("").css("color", "red");
-    } else {
-      opcion = 7;
-      $.ajax({
-        url: "../../app/controllers/usuario-controller.php",
-        type: "POST",
-        datatype: "json",
-        data: { opcion: opcion, inomusu: inomusu },
-        success: function (response) {
-          switch (response) {
-            case "0":
-              $("#ErrorNomUsu")
-                .text("Nombre de Usuario disponible")
-                .css("color", "green");
-              break;
-            case "1":
-              $("#ErrorNomUsu")
-                .text("Nombre de Usuario ya registrado")
-                .css("color", "red");
-              break;
-            default:
-              $("#ErrorNomUsu").text("Error").css("color", "red");
-              break;
-          }
-        },
-      });
-    }
-  });
-
-  $("#inomusu").blur(function () {
-    //Consulta de disponibilidad de EMAIL al cambiar el click
-    inomusu = $.trim($(this).val());
-    if (inomusu.length < 4) {
-      $("#ErrorNomUsu").text("").css("color", "red");
-    } else {
-      opcion = 7;
-      $.ajax({
-        url: "../../app/controllers/usuario-controller.php",
-        type: "POST",
-        datatype: "json",
-        data: { opcion: opcion, inomusu: inomusu },
-        success: function (response) {
-          switch (response) {
-            case "0":
-              $("#ErrorNomUsu")
-                .text("Nombre de Usuario disponible")
-                .css("color", "green");
-              break;
-            case "1":
-              $("#ErrorNomUsu")
-                .text("Nombre de Usuario ya registrado")
-                .css("color", "red");
-              break;
-            default:
-              $("#ErrorNomUsu").text("Error").css("color", "red");
-              break;
-          }
-        },
-      });
+  //Autogenerar Nombre de Usuario
+  $("#inomusu").focus(function () {
+    if (
+      $("#idni").val().trim() !== "" &&
+      $("#inombre").val().trim() !== "" &&
+      $("#iappat").val().trim() !== "" &&
+      $("#iapmat").val().trim() !== ""
+    ) {
+      $(this).val(
+        generarNombreUsuario(
+          $("#inombre").val(),
+          $("#iapmat").val(),
+          $("#iappat").val(),
+          $("#idni").val()
+        )
+      );
     }
   });
 
@@ -527,7 +400,7 @@ $(document).ready(function () {
         .css("color", "red");
     }
   });
-
+  //CAmbiar color y texto de estado
   $("#checkEstado").change(function () {
     if ($(this).is(":checked")) {
       $("#label-estado").text("ACTIVO").css("color", "green");
@@ -538,6 +411,7 @@ $(document).ready(function () {
     }
   });
 
+  //Ejecutar Evento input file
   $("#foto_perfilf").on("click", function () {
     $("#input_photo").click();
   });

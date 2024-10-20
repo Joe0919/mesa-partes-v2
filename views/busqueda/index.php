@@ -72,19 +72,19 @@
                                                         <div class="row">
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
-                                                                    <label>N° Expediente </label><span class="span-red"> (*)</span>
+                                                                    <label>N° Expediente </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control" name="expediente" id="expediente_b" onkeypress='return validaNumericos(event)' required maxlength="6" minlength="6" title="Ingrese el N° de Expediente">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
-                                                                    <label>DNI </label><span class="span-red"> (*)</span>
+                                                                    <label>DNI </label><span class="span-required"></span>
                                                                     <input type="text" class="form-control" name="dni" id="dni_b" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required title="Ingrese su DNI">
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <div class="form-group">
-                                                                    <label>Año</label><span class="span-red"> (*)</span>
+                                                                    <label>Año</label><span class="span-required"></span>
                                                                     <select class="form-control select-tipo text-center text-bold" name="anio" id="select-año" required>
                                                                         <?php
                                                                         $currentYear = date('Y');
@@ -95,7 +95,7 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <span class="span-red">(*) Campos Obligatorios </span>
+                                                            <span class="span-red span-required-description"> Obligatorio </span>
                                                         </div>
                                                         <br>
                                                         <div class="d-flex justify-content-center">

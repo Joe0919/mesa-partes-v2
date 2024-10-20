@@ -100,16 +100,41 @@
                             </div>
                             <div class="row" id="password-row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="ipass">Contraseña</label><span class="span-required"></span>
-                                        <input type="password" class="form-control" name="ipass" id="ipass" minlength="8" required placeholder="Ingrese contraseña">
+                                    <div class="form-group row">
+                                        <div class="col-12">
+                                            <label for="ipass">Contraseña</label>
+                                            <span class="span-required"></span>
+                                        </div>
+                                        <div class="row col-12">
+                                            <div class="col">
+                                                <input type="password" class="form-control" name="ipass" id="ipass" minlength="8" required placeholder="Ingrese contraseña">
+                                            </div>
+                                            <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                                <button class="btn bg-gradient-light toggle-password" type="button">
+                                                    <i class="fas fa-eye" id="eyeIcon"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="ipassco">Confirmar Contraseña</label><span class="span-required"></span>
-                                        <input type="password" class="form-control" name="ipassword" id="ipassco" minlength="8" required placeholder="Confirme contraseña">
-                                        <p id="ErrorContra" class="m-0 p-0 aviso"></p>
+                                    <div class="row form-group">
+                                        <div class="col-12">
+                                            <label for="ipassco">Confirmar Contraseña</label><span class="span-required"></span>
+                                        </div>
+                                        <div class="row col-12">
+                                            <div class="col">
+                                                <input type="password" class="form-control" name="ipassword" id="ipassco" minlength="8" required placeholder="Confirme contraseña">
+                                            </div>
+                                            <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                                <button class="btn bg-gradient-light toggle-password" type="button">
+                                                    <i class="fas fa-eye" id="eyeIcon"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-12">
+                                                <p id="ErrorContra" class="m-0 p-0 aviso"></p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
