@@ -829,3 +829,37 @@ body {
 .was-validated .form-control:invalid:focus {
   box-shadow: 0 0 2px #dc3545;
 }
+
+/* 404 */
+.error-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
+.error-container img {
+  max-width: 500px;
+}
+
+.error-container h1 {
+  font-size: 72px;
+  margin-bottom: 0;
+}
+
+.error-container h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.error-container p {
+  font-size: 18px;
+  color: #6c757d;
+}
+
+.btn-custom {
+  margin: 10px;
+}
