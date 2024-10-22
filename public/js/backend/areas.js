@@ -8,7 +8,7 @@ $(document).ready(function () {
   tablaAreas = $("#tablaAreas").DataTable({
     destroy: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      url: "Spanish.json",
     },
     ajax: {
       url: base_url + "/Areas/getAreas",
@@ -27,6 +27,10 @@ $(document).ready(function () {
     },
   });
 
+  $("#btn_reload").click(function () {
+    tablaAreas.ajax.reload(null, false);
+  });
+
   //Mostrar modal de nueva area
   $("#nueva_area").click(function () {
     $("#form_area")[0].reset();
@@ -35,6 +39,7 @@ $(document).ready(function () {
     $("#idarea").val("0");
     $("#modal_area").modal({ backdrop: "static", keyboard: false });
     accion = "guardarán";
+    eliminarValidacion("#form_area");
   });
 
   validarCamposRequeridos("#form_area");
@@ -116,6 +121,7 @@ $(document).ready(function () {
 
           $("#submitArea").text("Editar");
           $("#modal_area").modal({ backdrop: "static", keyboard: false });
+          eliminarValidacion("#form_area");
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");
         }

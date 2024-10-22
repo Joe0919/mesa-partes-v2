@@ -142,7 +142,7 @@ class Controllers
         $plantilla = file_get_contents('app/templates/plantilla_tramite.html');
 
         // Reemplazar marcadores de posición
-        $plantilla = str_replace('{ cuerpo }', $body, $plantilla); // Reemplaza el marcador con el contenido del cuerpo
+        $plantilla = str_replace('{ cuerpo }', $body, $plantilla); 
 
         return $plantilla;
     }

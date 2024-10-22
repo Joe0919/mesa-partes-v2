@@ -13,7 +13,7 @@ $(function () {
   tablaUsuarios = $("#tablaUsuarios").DataTable({
     destroy: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      url: "Spanish.json",
     },
     ajax: {
       url: base_url + "/Usuarios/getUsuarios",
@@ -35,7 +35,14 @@ $(function () {
     },
   });
 
-  llenarSelectRol();
+  setTimeout(() => {
+    llenarSelectRol();
+  }, 200);
+
+
+  $("#btn_reload").click(function () {
+    tablaUsuarios.ajax.reload(null, false);
+  });
 
   //Mostrar modal de nuevo usuario
   $("#btn_new_user").click(function () {
@@ -46,6 +53,7 @@ $(function () {
     accion = "guardarán";
     $("#idni").prop("readonly", false);
     $(".aviso").text("");
+    eliminarValidacion("#form_user");
   });
 
   //Visualizar Foto Seleccionada
@@ -194,7 +202,7 @@ $(function () {
             $("#estado").val(objData.data.estado);
           }
           $("#loader").hide();
-
+          eliminarValidacion("#form_edit_user");
           $("#modal_edit_user").modal({ backdrop: "static", keyboard: false });
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");
@@ -226,6 +234,7 @@ $(function () {
     $("#idusuarioC").val(idusuario);
     $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL USUARIO");
     $(".aviso").text("");
+    eliminarValidacion("#form_edit_psw");
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
   });
 

@@ -26,12 +26,10 @@
             <div class="content-header">
                 <div class="container-fluid">
                     <div class="row mb-2">
-                        <div class="col-sm-10 d-flex justify-content-center">
-                            <h4 class="m-0 font-weight-bold">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col d-flex justify-content-between">
+                            <h4 class="m-0">Informe de Trámites</h4>
                             <ol class="breadcrumb float-sm-right">
-                                <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-file-export"></i><?= $data['page_title'] ?></li>
+                                <li class="li-nav-info"><i class="nav-icon fas fa-file-export"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>
@@ -44,15 +42,22 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
-                            <div class="card card-danger card-outline">
-                                <div class="card-header">
-                                    <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h3 class="card-title font-weight-bold card-header-title">Generador de Informes de Trámites</h3>
+                            <div class="card card-info">
+                                <div class="card-header py-2">
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
+                                            <h3 class="title-content-h3 m-0"><i class="fas fa-search mr-2"></i><b>Generar Informe</b></h3>
+                                        </div>
+                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-2 mt-sm-0">
+                                            <button type="button" id="btnLimpiarI" class="btn btn-block bg-gradient-white">
+                                                <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="card-body pb-0">
-                                        <form id="form_informes" action="../../app/models/reports/report-documents.php" method="post" target="_blank">
+                                        <form id="form_informes" action="<?= base_url() ?>/Informes/getReportTramites" method="post" target="_blank">
                                             <div class="div_informes">
                                                 <div class="row div_principal">
                                                     <div class="col-sm-6">
@@ -64,6 +69,7 @@
                                                                 <option value="ACEPTADO">ACEPTADOS</option>
                                                                 <option value="RECHAZADO">RECHAZADOS</option>
                                                                 <option value="ARCHIVADO">ARCHIVADOS</option>
+                                                                <option value="OBSERVADO">OBSERVADO</option>
                                                             </select>
                                                         </div>
                                                     </div>

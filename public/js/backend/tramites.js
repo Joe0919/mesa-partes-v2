@@ -68,10 +68,14 @@ $(document).ready(function () {
   }
 
   $("#btnMostrarFiltro").on("click", function () {
-    // Alternar la clase collapse para mostrar u ocultar el divFiltro
+
     $("#divFiltro").collapse("toggle");
 
-    // Cambiar el icono entre filtro y cerrar
     $("#iconFiltro").toggleClass("fa-filter fa-times");
   });
+
+  
+$("#btn_reload").click(function () {
+  tablaTramites.ajax.reload(null, false);
+});
 });

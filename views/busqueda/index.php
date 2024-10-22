@@ -58,7 +58,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- /.card-header -->
                                 <form id="form_busqueda" method="post">
                                     <div class="card-body">
                                         <div class="row">

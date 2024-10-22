@@ -117,6 +117,25 @@ class TramiteModel extends Mysql
 
         return $request;
     }
+
+    public function selectReportTramites(string $Where, array $arrValues)
+    {
+        $request = $this->consultarVarios(
+            "ROW_NUMBER() OVER (ORDER BY nro_expediente) N°, nro_expediente EXPEDIENTE, 
+             date_format(fecha_registro, '%d/%m/%Y') REGISTRO, tipodoc TIPO, dni DNI, 
+             concat(nombres,' ',ap_paterno,' ',ap_materno) FIRMANTE, area 'AREA ACTUAL', d.estado ESTADO",
+            "documento d JOIN areainstitu a ON d.idubicacion = a.idareainstitu
+                JOIN area ae ON a.idarea = ae.idarea
+                JOIN persona p ON d.idpersona = p.idpersona
+                JOIN tipodoc t ON d.idtipodoc = t.idtipodoc
+            ",
+            "WHERE d.deleted = 0 " . $Where . " ORDER BY nro_expediente ASC",
+            $arrValues
+        );
+
+        return $request;
+    }
+
     public function selectTramite(string $expediente, string $limit = "LIMIT 1")
     {
         $this->strExpediente = $expediente;
@@ -157,7 +176,8 @@ class TramiteModel extends Mysql
         $this->strFecha = $anio;
 
         $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado, tipodoc, asunto, dni,
-                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, area,
+                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion,
+                     IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, area,
                     date_format(fechad , '%d/%m/%Y') Fecha, descripcion  
                 FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
                 JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
@@ -212,12 +232,12 @@ class TramiteModel extends Mysql
     public function selectAnios(string $column, string $condicion = '', array $arrValues = [])
     {
 
-        $where = $condicion == '' ? '' : "WHERE $condicion";
+        $where = $condicion == '' ? '' : "WHERE deleted = 0 and $condicion";
 
         $arrayValues = $condicion == '' ? [] : $arrValues;
 
         $request = $this->consultarTabla(
-            "distinct $column dato",
+            "DISTINCT $column dato",
             "derivacion",
             $where,
             $arrayValues
@@ -305,7 +325,7 @@ class TramiteModel extends Mysql
 
         $request = $this->editar(
             "documento",
-            "nro_doc = ?, folios = ?, asunto = ?, idtipodoc = ?" ,
+            "nro_doc = ?, folios = ?, asunto = ?, idtipodoc = ?",
             "nro_expediente = ?",
             [$this->strNroDoc, $this->intFolios, $this->strAsunto, $this->intIdTipoDoc, $this->strExpediente]
         );

@@ -45,7 +45,11 @@
                                     <div class="row row-cols-3">
                                         <div class="col-6">
                                             <h3 class="card-title font-weight-bold card-header-title mb-1">Lista de Trámites</h3>
-                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2"
+                                            <button type="button" id="btn_reload" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2 text-dark"
+                                                data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2 text-dark"
                                                 data-card-widget="maximize" title="Maximizar">
                                                 <i class="fas fa-expand"></i>
                                             </button>

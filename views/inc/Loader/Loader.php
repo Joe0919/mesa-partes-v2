@@ -7,5 +7,5 @@
             <div class="rect4"></div>
             <div class="rect5"></div>
         </div>
-        <div class="loader-text">Cargando...</div>
+        <div class="loader-text" id="loader-text">Cargando...</div>
     </div>

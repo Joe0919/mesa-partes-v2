@@ -27,6 +27,20 @@ class RolesModel extends Mysql
         return $request;
     }
 
+    public function selectReportRoles(
+        string $columnas = "ROW_NUMBER() OVER (ORDER BY idroles) N°,rol ROL, descripcion DESCRIPCION,
+        CASE 
+            WHEN estado = 1 THEN 'ACTIVO'
+            ELSE 'INACTIVO'
+        END AS ESTADO",
+        string $tablas = "roles u",
+        string $condicion = "where u.deleted = 0 ",
+    ) {
+        $sql = "SELECT $columnas FROM $tablas $condicion ";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
     public function selectRol(int $idrol)
     {
         //BUSCAR ROL

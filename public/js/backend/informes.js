@@ -8,6 +8,7 @@ $(document).ready(function () {
     true
   );
 
+  //Dibujamos segun seleccion
   $("#select_fechas").change(function () {
     let sel = $(this).val();
     let contenidoHTML;
@@ -89,108 +90,12 @@ $(document).ready(function () {
       $("#select_mes").prop("disabled", false);
     }
   });
-  //  ***************** FUNCIONES *****************
 
-  // Funcion general para llenar un select
-  function llenarSelect(select, opciones, numerosAscendentes) {
-    $("#loader").show();
-    $(select).empty();
-    let placeholderOption = $("<option></option>");
-    placeholderOption.val("");
-    placeholderOption.text("Seleccione...");
-    placeholderOption.attr("disabled", true);
-    placeholderOption.attr("selected", true);
-    $(select).append(placeholderOption);
+  validarCamposRequeridos("#form_informes");
 
-    opciones.forEach((opcion, index) => {
-      let option = $("<option></option>");
-      if (numerosAscendentes) {
-        option.val(index);
-        option.text(opcion);
-      } else {
-        option.val(opcion);
-        option.text(opcion);
-      }
-      $(select).append(option);
-    });
-
-    $("#loader").hide();
-  }
-
-  function llenarSelectAjax(opcion, select1, anio = "") {
-    // LLenar el select con opciones de tipos de documentos
-    let select = $(select1);
-    let dataToSend = { opcion: opcion };
-    if (anio !== "") {
-      dataToSend.anio = anio;
-    }
-    $.ajax({
-      url: base_url + "/Tramites/getFechas",
-      type: "POST",
-      datatype: "json",
-      data: dataToSend,
-      beforeSend: function () {
-        $("#loader").show();
-      },
-      success: function (response) {
-
-        data = $.parseJSON(response);
-        let placeholderOption = $("<option></option>");
-        placeholderOption.val("");
-        placeholderOption.text("Seleccione...");
-        placeholderOption.attr("disabled", true);
-        placeholderOption.attr("selected", true);
-        select.append(placeholderOption);
-        // Recorre los datos devueltos y crea las opciones del select
-        for (let i = 0; i < data.length; i++) {
-          let option = $("<option></option>");
-
-          option.val(data[i].dato);
-
-          if (opcion == 2) {
-            let mes = darNombreMes(data[i].dato);
-            option.text(mes);
-          } else {
-            option.text(data[i].dato);
-          }
-          select.append(option);
-        }
-        $("#loader").hide();
-      },
-      error: function (error) {
-        console.error("Error: " + select1 + " " + error);
-      },
-    });
-  }
-
-  function darNombreMes(numeroMes) {
-    const meses = [
-      "ENERO",
-      "FEBRERO",
-      "MARZO",
-      "ABRIL",
-      "MAYO",
-      "JUNIO",
-      "JULIO",
-      "AGOSTO",
-      "SETIEMBRE",
-      "OCTUBRE",
-      "NOVIEMBRE",
-      "DICIEMBRE",
-    ];
-    return meses[numeroMes - 1];
-  }
-
-  function convertirfecha(fecha) {
-    if (typeof fecha != "string") {
-      return false;
-    } else {
-      if (fecha == "") {
-        return "";
-      } else {
-        let partes = fecha.split("/");
-        return partes[2] + "-" + partes[1] + "-" + partes[0];
-      }
-    }
-  }
+  $("#btnLimpiarI").click(() => {
+    $("#form_informes").trigger("reset");
+    $(".div_informes .div_principal").next().remove();
+    eliminarValidacion("#form_informes");
+  });
 });

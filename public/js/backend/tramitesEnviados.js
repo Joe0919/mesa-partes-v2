@@ -6,7 +6,7 @@ $(document).ready(function () {
   tablaTramitesEnviados = $("#tablaTramitesEnviados").DataTable({
     destroy: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      url: "Spanish.json",
     },
     ajax: {
       url:
@@ -28,5 +28,9 @@ $(document).ready(function () {
     initComplete: function () {
       $("#loader").hide();
     },
+  });
+
+  $("#btn_reload").click(function () {
+    tablaTramitesEnviados.ajax.reload(null, false);
   });
 });

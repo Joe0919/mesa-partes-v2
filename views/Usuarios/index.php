@@ -45,7 +45,11 @@
                                     <div class="row d-flex align-items-center">
                                         <div class="col-md-5 d-flex justify-content-center justify-content-md-start mb-2 mb-md-0">
                                             <h3 class="card-title text-bold card-header-title">Lista de Usuarios</h3>
-                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2"
+                                            <button type="button" id="btn_reload" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2 text-dark"
+                                                data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>   
+                                            <button type="button" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2 text-dark"
                                                 data-card-widget="maximize" title="Maximizar">
                                                 <i class="fas fa-expand"></i>
                                             </button>
@@ -55,7 +59,9 @@
                                                 <button type="button" class="btn bg-gradient-success ml-2" data-toggle="modal" id="btn_new_user" title="Agregar nuevo registro">
                                                     <i class="nav-icon fas fa-plus mr-1"></i>Nuevo Registro
                                                 </button>
-                                                <button type="button" class="btn bg-gradient-dark ml-2" onclick="window.open('views/views/app/models/reports/report-users.php', '_blank')" title="Generar Reporte">
+                                            <?php } ?>
+                                            <?php if ($_SESSION['permisosMod']['rea']) { ?>
+                                                <button type="button" class="btn bg-gradient-dark ml-2" onclick="window.open('<?= base_url() ?>/Usuarios/getReportUsers', '_blank')" title="Generar Reporte">
                                                     <i class="nav-iconfas fas fa-file-pdf mr-1"></i>Generar Reporte
                                                 </button>
                                             <?php } ?>

@@ -33,16 +33,17 @@ class UsuarioModel extends Mysql
         return $request;
     }
 
-    public function selectUsuarios(
-        string $columnas = "idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado",
-        string $tablas = "usuarios u join persona p on p.dni=u.dni join roles r on r.idroles=u.idroles",
+    public function selectReportUsuarios(
+        string $columnas = "ROW_NUMBER() OVER (ORDER BY idusuarios) N°,p.dni DNI,
+         concat(ap_paterno,' ',ap_materno,' ', nombres) 'APELLIDOS Y NOMBRES', p.email EMAIL, telefono TELEFONO,
+         rol ROL, u.estado",
+        string $tablas = "usuarios u JOIN persona p on p.dni=u.dni JOIN roles r on r.idroles=u.idroles",
         string $condicion = "where u.deleted = 0 ",
-        array $valores = []
     ) {
         $whereAdmin = "";
-        if ($_SESSION['idUsuario'] != 1) {
-            $whereAdmin = " and u.idroles != 1 ";
-        }
+        // if ($_SESSION['idUsuario'] != 1) {
+        //     $whereAdmin = " and u.idroles != 1 ";
+        // }
         $sql = "SELECT $columnas FROM $tablas $condicion " . $whereAdmin;
         $request = $this->select_all($sql);
         return $request;

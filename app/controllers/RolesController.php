@@ -175,4 +175,15 @@ class RolesController extends Controllers
             return ['status' => false, 'title' => 'Error', 'msg' => 'Error al eliminar el Rol.'];
         }
     }
+
+    public function getReportRoles()
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $arrData = $this->model->selectReportRoles();
+            $reportGenerator = new ReportGenerator();
+            $reportGenerator->createReport($arrData, "Roles", "portrait", 2);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

@@ -84,6 +84,7 @@ $(document).ready(function () {
   $("#btnLimpiarB").click(function () {
     $("#form_busqueda")[0].reset();
     $("#expediente_b").focus();
+    eliminarValidacion("#form_busqueda");
   });
 
   $("#btnNuevaBusqueda").click(function () {
@@ -144,5 +145,6 @@ $(document).ready(function () {
     $("#celdaruc").text("");
     $("#celdaenti").text("");
     $("#btnHistorial").prop("disabled", false);
+    eliminarValidacion("#form_busqueda");
   }
 });

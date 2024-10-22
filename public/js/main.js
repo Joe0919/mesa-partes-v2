@@ -38,6 +38,7 @@ $(function () {
   $("#conf-inst").click(function () {
     idinst = 1;
     $("#form_institucion")[0].reset();
+    eliminarValidacion("#form_institucion");
     $.ajax({
       url: base_url + "/Institucion/getInstitucion/" + idinst,
       type: "GET",
@@ -190,7 +191,7 @@ $(function () {
           $("#rolP").val(objData.data.rol);
           $("#bdr-photoP").val("0");
           $("#loader").hide();
-
+          eliminarValidacion("#form_EditUser");
           $("#modal_EditUser").modal({ backdrop: "static", keyboard: false });
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");
@@ -300,6 +301,7 @@ $(function () {
     $(".description").empty();
     $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL PERFIL");
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
+    eliminarValidacion("#form_edit_psw");
   });
 
   //Mostrar/Ocultar contraseña En General
@@ -828,9 +830,9 @@ $(function () {
 
     tablaSeguimiento = $("#tablaSeguimiento").DataTable({
       destroy: true,
-      language: {
-        url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
-      },
+    language: {
+      url: "Spanish.json",
+    },
       ajax: {
         url: base_url + "/" + controlador + "/getHistorial/" + expediente,
         method: "GET",
@@ -850,45 +852,6 @@ $(function () {
 });
 
 //******************** FUNCIONES *******************
-function inicializarTablaTramites(tabla, controlador) {
-  const url =
-    base_url +
-    "/" +
-    controlador +
-    "/getTramites/" +
-    idarea +
-    "/" +
-    area.replace(/ /g, "+") +
-    "/" +
-    estado.replace(/ /g, "+");
-
-  tabla = $("#" + tabla).DataTable({
-    destroy: true,
-    language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
-    },
-    ajax: {
-      url: url,
-      dataSrc: "",
-    },
-    ordering: true,
-    autoWidth: false,
-    columns: [
-      { data: "expediente" },
-      { data: "Fecha" },
-      { data: "dni" },
-      { data: "Datos" },
-      { data: "origen" },
-      { data: "area" },
-      { data: "estado" },
-      { data: "opciones" },
-    ],
-
-    initComplete: function () {
-      $("#loader").hide();
-    },
-  });
-}
 
 //Llenar el Select Con Areas distintas al actual
 function llenarSelectDestino(area) {

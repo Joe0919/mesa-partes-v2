@@ -122,3 +122,22 @@ function eliminarArchivos($dir)
         }
     }
 }
+
+function convertirfecha($fecha)
+{
+    if (!is_string($fecha)) {
+        return false;
+    } else {
+        if ($fecha == "") {
+            return "";
+        } else {
+            $partes = explode("/", $fecha);
+            return $partes[2] . "-" . $partes[1] . "-" . $partes[0];
+        }
+    }
+}
+
+function agregarConsulta(&$variable, &$valores, $consulta, $params) {
+    $variable .= $consulta;
+    $valores = array_merge($valores, $params);
+}

@@ -19,26 +19,23 @@ class EmpleadoModel extends Mysql
             $whereAdmin = " and e.idempleado != 1 ";
         }
         $sql = "SELECT idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area
-        FROM empleado e join persona p on e.idpersona=p.idpersona
-        join areainstitu a on e.idareainstitu=a.idareainstitu
-        join area ae on ae.idarea=a.idarea WHERE e.deleted = 0" . $whereAdmin;
+        FROM empleado e JOIN persona p on e.idpersona=p.idpersona
+        JOIN areainstitu a on e.idareainstitu=a.idareainstitu
+        JOIN area ae on ae.idarea=a.idarea WHERE e.deleted = 0" . $whereAdmin;
         $request = $this->select_all($sql);
         return $request;
     }
 
-    function listarEmpleados(
-        string $columnas = "idempleado ID, cod_empleado Codigo, dni, concat(ap_paterno,' ',ap_materno,' ',nombres) Datos, telefono, area",
-        string $tabla = "empleado e inner join persona p on e.idpersona=p.idpersona
-        inner join areainstitu a on e.idareainstitu=a.idareainstitu
-        inner join area ae on ae.idarea=a.idarea"
+    public function selectReportEmpleados(
+        string $columnas = "ROW_NUMBER() OVER (ORDER BY idempleado) N°,p.dni DNI, concat(ap_paterno,' ',ap_materno,' ', nombres) 'APELLIDOS Y NOMBRES',
+         p.telefono TELEFONO, e.cod_empleado Codigo, ae.area Area",
+        string $tablas = "empleado e JOIN persona p on e.idpersona=p.idpersona JOIN areainstitu a on e.idareainstitu=a.idareainstitu
+        JOIN area ae on ae.idarea=a.idarea",
+        string $condicion = "where e.deleted = 0 ",
     ) {
-
-        $conectar = parent::Conectar();
-
-        $consulta = "SELECT $columnas from $tabla";
-        $resultado = $conectar->prepare($consulta);
-        $resultado->execute();
-        return $resultado->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT $columnas FROM $tablas $condicion ";
+        $request = $this->select_all($sql);
+        return $request;
     }
 
     public function selectEmpleado(int $idempleado)

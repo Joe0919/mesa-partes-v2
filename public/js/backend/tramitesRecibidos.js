@@ -12,4 +12,8 @@ $(document).ready(function () {
     inicializarTablaTramites("tablaTramitesRecibidos", "tramites-recibidos");
   });
 
+  
+$("#btn_reload").click(function () {
+  tablaTramiteRecibidos.ajax.reload(null, false);
+});
 });

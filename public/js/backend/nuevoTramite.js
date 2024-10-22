@@ -47,15 +47,15 @@ $(function () {
     } else if (resultado === 1) {
       // Si el archivo es válido, continuar con la lógica
       let file = $(this).prop("files")[0];
-      $("#archivo").addClass("d-none");
 
       // Mostrar la información del archivo
       let fileName = file.name;
       let fileSize = (file.size / 1024 / 1024).toFixed(2); // Convertir a MB
       $("#alias").text(fileName);
       $("#fileSize strong").text(fileSize);
-      $("#fileInfo").removeClass("d-none"); // Mostrar el contenedor de información del archivo
+      $("#fileInfo").removeClass("d-none");
       $("#fileSize").removeClass("d-none");
+      $("#archivo").addClass("d-none");
       $("#alias").removeAttr("title");
       $("#nom_pdf").show();
       $("#link_doc").attr({ title: file.name });
@@ -156,6 +156,7 @@ $(function () {
         "error"
       );
     } else {
+      let formulario = $(this);
       if (!validarCampos(formulario)) {
         MostrarAlerta(
           "Advertencia",
@@ -177,6 +178,9 @@ $(function () {
             let formData = new FormData(this);
             formData.append("idusuario", idusuario);
             $("#loader").show();
+            $("#loader-text").text(
+              "Por favor espere. Estamos registrando su trámite..."
+            );
             $.ajax({
               url: `${base_url}/${controlador}/setTramite`,
               type: "POST",
@@ -184,9 +188,6 @@ $(function () {
               data: formData,
               processData: false,
               contentType: false,
-              beforesend: function () {
-                $("#loader").show();
-              },
               success: function (response) {
                 objData = $.parseJSON(response);
                 if (objData.status) {
@@ -230,6 +231,8 @@ $(function () {
                   $("#iddirec").prop("readonly", true);
                   $("#idemail").prop("readonly", true);
                   $("#idpersona").val("0");
+                  resetVistaNuevoTramite();
+                  $("#loader-text").text("Cargando...");
                 } else {
                   MostrarAlerta(objData.title, objData.msg, "error");
                 }
@@ -238,6 +241,7 @@ $(function () {
                 MostrarAlerta("Error", "Error al cargar los datos", "error");
                 console.error("Error: " + error);
                 $("#loader").hide();
+                $("#loader-text").text("Cargando...");
               },
               complete: function () {
                 $("#loader").hide();
@@ -268,6 +272,10 @@ function resetVistaNuevoTramite() {
   $("#iddirec").prop("readonly", true);
   $("#idemail").prop("readonly", true);
   $("#idpersona").val("0");
+  eliminarValidacion("#form_tramite");
+  $("#fileInfo").addClass("d-none");
+  $("#fileSize").addClass("d-none");
+  $("#archivo").removeClass("d-none");
 }
 
 function llenarSelectTipo() {

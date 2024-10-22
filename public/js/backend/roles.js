@@ -6,7 +6,7 @@ $(document).ready(function () {
   tablaRoles = $("#tablaRoles").DataTable({
     destroy: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      url: "Spanish.json",
     },
     ajax: {
       url: base_url + "/Roles/getRoles",
@@ -26,6 +26,10 @@ $(document).ready(function () {
     },
   });
 
+  $("#btn_reload").click(function () {
+    tablaRoles.ajax.reload(null, false);
+  });
+
   //Mostrar modal de nuevo rol
   $("#nuevo_rol").click(function () {
     $("#form_roles")[0].reset();
@@ -34,6 +38,7 @@ $(document).ready(function () {
     $("#idrol").val("0");
     $("#modal_roles").modal({ backdrop: "static", keyboard: false });
     accion = "guardarán";
+    eliminarValidacion("#form_roles");
   });
 
   validarCamposRequeridos("#form_roles");
@@ -115,6 +120,7 @@ $(document).ready(function () {
           $("#estado").val(objData.data.estado);
 
           $("#submitRol").text("Editar");
+          eliminarValidacion("#form_roles");
           $("#modal_roles").modal({ backdrop: "static", keyboard: false });
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");

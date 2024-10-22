@@ -29,6 +29,17 @@ class AreaModel extends Mysql
         return $request;
     }
 
+    public function selectReportAreas(
+        string $columnas = "ROW_NUMBER() OVER (ORDER BY a.idarea) N°,cod_area CODIGO, area DESCRIPCION",
+        string $tablas = "areainstitu ai JOIN institucion i on ai.idinstitucion=i.idinstitucion
+                            JOIN area a on a.idarea=ai.idarea",
+        string $condicion = "where ai.deleted = 0 ",
+    ) {
+        $sql = "SELECT $columnas FROM $tablas $condicion ";
+        $request = $this->select_all($sql);
+        return $request;
+    }
+
     public function selectArea(int $idArea)
     {
         $this->intIdArea = $idArea;

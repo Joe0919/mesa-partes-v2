@@ -9,7 +9,7 @@ $(document).ready(function () {
   tablaEmpleados = $("#tablaEmpleados").DataTable({
     destroy: true,
     language: {
-      url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+      url: "Spanish.json",
     },
     ajax: {
       url: base_url + "/Empleados/getEmpleados",
@@ -30,6 +30,10 @@ $(document).ready(function () {
     },
   });
 
+  $("#btn_reload").click(function () {
+    tablaEmpleados.ajax.reload(null, false);
+  });
+
   llenarSelectAreas().catch((error) => {
     console.error("Error al cargar áreas:", error);
   });
@@ -43,6 +47,7 @@ $(document).ready(function () {
     accion = "guardarán";
     $("#div_users").show();
     $("#select_usuario").prop("required", true);
+    eliminarValidacion("#form_empleado");
     $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
     llenarSelectUsuarios().catch((error) => {
       console.error("Error al cargar usuarios:", error);
@@ -173,6 +178,7 @@ $(document).ready(function () {
           $("#select_usuario").prop("required", false);
 
           $("#submitEmpleado").text("Editar");
+          eliminarValidacion("#form_empleado");
           $("#modal_empleado").modal({ backdrop: "static", keyboard: false });
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");

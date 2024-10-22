@@ -1,6 +1,4 @@
 <?php
-
-
 class UsuariosController extends Controllers
 {
     public function __construct()
@@ -453,5 +451,16 @@ class UsuariosController extends Controllers
             echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
         }
         die();
+    }
+
+    public function getReportUsers()
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $arrData = $this->model->selectReportUsuarios();
+            $reportGenerator = new ReportGenerator();
+            $reportGenerator->createReport($arrData, "Usuarios", "landscape", 2);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+        }
     }
 }

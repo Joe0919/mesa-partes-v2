@@ -194,4 +194,14 @@ class AreasController extends Controllers
         echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
+    public function getReportAreas()
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $arrData = $this->model->selectReportAreas();
+            $reportGenerator = new ReportGenerator();
+            $reportGenerator->createReport($arrData, "Areas", "portrait",-1);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+        }
+    }
 }

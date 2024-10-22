@@ -183,4 +183,14 @@ class EmpleadosController extends Controllers
         echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         die();
     }
+    public function getReportEmpleados()
+    {
+        if ($_SESSION['permisosMod']['rea']) {
+            $arrData = $this->model->selectReportEmpleados();
+            $reportGenerator = new ReportGenerator();
+            $reportGenerator->createReport($arrData, "Empleados", "landscape", 2);
+        } else {
+            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+        }
+    }
 }
