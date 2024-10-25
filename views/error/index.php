@@ -27,9 +27,9 @@
 
 </head>
 
-<body class="body">
+<body class="bg-color-gray">
 
-    <div class="error-container">
+    <div class="error-container contenedor">
         <div class="container-xl bg-color-gray h-100 d-flex align-items-center justify-content-center">
             <div class="text-center ">
                 <!-- Puedes reemplazar este link con tu propia imagen de señal de tráfico -->

@@ -12,7 +12,7 @@ $base_url_path = parse_url($base_url, PHP_URL_PATH);
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a class="brand-link navbar-lightblue">
         <img src="<?php echo media() . "/" . $_SESSION['userData']['logo']; ?>" id="inst_logo" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text span-logo" id="inst_desc">HACDP</span>
+        <span class="brand-text span-logo" id="inst_desc">Mesa de Partes</span>
     </a>
     <div class="sidebar">
         <nav class="mt-2">

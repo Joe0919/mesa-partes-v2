@@ -2,80 +2,125 @@
 <html lang="es">
 
 <head>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="<?= media() ?>/icons/ionicons.css">
+    <!-- Feather Icons -->
+    <link rel="stylesheet" href="<?= media() ?>/icons/feather.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="<?= media() ?>/css/style.css">
 
-    <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
-
-    <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
+    <link rel="icon" type="image/png" href="<?= media() ?>/images/logo.png">
+    <title>Mesa de Partes Virtual</title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed bg-color-gray">
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Mesa de Partes Virtual</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a href="<?= base_url(); ?>/acceso">Iniciar Sesión</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main content -->
-    <div class="container my-5">
-        <!-- Description -->
-        <div class="row text-center mb-5">
-            <div class="col">
-                <h1>Bienvenido a la Mesa de Partes Virtual</h1>
-                <p class="lead">Aquí puedes registrar tus trámites, hacer seguimiento y más.</p>
-            </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="row text-center">
-            <!-- Registrar Trámite -->
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Registrar Trámite</h2>
-                        <p class="card-text">Envía tus trámites de manera virtual.</p>
-                        <a href="<?= base_url(); ?>/registro-tramite" class="btn btn-primary">Registrar</a>
-                    </div>
+<body class="bg-color-gray">
+    <div class="contenedor bg-principal text-light">
+        <!-- Navbar -->
+        <nav class="navbar bg-oscuro p-3">
+            <div class="container-fluid row d-flex justify-content-between">
+                <div class="col-12 text-center col-sm-auto">
+                    <h3 class="text-bold">Mesa de Partes Virtual</h3>
+                </div>
+                <div class="col-12 text-center col-sm-auto">
+                    <a href="<?= base_url(); ?>/acceso" class="btn btn-light">Iniciar Sesión</a>
                 </div>
             </div>
+        </nav>
 
-            <!-- Hacer Seguimiento -->
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Hacer Seguimiento</h2>
-                        <p class="card-text">Consulta el estado de tu trámite en tiempo real.</p>
-                        <a href="<?= base_url(); ?>/seguimiento" class="btn btn-success">Ver Seguimiento</a>
+        <!-- Main content -->
+        <main class="main px-4">
+            <div class="mt-3">
+                <!-- Description -->
+                <div class="row text-center mb-3">
+                    <div class="col">
+                        <h1 class="text bold">Bienvenido a la Mesa de Partes Virtual</h1>
+                        <p class="lead">Aquí puedes registrar tus trámites, hacer seguimiento y más.</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- Iniciar Sesión -->
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Iniciar Sesión</h2>
-                        <p class="card-text">Accede a tu cuenta para más funcionalidades.</p>
-                        <a href="<?= base_url(); ?>/acceso" class="btn btn-warning">Iniciar Sesión</a>
+                <!-- Action buttons -->
+                <div class="row text-center d-flex justify-content-center text-dark">
+                    <!-- Registrar Trámite -->
+                    <div class="col-lg-5 col-xl-4 col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title text-bold">Registrar Trámite</h5>
+                                <p class="card-text">Registra tus trámites de manera virtual en cualquier momento a traves de la red.</p>
+                                <a href="<?= base_url(); ?>/registro-tramite" class="btn btn-primary">Registrar</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hacer Seguimiento -->
+                    <div class="col-lg-5 col-xl-4 col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h2 class="card-title text-bold">Hacer Seguimiento</h2>
+                                <p class="card-text">Consulta el estado de tu trámite en tiempo real y mantente informado.</p>
+                                <a href="<?= base_url(); ?>/seguimiento" class="btn btn-success">Ver Seguimiento</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <article class="col-lg-10 col-xl-8 col-12 mx-auto mt-2">
+                    <div class="card">
+                        <div class="card-body p-2">
+                            <ul class="topic__rows row">
+                                <ul class="topic__rows row">
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                        <span>Eficiencia</span>
+                                    </li>
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-eye font-weight-normal"></i>
+                                        <span>Transparencia</span>
+                                    </li>
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-clock font-weight-normal"></i>
+                                        <span>Disponibilidad</span>
+                                    </li>
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-universal-access"></i>
+                                        <span>Accesibilidad</span>
+                                    </li>
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-shield-alt"></i>
+                                        <span>Seguridad</span>
+                                    </li>
+                                    <li class="col topic__rows__item">
+                                        <i class="nav-icon fas fa-sliders-h"></i>
+                                        <span>Control</span>
+                                    </li>
+                                </ul>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+
+                    </div>
+                </article>
+
             </div>
-        </div>
+        </main>
+        <footer class="bg-body-tertiary text-center text-lg-start">
+            <div class="text-center p-3 bg-oscuro">
+                © <?= date('Y'); ?> | Joel Llallihuaman:
+            </div>
+        </footer>
     </div>
     <!-- Bootstrap 4 -->
     <script src="<?= media() ?>/templates/AdminLTE/plugins/bootstrap5/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

@@ -11,7 +11,7 @@ class Controllers
         $this->controler = $controler;
 
         $this->loadModel($this->controler);
-        $this->loadDependencies('vendor/phpmailer/src/clsMail.php'); //Cargamos la libreria 
+        $this->loadDependencies('app/mail/clsMail.php');
         $this->views = new Views();
     }
 
@@ -142,7 +142,7 @@ class Controllers
         $plantilla = file_get_contents('app/templates/plantilla_tramite.html');
 
         // Reemplazar marcadores de posición
-        $plantilla = str_replace('{ cuerpo }', $body, $plantilla); 
+        $plantilla = str_replace('{ cuerpo }', $body, $plantilla);
 
         return $plantilla;
     }

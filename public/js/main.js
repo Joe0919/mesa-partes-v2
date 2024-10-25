@@ -1,3 +1,21 @@
+document.addEventListener("DOMContentLoaded", function () {
+  // Selecciona el botón del menú y el sidebar
+  const pushMenuButton = document.querySelector('[data-widget="pushmenu"]');
+  const sidebar = document.querySelector(".main-sidebar");
+
+  // Añade un evento de clic al botón
+  pushMenuButton.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Alterna la clase d-none en el sidebar
+    if (sidebar.classList.contains("d-none")) {
+      sidebar.classList.remove("d-none");
+    } else {
+      sidebar.classList.add("d-none");
+    }
+  });
+});
+
 $(function () {
   let idinst,
     idusu,
@@ -544,6 +562,7 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
+              console.log(response);
               objData = $.parseJSON(response);
               if (objData.status) {
                 $("#form_aceptacion")[0].reset();
@@ -830,9 +849,9 @@ $(function () {
 
     tablaSeguimiento = $("#tablaSeguimiento").DataTable({
       destroy: true,
-    language: {
-      url: "Spanish.json",
-    },
+      language: {
+        url: "Spanish.json",
+      },
       ajax: {
         url: base_url + "/" + controlador + "/getHistorial/" + expediente,
         method: "GET",

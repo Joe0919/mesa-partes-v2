@@ -21,6 +21,7 @@ function MostrarAlertaHtml(titulo, html, tipoalerta) {
     icon: tipoalerta,
     showConfirmButton: true,
     confirmButtonText: "Entendido",
+    width: '750px',
   });
 }
 

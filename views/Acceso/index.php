@@ -25,8 +25,8 @@
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
-<body class="body">
-    <section class="fondo">
+<body class="bg-color-gray">
+    <section class="fondo contenedor bg-principal">
         <div class="container bg-light form-login rounded-3 overflow-hidden">
             <div class="row">
                 <div class="col-sm-6 text-black">
@@ -45,12 +45,12 @@
                             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Ingresar</button>
                         </form>
 
-                        <p class="small mb-5 pb-lg-2  pt-2 "><a class="forgot-password" href="<?= base_url(); ?>/recuperar-contrasena">¿Olvido su contraseña?</a></p>
+                        <p class="mb-5 pb-lg-2  pt-2 "><a class="forgot-password" href="<?= base_url(); ?>/recuperar-contrasena">¿Olvido su contraseña?</a></p>
 
                     </div>
 
                 </div>
-                <div class="col-sm-6" id="fondo">
+                <div class="col-sm-6 fondo-img" id="fondo">
                 </div>
             </div>
         </div>

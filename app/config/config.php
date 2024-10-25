@@ -1,17 +1,19 @@
 <?php
+require_once 'vendor/autoload.php';
 
-const DB_DRIVER = 'mysql';
-const DB_HOST = 'localhost';
-const DB_USER = 'root';
-const DB_PASSWORD = '';
-const DB_NAME = 'db_hacdp';
-const DB_CHARSET = 'utf8';
+// Cargar las variables de entorno desde el archivo .env
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
+$dotenv->load();
 
+// Definir constantes usando las variables del archivo .env
+define('DB_DRIVER', $_ENV['DB_DRIVER']);
+define('DB_HOST', $_ENV['DB_HOST']);
+define('DB_USER', $_ENV['DB_USER']);
+define('DB_PASSWORD', $_ENV['DB_PASSWORD']);
+define('DB_NAME', $_ENV['DB_NAME']);
+define('DB_CHARSET', $_ENV['DB_CHARSET']);
+define('URL', $_ENV['URL']);
 
 define('APP', dirname(dirname(__FILE__)));
-const URL = 'http://localhost/MesaPartesVirtual';
-// Definir BASE_PATH para obtener la ruta base del proyecto
 define('BASE_PATH', dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
-
-// Definir UPLOADS_PATH para la ruta pública donde se almacenan los archivos subidos
 define('UPLOADS_PATH', BASE_PATH . 'public/files/');

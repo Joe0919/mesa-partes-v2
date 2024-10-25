@@ -14,11 +14,11 @@
 
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="bg-color-gray">
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
-    <div class="wrapper">
+    <div class="wrapper contenedor">
 
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 

@@ -3,7 +3,7 @@ $(document).ready(function () {
 
   $("#fondo1").css(
     "background-image",
-    "url(" + base_url + "/public/images/fondo1.webp)"
+    "url(" + base_url + "/public/images/recovery.webp)"
   );
 
   // Enviar los datos para verificacion de usuario

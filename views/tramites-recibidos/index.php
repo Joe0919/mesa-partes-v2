@@ -8,11 +8,11 @@
     <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="bg-color-gray">
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
-    <div class="wrapper" id="wrapper_content">
+    <div class="wrapper contenedor">
 
         <?php require_once "views/inc/MainHeader/MainHeader.php" ?>
 

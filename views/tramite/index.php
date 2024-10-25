@@ -26,12 +26,11 @@
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed body">
-
+<body class="bg-color-gray">
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 
-    <div class="wrapper" id="wrapper_content">
+    <div class="wrapper contenedor">
 
         <!-- CONTENIDO PRINCIPAL -->
         <div class="container-xl bg-color-gray px-0">
