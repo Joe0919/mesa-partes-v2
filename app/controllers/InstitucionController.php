@@ -50,9 +50,9 @@ class InstitucionController extends Controllers
         $RUC = limpiarCadena($_POST['ruc']);
         $Razon = strtoupper(limpiarCadena($_POST['razon']));
         $Direc = strtoupper(limpiarCadena($_POST['instdirec']));
-        $ruta_foto = $this->handleFileUpload($idInst, $RUC);
 
         if ($idInst > 0 && $_SESSION['permisosMod']['upd']) {
+            $ruta_foto = $this->handleFileUpload($idInst, $RUC);
             $request_inst = $this->model->editarInst($idInst, $RUC, $Razon, $Direc, $ruta_foto);
             $arrResponse = $this->generateResponse($request_inst, $ruta_foto);
         } else {
@@ -88,7 +88,7 @@ class InstitucionController extends Controllers
         }
 
         $foto = $_FILES['foto'];
-        $ruta_aux = UPLOADS_PATH . 'inst/';
+        $ruta_aux = UPLOADS_PATH . 'logo/';
         $file_tmp_name = $foto['tmp_name'];
         $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
         $date = date("Ymd");
@@ -104,7 +104,12 @@ class InstitucionController extends Controllers
         }
 
         if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
-            return 'files/images/inst/logo' . $idInst . '_' . $RUC . '_' . $date . '.' . $ext;
+            $ruta_destino = BASE_PATH . 'public/images/logo.png';
+            if (copy($nuevo_nombre, $ruta_destino)) {
+                return 'files/images/logo/logo' . $idInst . '_' . $RUC . '_' . $date . '.' . $ext;
+            } else {
+                return array("status" => false, "title" => "Error", "msg" => 'No fue posible copiar la imagen a la ruta de destino.');
+            }
         } else {
             return array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar la foto.');
         }

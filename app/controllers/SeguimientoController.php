@@ -124,13 +124,13 @@ class SeguimientoController extends Controllers
     {
         switch ($accion) {
             case 'DERIVADO':
-                return '<i class="fas fa-arrow-circle-right bg-yellow"></i>';
+                return '<i class="fas fa-arrow-circle-right bg-blue"></i>';
             case 'ACEPTADO':
                 return '<i class="fas fa-check bg-green"></i>';
             case 'RECHAZADO':
                 return '<i class="fas fa-remove-format bg-red"></i>';
             case 'ARCHIVADO':
-                return '<i class="fas fa-save bg-blue"></i>';
+                return '<i class="fas fa-save bg-yellow"></i>';
             default:
                 return '<i class="fas fa-search-minus bg-info"></i>';
         }

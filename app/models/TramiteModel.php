@@ -398,6 +398,10 @@ class TramiteModel extends Mysql
 
         $iddoc = $this->strExpediente !== '' ? '(SELECT iddocumento FROM documento WHERE nro_expediente = ?)' : '?';
 
+        $idarea = $this->strIdDestino === 'SECRETARIA' ?
+            '(SELECT idareainstitu FROM areainstitu ai JOIN area a ON a.idarea=ai.idarea WHERE area = ?)' :
+            '?';
+
         $arrData = $this->strExpediente !== '' ? array(
             $this->strOrigen,
             $this->strIdDestino,
@@ -411,7 +415,7 @@ class TramiteModel extends Mysql
         );
         $request_insert = $this->registrar(
             "derivacion",
-            "(null, sysdate(), ?, ? ,$iddoc, ?, 0)",
+            "(null, sysdate(), ?, $idarea ,$iddoc, ?, 0)",
             $arrData
         );
         $return = $request_insert;

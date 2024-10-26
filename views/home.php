@@ -31,7 +31,7 @@
                     <h3 class="text-bold">Mesa de Partes Virtual</h3>
                 </div>
                 <div class="col-12 text-center col-sm-auto">
-                    <a href="<?= base_url(); ?>/acceso" class="btn btn-light">Iniciar Sesión</a>
+                    <a href="<?= base_url(); ?>/acceso" class="btn btn-light text-bold ">Iniciar Sesión</a>
                 </div>
             </div>
         </nav>
@@ -53,7 +53,7 @@
                     <div class="col-lg-5 col-xl-4 col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title text-bold">Registrar Trámite</h5>
+                                <h5 class="card-title text-bold text-center w-100 mb-2 text-primary">REGISTRE SU TRÁMITE</h5>
                                 <p class="card-text">Registra tus trámites de manera virtual en cualquier momento a traves de la red.</p>
                                 <a href="<?= base_url(); ?>/registro-tramite" class="btn btn-primary">Registrar</a>
                             </div>
@@ -64,9 +64,9 @@
                     <div class="col-lg-5 col-xl-4 col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h2 class="card-title text-bold">Hacer Seguimiento</h2>
+                                <h2 class="card-title text-bold text-center w-100 mb-2 text-success">HAGA SEGUIMIENTO</h2>
                                 <p class="card-text">Consulta el estado de tu trámite en tiempo real y mantente informado.</p>
-                                <a href="<?= base_url(); ?>/seguimiento" class="btn btn-success">Ver Seguimiento</a>
+                                <a href="<?= base_url(); ?>/seguimiento" class="btn btn-success">Seguimiento</a>
                             </div>
                         </div>
                     </div>

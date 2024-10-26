@@ -1,13 +1,11 @@
+//Ocultar Navbar
 document.addEventListener("DOMContentLoaded", function () {
-  // Selecciona el botón del menú y el sidebar
   const pushMenuButton = document.querySelector('[data-widget="pushmenu"]');
   const sidebar = document.querySelector(".main-sidebar");
 
-  // Añade un evento de clic al botón
   pushMenuButton.addEventListener("click", function (e) {
     e.preventDefault();
 
-    // Alterna la clase d-none en el sidebar
     if (sidebar.classList.contains("d-none")) {
       sidebar.classList.remove("d-none");
     } else {
@@ -31,7 +29,8 @@ $(function () {
     iddocumento,
     dni,
     descripcion,
-    idBoton;
+    idBoton,
+    action;
 
   idusu = $("#iduser").val();
   idni = $("#dniuser").val();
@@ -50,7 +49,7 @@ $(function () {
     controlador = "tramites-enviados";
   }
 
-  // ********************** ACCIONES GENERALES **********************
+  // # ********************** ACCION PARA CAMBIAR DATOS DE INSTITUCIÓN **********************
   // # **************************** DATOS INSTITUCION ****************************
   //Boton mostrar datos de Institucion general
   $("#conf-inst").click(function () {
@@ -151,6 +150,7 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
+              console.log(response);
               data = $.parseJSON(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
@@ -490,9 +490,8 @@ $(function () {
 
   //Cambiar el color del boton Observar/Rechazar y el valor del input
   $(".dropdown-item").on("click", function () {
-    var action = $(this).data("action");
-    var colorClass = $(this).data("color");
-    var value = $(this).data("value");
+    action = $(this).data("action");
+    let colorClass = $(this).data("color");
 
     $("#btnObservarRechazarDoc").text(action);
 
@@ -503,6 +502,8 @@ $(function () {
       .next(".dropdown-toggle")
       .removeClass("btn-danger btn-info")
       .addClass("btn-" + colorClass);
+
+    console.log($(this).data("action"));
   });
 
   //Realizar Accion de ACEPTAR , OBSERVAR o RECHAZAR el Tramite sea el Caso
@@ -517,7 +518,7 @@ $(function () {
 
     idBoton === "btnAceptarDoc"
       ? (accion = "ACEPTAR")
-      : $(".dropdown-item").data("action") == "Rechazar"
+      : action == "Rechazar"
       ? (accion = "RECHAZAR")
       : (accion = "OBSERVAR");
 

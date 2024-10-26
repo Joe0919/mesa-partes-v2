@@ -341,8 +341,8 @@ class TramitesController extends Controllers
                     $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
                 } else {
                     // Se cumple que es otra area
-                    // Derivamos el Tramite a Secretaria sabiendo su ID
-                    $this->model->registrarDerivacion($iddocumento, '', $origen, '8', $descripcion);
+                    // Derivamos el Tramite a Secretaria y este validara su ID
+                    $this->model->registrarDerivacion($iddocumento, '', $origen, 'SECRETARIA', $descripcion);
                     // Guardamos el Rechazo en el historial del doc
                     $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
                     // Guardamos la Derivacion a SECRETARIA en el historial 
