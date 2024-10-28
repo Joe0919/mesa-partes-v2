@@ -2,7 +2,7 @@
 <script>
   const base_url = "<?= base_url(); ?>";
   const modulo = "<?= $_SESSION['permisosMod']['idmodulo'] ?>";
-  const page_id = "15";
+  const page_id = "<?= $data['page_id'] ?>";
 </script>
 <!-- jQuery -->
 <script src="<?= media() ?>/templates/AdminLTE/plugins/jquery/jquery.min.js"></script>

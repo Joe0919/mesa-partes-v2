@@ -1,19 +1,3 @@
-//Ocultar Navbar
-document.addEventListener("DOMContentLoaded", function () {
-  const pushMenuButton = document.querySelector('[data-widget="pushmenu"]');
-  const sidebar = document.querySelector(".main-sidebar");
-
-  pushMenuButton.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    if (sidebar.classList.contains("d-none")) {
-      sidebar.classList.remove("d-none");
-    } else {
-      sidebar.classList.add("d-none");
-    }
-  });
-});
-
 $(function () {
   let idinst,
     idusu,
@@ -502,8 +486,6 @@ $(function () {
       .next(".dropdown-toggle")
       .removeClass("btn-danger btn-info")
       .addClass("btn-" + colorClass);
-
-    console.log($(this).data("action"));
   });
 
   //Realizar Accion de ACEPTAR , OBSERVAR o RECHAZAR el Tramite sea el Caso
@@ -563,12 +545,13 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
               objData = $.parseJSON(response);
               if (objData.status) {
                 $("#form_aceptacion")[0].reset();
                 $("#modal_aceptacion").modal("hide");
-                inicializarTablaTramites(tabla, controlador);
+                // inicializarTablaTramites(tabla, controlador);
+                let tablaRelaod = $("#" + tabla).DataTable();
+                tablaRelaod.ajax.reload();
                 MostrarAlertaxTiempo(objData.title, objData.msg, "success");
               } else {
                 MostrarAlerta(
@@ -675,7 +658,9 @@ $(function () {
               if (objData.status) {
                 $("#form_derivacion")[0].reset();
                 $("#modal_derivacion").modal("hide");
-                inicializarTablaTramites(tabla, controlador);
+                // inicializarTablaTramites(tabla, controlador);
+                let tablaRelaod = $("#" + tabla).DataTable();
+                tablaRelaod.ajax.reload();
                 MostrarAlertaxTiempo(objData.title, objData.msg, "success");
               } else {
                 MostrarAlerta(

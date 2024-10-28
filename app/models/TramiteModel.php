@@ -638,4 +638,10 @@ class TramiteModel extends Mysql
         $request = $this->select_all($sql);
         return $request;
     }
+    public function selectInstitucion()
+    {
+        $sql = "SELECT * FROM institucion ";
+        $request = $this->selectOne($sql);
+        return $request;
+    }
 }

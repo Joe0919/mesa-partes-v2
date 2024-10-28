@@ -10,9 +10,9 @@ $(document).ready(function () {
 
   //Dibujamos segun seleccion
   $("#select_fechas").change(function () {
-    let sel = $(this).val();
+    let seleccion = $(this).val();
     let contenidoHTML;
-    switch (sel) {
+    switch (seleccion) {
       case "1":
         contenidoHTML = `
                   <div class="row">
@@ -51,9 +51,9 @@ $(document).ready(function () {
                               <label>Rango de fechas</label><span class="span-required"></span>
                               <div class="input-daterange input-group" id="datepicker">
                                   <span class="input-group-addon mr-2">Desde: </span>
-                                  <input type="text" class="input-sm form-control font-w-600" name="desde" id="desde" required/>
+                                  <input type="text" class="input-sm form-control font-w-600 desde" name="desde" id="desde" required/>
                                   <span class="input-group-addon mx-2"> hasta </span>
-                                  <input type="text" class="input-sm form-control font-w-600" name="hasta" id="hasta" required/>
+                                  <input type="text" class="input-sm form-control font-w-600 hasta" name="hasta" id="hasta" required/>
                               </div>
                           </div>
                       </div>
@@ -64,7 +64,7 @@ $(document).ready(function () {
     $(".div_informes .div_principal").next().remove();
     $(".div_informes").append(contenidoHTML);
 
-    switch (sel) {
+    switch (seleccion) {
       case "1":
         llenarSelectAjax(1, "#select_anio");
         bdr = false;
@@ -75,14 +75,12 @@ $(document).ready(function () {
         bdr = true;
         break;
       case "3":
-        $("#sandbox-container .input-daterange").datepicker({
-          language: "es",
-          autoclose: true,
-        });
+        initializeDatepickers();
         break;
     }
   });
 
+  //Crear Select de Meses
   $(document).on("change", "#select_anio", function () {
     if (bdr) {
       $("#select_mes").empty();
@@ -98,4 +96,31 @@ $(document).ready(function () {
     $(".div_informes .div_principal").next().remove();
     eliminarValidacion("#form_informes");
   });
+
+  let today = new Date();
+
+  function initializeDatepickers() {
+    $("#sandbox-container .input-daterange").datepicker({
+      format: "dd/mm/yyyy",
+      endDate: today,
+      autoclose: true,
+      language: "es",
+    });
+    // Sincronizar las fechas
+    $(".input-daterange .desde").on("changeDate", function (selected) {
+      var minDate = new Date(selected.date.valueOf());
+      $(this)
+        .closest(".input-daterange")
+        .find(".hasta")
+        .datepicker("setStartDate", minDate);
+    });
+
+    $(".input-daterange .hasta").on("changeDate", function (selected) {
+      var maxDate = new Date(selected.date.valueOf());
+      $(this)
+        .closest(".input-daterange")
+        .find(".desde")
+        .datepicker("setEndDate", maxDate);
+    });
+  }
 });

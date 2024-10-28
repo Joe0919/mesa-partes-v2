@@ -23,7 +23,7 @@ class TramitesEnviadosController extends Controllers
             exit();
         }
         $data = [
-            'page_id' => 10,
+            'page_id' => 14,
             'page_tag' => "Trámites Enviados",
             'page_title' => "Trámites Enviados",
             'file_js' => "tramitesEnviados.js"

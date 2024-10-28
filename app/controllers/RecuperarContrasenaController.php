@@ -1,6 +1,7 @@
 <?php
 class RecuperarContrasenaController extends Controllers
 {
+    private $tramiteModel;
     public function __construct()
     {
         if (session_status() == PHP_SESSION_NONE) {
@@ -17,7 +18,7 @@ class RecuperarContrasenaController extends Controllers
     public function index()
     {
         $data = [
-            'page_id' => 13,
+            'page_id' => 5,
             'page_tag' => "Recuperar contraseña",
             'page_title' => "Recuperar contraseña",
             'file_js' => "recuperarContrasena.js"
@@ -95,7 +96,9 @@ class RecuperarContrasenaController extends Controllers
                                 <br>
                             </div>";
 
-                        $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $usuario, $correo, "CAMBIO DE CONTRASEÑA", $html);
+                        $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+                        $arrInst = $this->tramiteModel->selectInstitucion();
+                        $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $usuario, $correo, "CAMBIO DE CONTRASEÑA", $html, $arrInst);
 
                         $arrResponse = array(
                             'status' => true,

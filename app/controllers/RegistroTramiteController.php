@@ -3,6 +3,7 @@
 class RegistroTramiteController extends Controllers
 {
     private $personaModel;
+    private $tramiteModel;
     public function __construct()
     {
         parent::__construct("Tramite"); //Importante tener Modelo
@@ -12,7 +13,7 @@ class RegistroTramiteController extends Controllers
     public function index()
     {
         $data = [
-            'page_id' => 15,
+            'page_id' => 2,
             'page_tag' => "Registro Trámite",
             'page_title' => "Registro Trámite",
             'file_js' => "nuevoTramite.js",
@@ -140,8 +141,9 @@ class RegistroTramiteController extends Controllers
                                     Virtual</b> en
                                 la pestaña <b><i>Seguimiento</i></b>
                             </p>";
-
-                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html);
+                            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+                            $arrInst = $this->tramiteModel->selectInstitucion();
+                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
 
                             $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
                         }

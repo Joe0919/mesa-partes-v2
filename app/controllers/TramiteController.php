@@ -2,7 +2,7 @@
 
 class TramiteController extends Controllers
 {
-
+    private $tramiteModel;
     public function __construct()
     {
         //Importante tener Modelo o solo colocar ''
@@ -22,7 +22,7 @@ class TramiteController extends Controllers
             if (is_array($arrData) && isset($arrData['estado'])) {
                 if ($arrData['estado'] === 'OBSERVADO') {
                     $data = [
-                        'page_id' => 16,
+                        'page_id' => 17,
                         'page_tag' => "Datos de Trámite",
                         'page_title' => "Datos de Trámite",
                         'file_js' => "tramite.js",
@@ -125,9 +125,11 @@ class TramiteController extends Controllers
                                 la pestaña <b><a href='" . base_url() . "/seguimiento'>Seguimiento</a></b>
                             </p>";
 
-                    $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html);
+                    $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+                    $arrInst = $this->tramiteModel->selectInstitucion();
+                    $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
 
-                    $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Se actualizaron los datos correctamente.', 'data' => $arrData, 'response' => $response);
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Será redirigido a Inicio automaticamente', 'data' => $arrData, 'response' => $response);
                 } else {
                     $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar el pdf.');
                 }

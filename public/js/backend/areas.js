@@ -29,6 +29,7 @@ $(document).ready(function () {
 
   $("#btn_reload").click(function () {
     tablaAreas.ajax.reload(null, false);
+    alert("hola");
   });
 
   //Mostrar modal de nueva area

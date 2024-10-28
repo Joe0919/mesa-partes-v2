@@ -27,7 +27,7 @@ class Mysql extends Conexion
         return $lastInsert;
     }
     //Busca un registro
-    public function selectOne(string $query, array $arrValues)
+    public function selectOne(string $query, array $arrValues = [])
     {
         $this->strquery = $query;
         $this->arrValues = $arrValues;

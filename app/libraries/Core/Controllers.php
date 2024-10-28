@@ -147,10 +147,11 @@ class Controllers
         return $plantilla;
     }
 
-    public function enviarCorreo($titulo, $nombre, $correo, $asunto, $cuerpo)
+    public function enviarCorreo($titulo, $nombre, $correo, $asunto, $cuerpo, $arrInst = [])
     {
         $enviarEmail = new clsMail(); // Instanciar la clase clsMail
-        return $enviarEmail->metEnviar($titulo, $nombre, $correo, $asunto, $cuerpo);
+
+        return $enviarEmail->metEnviar($titulo, $nombre, $correo, $asunto, $cuerpo, $arrInst);
     }
 
     // Método para obtener colores de estado

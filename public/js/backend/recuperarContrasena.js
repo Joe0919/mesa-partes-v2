@@ -90,7 +90,7 @@ $(document).ready(function () {
                         usuario = "";
                         MostrarAlerta(
                           "Contraseña Cambiada",
-                          "Se le envió la nueva contraseña con éxito a su correo.",
+                          "Se le envió la nueva contraseña a su correo.",
                           "success"
                         );
                       } else {

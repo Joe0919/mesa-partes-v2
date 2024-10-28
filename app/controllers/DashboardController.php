@@ -17,9 +17,12 @@ class DashboardController extends Controllers
 
     public function index()
     {
-        $data['page_tag'] = "Dashboard";
-        $data['page_title'] = "Dashboard";
-        $data['file_js'] = "dashboard.js";
+        $data = [
+            'page_id' => 6,
+            'page_tag' => "Dashboard",
+            'page_title' => "Dashboard",
+            'file_js' => "dashboard.js"
+        ];
 
         $this->views->getView("Dashboard", "index", $data);
     }

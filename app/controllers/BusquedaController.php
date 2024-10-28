@@ -22,7 +22,7 @@ class BusquedaController extends Controllers
             exit();
         }
         $data = [
-            'page_id' => 11,
+            'page_id' => 15,
             'page_tag' => "Busqueda",
             'page_title' => "Busqueda",
             'file_js' => "busqueda.js"

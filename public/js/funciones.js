@@ -61,6 +61,7 @@ function MostrarAlerta(titulo, descripcion, tipoalerta) {
   });
 }
 
+
 function verificarCampos(formulario) {
   let camposVacios = formulario.find("input[required]").filter(function () {
     return $.trim($(this).val()) === "";

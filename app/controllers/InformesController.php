@@ -24,7 +24,7 @@ class InformesController extends Controllers
         }
 
         $data = [
-            'page_id' => 12,
+            'page_id' => 16,
             'page_tag' => "Informes",
             'page_title' => "Informes",
             'file_js' => "informes.js"
@@ -98,8 +98,9 @@ class InformesController extends Controllers
                 }
 
                 $arrData = $this->model->selectReportTramites($strWhere, $arrValues);
+                $arrInst = $this->model->selectInstitucion();
                 $reportGenerator = new ReportGenerator();
-                $reportGenerator->createReport($arrData, "Trámites", "landscape", -1, $descripcion, '75px');
+                $reportGenerator->createReport($arrInst, $arrData, "Trámites", "landscape", 5, $descripcion);
             } else {
                 echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
             }

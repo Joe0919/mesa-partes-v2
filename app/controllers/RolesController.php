@@ -1,6 +1,7 @@
 <?php
 class RolesController extends Controllers
 {
+    private $tramiteModel;
     public function __construct()
     {
         parent::__construct("Roles");
@@ -23,7 +24,7 @@ class RolesController extends Controllers
             exit();
         }
         $data = [
-            'page_id' => 4,
+            'page_id' => 8,
             'page_tag' => "Roles Usuario",
             'page_title' => "Roles Usuario",
             'file_js' => "roles.js"
@@ -180,8 +181,10 @@ class RolesController extends Controllers
     {
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectReportRoles();
+            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+            $arrInst = $this->tramiteModel->selectInstitucion();
             $reportGenerator = new ReportGenerator();
-            $reportGenerator->createReport($arrData, "Roles", "portrait", 2);
+            $reportGenerator->createReport($arrInst, $arrData, "Roles", "portrait", 2);
         } else {
             echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }

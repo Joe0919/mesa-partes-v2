@@ -37,11 +37,11 @@
             <!-- Contenido del Encabezado del Cuerpo -->
             <div class="content-header bg-color-header">
                 <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col d-flex justify-content-center">
-                            <h3 class="m-0 font-weight-bold text-center">MESA DE PARTES VIRTUAL</h3>
-                        </div>
-
+                    <div class="row ">
+                        <a class="col d-flex justify-content-space-start align-items-center cursor-pointer text-light" href="<?= base_url(); ?>" title="Ir a Inicio">
+                            <img src="<?= media() ?>/images/logo.png" id="inst_logo" alt="Logo" class="logo mt-0">
+                            <h3 class="m-0 font-weight-bold text-center ml-2">MESA DE PARTES VIRTUAL</h3>
+                        </a>
                     </div>
                 </div>
             </div>

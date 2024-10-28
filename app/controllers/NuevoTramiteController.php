@@ -25,7 +25,7 @@ class NuevoTramiteController extends Controllers
         }
 
         $data = [
-            'page_id' => 8,
+            'page_id' => 12,
             'page_tag' => "Nuevo Tramite",
             'page_title' => "Nuevo Tramite",
             'file_js' => "nuevoTramite.js"

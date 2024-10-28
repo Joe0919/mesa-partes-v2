@@ -1,6 +1,7 @@
 <?php
 class AreasController extends Controllers
 {
+    private $tramiteModel;
     public function __construct()
     {
         parent::__construct("Area");
@@ -22,7 +23,7 @@ class AreasController extends Controllers
             exit();
         }
         $data = [
-            'page_id' => 5,
+            'page_id' => 9,
             'page_tag' => "Áreas",
             'page_title' => "Áreas",
             'file_js' => "areas.js"
@@ -198,8 +199,10 @@ class AreasController extends Controllers
     {
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectReportAreas();
+            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+            $arrInst = $this->tramiteModel->selectInstitucion();
             $reportGenerator = new ReportGenerator();
-            $reportGenerator->createReport($arrData, "Areas", "portrait",-1);
+            $reportGenerator->createReport($arrInst, $arrData, "Areas", "portrait", -1);
         } else {
             echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }

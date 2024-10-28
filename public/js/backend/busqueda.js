@@ -11,7 +11,7 @@ $(document).ready(function () {
     $("#div_busqueda").hide();
   }
 
-  controlador = page_id == "14" ? "Seguimiento" : "Busqueda";
+  controlador = page_id == "3" ? "Seguimiento" : "Busqueda";
 
   validarCamposRequeridos("#form_busqueda");
 

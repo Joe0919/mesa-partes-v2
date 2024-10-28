@@ -1,6 +1,9 @@
 <?php
 class UsuariosController extends Controllers
 {
+
+    private $tramiteModel;
+
     public function __construct()
     {
         parent::__construct("Usuario");
@@ -19,11 +22,12 @@ class UsuariosController extends Controllers
         if (empty($_SESSION['permisosMod']['rea'])) {
             header("Location:" . base_url() . '/dashboard');
         }
-        $data['page_id'] = 3;
-        $data['page_tag'] = "Usuarios";
-        $data['page_name'] = "usuarios";
-        $data['page_title'] = "Usuarios";
-        $data['file_js'] = "usuarios.js";
+        $data = [
+            'page_id' => 7,
+            'page_tag' => "usuarios",
+            'page_title' => "Usuarios",
+            'file_js' => "usuarios.js",
+        ];
         $this->views->getView("Usuarios", "index", $data);
     }
 
@@ -457,8 +461,10 @@ class UsuariosController extends Controllers
     {
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectReportUsuarios();
+            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+            $arrInst = $this->tramiteModel->selectInstitucion();
             $reportGenerator = new ReportGenerator();
-            $reportGenerator->createReport($arrData, "Usuarios", "landscape", 2);
+            $reportGenerator->createReport($arrInst, $arrData, "Usuarios", "landscape", 2);
         } else {
             echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }

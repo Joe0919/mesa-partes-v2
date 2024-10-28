@@ -2,6 +2,7 @@
 
 class EmpleadosController extends Controllers
 {
+    private $tramiteModel;
     public function __construct()
     {
         parent::__construct("Empleado");
@@ -23,10 +24,12 @@ class EmpleadosController extends Controllers
             exit();
         }
 
-        $data['page_id'] = 6;
-        $data['page_tag'] = "Empleados";
-        $data['page_title'] = "Empleados";
-        $data['file_js'] = "empleados.js";
+        $data = [
+            'page_id' => 10,
+            'page_tag' => "Empleados",
+            'page_title' => "Empleados",
+            'file_js' => "empleados.js",
+        ];
         $this->views->getView("Empleados", "index", $data);
     }
 
@@ -187,8 +190,10 @@ class EmpleadosController extends Controllers
     {
         if ($_SESSION['permisosMod']['rea']) {
             $arrData = $this->model->selectReportEmpleados();
+            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+            $arrInst = $this->tramiteModel->selectInstitucion();
             $reportGenerator = new ReportGenerator();
-            $reportGenerator->createReport($arrData, "Empleados", "landscape", 2);
+            $reportGenerator->createReport($arrInst, $arrData, "Empleados", "landscape", 2);
         } else {
             echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
         }

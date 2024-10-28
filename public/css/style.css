@@ -68,7 +68,7 @@ body {
   padding: 1.5rem;
   color: var(--color-gray1);
   height: 150px;
-  transition: transform .3s   ease;
+  transition: transform 0.3s ease;
 }
 
 .topic__rows__item:hover {
@@ -103,7 +103,8 @@ body {
 }
 
 .logo {
-  width: 90px;
+  width: 50px;
+  height: 50px;
 }
 
 .fondo-img {
@@ -933,3 +934,4 @@ body {
 .btn-custom {
   margin: 10px;
 }
+

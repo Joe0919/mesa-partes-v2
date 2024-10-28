@@ -14,6 +14,7 @@ $(document).ready(function () {
 
   
 $("#btn_reload").click(function () {
-  tablaTramiteRecibidos.ajax.reload(null, false);
+  let tablaTramitesRecibidos = $("#tablaTramiteRecibidos").DataTable();
+  tablaTramitesRecibidos.ajax.reload(null, false);
 });
 });

@@ -12,11 +12,10 @@ class SeguimientoController extends Controllers
     public function index()
     {
         $data = [
-            'page_id' => 14,
+            'page_id' => 3,
             'page_tag' => "Seguimiento",
             'page_title' => "Seguimiento",
             'file_js' => "busqueda.js",
-
         ];
         $this->views->getView("seguimiento", "index", $data);
     }

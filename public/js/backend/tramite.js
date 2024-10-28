@@ -61,7 +61,6 @@ $(function () {
   });
 
   $("#btnDescargar").click(function () {
-
     if (archivo !== "") {
       let a = document.createElement("a");
       a.href = url;
@@ -91,7 +90,6 @@ $(function () {
           "error"
         );
       } else {
-        alert(ruta);
         Swal.fire({
           title: "¿Estás seguro?",
           text: "Al guardar no podra realizar ninguna modificación",
@@ -108,6 +106,10 @@ $(function () {
             formData.append("ruta", ruta);
             formData.append("dni", dniRemitente);
             formData.append("email", emailRemitente);
+            $("#loader").show();
+            $("#loader-text").text(
+              "Por favor espere. Estamos registrando su trámite..."
+            );
             $.ajax({
               url: `${base_url}/tramite/putTramite`,
               type: "POST",
@@ -115,26 +117,38 @@ $(function () {
               data: formData,
               processData: false,
               contentType: false,
-              beforesend: function () {
-                $("#loader").show();
-              },
               success: function (response) {
-
                 objData = $.parseJSON(response);
                 if (objData.status) {
-                  MostrarAlerta(objData.title, objData.msg, "success");
+                  const redireccionar = setTimeout(() => {
+                    window.location.href = base_url
+                  }, 5000);
+
+                  Swal.fire({
+                    title: objData.title,
+                    text: objData.msg,
+                    icon: "success",
+                    confirmButtonText: "Entendido",
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      clearTimeout(redireccionar);
+                      window.location.href = base_url
+                    }
+                  });
                   $("#form_tramite_obs")[0].reset();
                   dniRemitente = "";
                   emailRemitente = "";
-                  
                 } else {
                   MostrarAlerta(objData.title, objData.msg, "error");
                 }
+                $("#loader").hide();
+                $("#loader-text").text("Cargando...");
               },
               error: function (error) {
                 MostrarAlerta("Error", "Error al cargar los datos", "error");
                 console.error("Error: " + error);
                 $("#loader").hide();
+                $("#loader-text").text("Cargando...");
               },
               complete: function () {
                 $("#loader").hide();

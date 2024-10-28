@@ -24,7 +24,7 @@ class TramitesController extends Controllers
         }
 
         $data = [
-            'page_id' => 7,
+            'page_id' => 11,
             'page_tag' => "Trámites",
             'page_title' => "Trámites",
             'file_js' => "tramites.js",
@@ -256,10 +256,8 @@ class TramitesController extends Controllers
 
                             $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
                             <hr>
-                            <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio
-                                Caldas Domínguez - Pomabamba.</b>
-                                <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite
-                                recepcionado:
+                            <p class='p_name'>Se le envía este mensaje desde la plataforma para informarle que su trámite ha sido
+                                 registrado con éxito por lo que se le da a conocer la información del trámite recepcionado:
                             </p>
                             <div class='container'>
                                 <table width='100%' border='1' cellspacing='0' cellpadding='5' id='tableDoc'>
@@ -294,7 +292,8 @@ class TramitesController extends Controllers
                                 la pestaña <b><a href='" . base_url() . "/seguimiento'>Seguimiento</a></b>
                             </p>";
 
-                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html);
+                            $arrInst = $this->model->selectInstitucion();
+                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
 
                             $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
                         }
@@ -375,7 +374,8 @@ class TramitesController extends Controllers
                             trámite una vez subsanado el motivo de la observación.
                         </p>";
 
-                $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $arrData['email'], "TRÁMITE OBSERVADO", $html);
+                $arrInst = $this->model->selectInstitucion();
+                $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $arrData['email'], "TRÁMITE OBSERVADO", $html, $arrInst);
                 // Cambiamos el estado del documento a observado
                 $arrResponse = array('status' => true, 'title' => 'Trámite Observado', "msg" => 'La acción se realizó con exito.', 'data' => $response);
             }

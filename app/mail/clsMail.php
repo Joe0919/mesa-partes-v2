@@ -9,23 +9,23 @@ class clsMail
 
     function __construct()
     {
-        $this->mail = new PHPMailer(true); 
+        $this->mail = new PHPMailer(true);
         $this->mail->isSMTP();
         $this->mail->SMTPAuth = true;
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Host = $_ENV['SMTP_HOST'];
         $this->mail->Port = $_ENV['SMTP_PORT'];
         $this->mail->Username = $_ENV['SMTP_USERNAME'];
-        $this->mail->Password = $_ENV['SMTP_PASSWORD']; 
+        $this->mail->Password = $_ENV['SMTP_PASSWORD'];
     }
 
-    public function metEnviar(string $titulo, string $nombre, string $correo, string $asunto, string $body)
+    public function metEnviar(string $titulo, string $nombre, string $correo, string $asunto, string $body, array $arrInst = [])
     {
         try {
 
-            $bodyHTML = $this->cargarPlantilla($body);
+            $bodyHTML = $this->cargarPlantilla($body, $arrInst);
 
-            $this->mail->setFrom($_ENV['SMTP_USERNAME'], $titulo); 
+            $this->mail->setFrom($_ENV['SMTP_USERNAME'], $titulo);
             $this->mail->addAddress($correo, $nombre);
             $this->mail->Subject = $asunto;
             $this->mail->Body = $bodyHTML;
@@ -39,12 +39,16 @@ class clsMail
         }
     }
 
-    private function cargarPlantilla($body)
+    private function cargarPlantilla($body, $arrInst)
     {
         $plantilla = file_get_contents(URL . '/public/templates/bodyHtml.html');
 
         // Reemplazar marcadores de posición
         $plantilla = str_replace('{ cuerpo }', $body, $plantilla); // Reemplaza el marcador con el contenido del cuerpo
+        $plantilla = str_replace('{ institucion }', $arrInst['razon'], $plantilla);
+        $plantilla = str_replace('{ telefono }', $arrInst['telefono'], $plantilla);
+        $plantilla = str_replace('{ direccion }', $arrInst['direccion'], $plantilla);
+        $plantilla = str_replace('{ web }', $arrInst['web'], $plantilla);
 
         return $plantilla;
     }

@@ -23,7 +23,7 @@ class TramitesRecibidosController extends Controllers
             exit();
         }
         $data = [
-            'page_id' => 9,
+            'page_id' => 13,
             'page_tag' => "Trámites Recibidos",
             'page_title' => "Trámites Recibidos",
             'file_js' => "tramitesRecibidos.js"

@@ -16,13 +16,8 @@ class ReportGenerator
         $this->dompdf->setOptions($options);
     }
 
-    public function createReport($data, $entidad, $orientacion, $AlignFila, $descripcion = '', $padding = '')
+    public function createReport($arrInst, $data, $entidad, $orientacion, $AlignFila, $descripcion = '')
     {
-        // Configurar márgenes
-        $this->dompdf->set_option('margin_top', 20);
-        $this->dompdf->set_option('margin_bottom', 20);
-        $this->dompdf->set_option('margin_left', 10);
-        $this->dompdf->set_option('margin_right', 10);
 
         // Cargar HTML
         ob_start();

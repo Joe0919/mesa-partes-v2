@@ -27,8 +27,9 @@
         <!-- Navbar -->
         <nav class="navbar bg-oscuro p-3">
             <div class="container-fluid row d-flex justify-content-between">
-                <div class="col-12 text-center col-sm-auto">
-                    <h3 class="text-bold">Mesa de Partes Virtual</h3>
+                <div class="col-12 text-center col-sm-auto d-flex align-items-center">
+                    <img src="<?= media() ?>/images/logo.png" id="inst_logo" alt="Logo" class="logo mt-0">
+                    <h3 class="text-bold ml-2">Mesa de Partes Virtual</h3>
                 </div>
                 <div class="col-12 text-center col-sm-auto">
                     <a href="<?= base_url(); ?>/acceso" class="btn btn-light text-bold ">Iniciar Sesión</a>

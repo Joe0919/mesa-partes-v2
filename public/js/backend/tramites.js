@@ -68,14 +68,13 @@ $(document).ready(function () {
   }
 
   $("#btnMostrarFiltro").on("click", function () {
-
     $("#divFiltro").collapse("toggle");
 
     $("#iconFiltro").toggleClass("fa-filter fa-times");
   });
 
-  
-$("#btn_reload").click(function () {
-  tablaTramites.ajax.reload(null, false);
-});
+  $("#btn_reload").click(function () {
+    let tablaTramites = $("#tablaTramites").DataTable();
+    tablaTramites.ajax.reload(null, false);
+  });
 });
