@@ -70,14 +70,23 @@ class AreasController extends Controllers
     // Método para crear o actualizar un área
     public function setArea()
     {
-        $intIdArea = intval(limpiarCadena($_POST['idarea']));
-        $strCodigo = strtoupper(limpiarCadena($_POST['icodigo']));
-        $strArea = strtoupper(limpiarCadena($_POST['iarea']));
-        $intIdInst = intval(limpiarCadena($_POST['id_inst']));
+        try {
+            $intIdArea = intval(limpiarCadena($_POST['idarea']));
+            $strCodigo = strtoupper(limpiarCadena($_POST['icodigo']));
+            $strArea = strtoupper(limpiarCadena($_POST['iarea']));
+            $intIdInst = intval(limpiarCadena($_POST['id_inst']));
 
-        $request_area = $this->handleAreaRequest($intIdArea, $strCodigo, $strArea, $intIdInst);
-        echo json_encode($request_area, JSON_UNESCAPED_UNICODE);
-        die();
+            $request_area = $this->handleAreaRequest($intIdArea, $strCodigo, $strArea, $intIdInst);
+            echo json_encode($request_area, JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     // Método para manejar las solicitudes de creación o actualización de áreas

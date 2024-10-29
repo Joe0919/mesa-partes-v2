@@ -42,26 +42,35 @@ class PermisosController extends Controllers
 
     public function setPermisos()
     {
-        if ($_POST) {
-            $intIdrol = intval($_POST['idrol']);
-            $modulos = $_POST['modulos'];
+        try {
+            if ($_POST) {
+                $intIdrol = intval($_POST['idrol']);
+                $modulos = $_POST['modulos'];
 
-            $this->model->deletePermisos($intIdrol);
-            foreach ($modulos as $modulo) {
-                $idModulo = $modulo['idmodulo'];
-                $cre = empty($modulo['cre']) ? 0 : 1;
-                $rea = empty($modulo['rea']) ? 0 : 1;
-                $upd = empty($modulo['upd']) ? 0 : 1;
-                $del = empty($modulo['del']) ? 0 : 1;
-                $requestPermiso = $this->model->insertPermisos($intIdrol, $idModulo, $cre, $rea, $upd, $del);
+                $this->model->deletePermisos($intIdrol);
+                foreach ($modulos as $modulo) {
+                    $idModulo = $modulo['idmodulo'];
+                    $cre = empty($modulo['cre']) ? 0 : 1;
+                    $rea = empty($modulo['rea']) ? 0 : 1;
+                    $upd = empty($modulo['upd']) ? 0 : 1;
+                    $del = empty($modulo['del']) ? 0 : 1;
+                    $requestPermiso = $this->model->insertPermisos($intIdrol, $idModulo, $cre, $rea, $upd, $del);
+                }
+                if ($requestPermiso > 0) {
+                    $arrResponse = array('status' => true, 'title' => 'Hecho', 'msg' => 'Permisos asignados correctamente.');
+                } else {
+                    $arrResponse = array("status" => false, 'title' => 'Error', "msg" => 'No es posible asignar los permisos.');
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             }
-            if ($requestPermiso > 0) {
-                $arrResponse = array('status' => true, 'msg' => 'Permisos asignados correctamente.');
-            } else {
-                $arrResponse = array("status" => false, "msg" => 'No es posible asignar los permisos.');
-            }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
-        die();
     }
 }

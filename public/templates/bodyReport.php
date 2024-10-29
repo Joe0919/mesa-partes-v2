@@ -173,7 +173,7 @@
                             <td><?= count($data) ?></td>
                         </tr>
                         <tr>
-                            <td><strong>Fecha y hora del Reporte:</strong></td>
+                            <td><strong>Fecha y hora:</strong></td>
                             <td><?= date("d/m/Y") . ' - ' . date("g:i:s a"); ?></td>
                         </tr>
                     </table>

@@ -29,7 +29,6 @@ $(document).ready(function () {
 
   $("#btn_reload").click(function () {
     tablaAreas.ajax.reload(null, false);
-    alert("hola");
   });
 
   //Mostrar modal de nueva area
@@ -73,9 +72,10 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = $.parseJSON(response);
+              data = JSON.parse(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
+                console.error(data.error);
               } else {
                 $("#form_area")[0].reset();
                 tablaAreas.ajax.reload(null, false);
@@ -113,7 +113,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idarea").val(objData.data.idarea);
           $("#icodarea").val(objData.data.cod_area);
@@ -159,7 +159,7 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (response) {
-            data = $.parseJSON(response);
+            data = JSON.parse(response);
             if (data.status) {
               MostrarAlertaxTiempo(data.title, data.msg, "success");
               tablaAreas.ajax.reload(null, false);
@@ -187,7 +187,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        data = $.parseJSON(response);
+        data = JSON.parse(response);
         let select = $("#select_inst");
         for (let i = 0; i < data.length; i++) {
           let option = $("<option></option>");

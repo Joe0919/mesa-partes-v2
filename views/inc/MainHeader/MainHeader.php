@@ -7,7 +7,7 @@
                 </li>
                 <li class="nav-item d-flex align-items-center">
                     <h3 class="font-weight-bold h6 m-0 d-none d-md-block">
-                        USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['datos'] ?></span>
+                        USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['nombres'] . ' ' . $_SESSION['userData']['apellidos'] ?></span>
                     </h3>
                     <input id="id_areaid" type="hidden" value="<?= $_SESSION['userData']['idareainstitu'] ?>">
                     <input id="info-area" type="hidden" value="<?= $_SESSION['userData']['area'] ?>">
@@ -71,12 +71,12 @@
                                 </span>
                             </span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end" style="width: 330px;">
+                        <div class="dropdown-menu dropdown-menu-end" style="width: 300px;">
                             <div class="dropdown-header text-center">
                                 <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" 
                                 alt="Foto perfil" class="img-thumbnail rounded-circle" style="width: 100px;">
-                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['datos'] ?></h5>
-                                <h6 class="text-muted text-bold"><?= $_SESSION['userData']['rol'] ?></h6>
+                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['nombres']?><br><?= $_SESSION['userData']['apellidos']?></h5>
+                                <h6 class="text-muted text-bold mt-1"><?= $_SESSION['userData']['rol'] ?></h6>
                                 <h7 class="text-muted"><?= $_SESSION['userData']['area'] ?></h7>
                             </div>
                             <div class="dropdown-divider"></div>

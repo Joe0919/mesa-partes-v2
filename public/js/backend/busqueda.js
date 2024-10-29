@@ -29,7 +29,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#tdExpediente").text(objData.data.nro_expediente);
           expediente = objData.data.nro_expediente;
@@ -110,7 +110,7 @@ $(document).ready(function () {
           $("#loader").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
           if (objData.status) {
             $("#linea_tiempo").empty();
             $("#linea_tiempo").html(objData.data);

@@ -47,17 +47,20 @@ $(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idinstitucion").val(objData.data.idinstitucion);
           $("#ruc").val(objData.data.ruc);
           $("#razon").val(objData.data.razon);
           $("#instdirec").val(objData.data.direccion);
+          $("#itelefono").val(objData.data.telefono);
+          $("#iemail").val(objData.data.email);
+          $("#iweb").val(objData.data.web);
+          $("#isector").val(objData.data.sector);
           $("#logo").css(
             "background-image",
             "url(" + base_url + "/public/" + objData.data.logo + ")"
           );
-
           $("#modal_inst").modal({ backdrop: "static", keyboard: false });
         } else {
           MostrarAlerta(objData.title, objData.msg, "error");
@@ -134,10 +137,10 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              console.log(response);
-              data = $.parseJSON(response);
+              data = JSON.parse(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
+                console.error(data.error);
               } else {
                 $("#form_institucion")[0].reset();
                 MostrarAlertaxTiempo(data.title, data.msg, "success");
@@ -145,10 +148,14 @@ $(function () {
               }
               $("#loader").hide();
             },
-            error: function (error) {
-              MostrarAlerta("Error", "Error al cargar los datos", "error");
-              console.error("Error: " + error);
+            error: function (jqXHR, textStatus, errorThrown) {
               $("#loader").hide();
+              MostrarAlerta(
+                "Error",
+                "Error en el servidor. Por favor, revise la consola para más detalles.",
+                "error"
+              );
+              console.log("Error: " + textStatus + " - " + errorThrown);
             },
           });
         }
@@ -172,7 +179,7 @@ $(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idusuarioP").val(objData.data.idusuarios);
           $("#idpersonaP").val(objData.data.idpersona);
@@ -269,9 +276,10 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = $.parseJSON(response);
+              data = JSON.parse(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
+                console.error(data.error);
               } else {
                 $("#form_EditUser")[0].reset();
                 MostrarAlertaxTiempo(data.title, data.msg, "success");
@@ -303,25 +311,9 @@ $(function () {
     $(".description").empty();
     $(".tituloPsw").text("CAMBIAR CONTRASEÑA DEL PERFIL");
     $("#modal_edit_psw").modal({ backdrop: "static", keyboard: false });
+    $("#form_edit_psw")[0].reset();
+    resetEyeIcon("#form_edit_psw");
     eliminarValidacion("#form_edit_psw");
-  });
-
-  //Mostrar/Ocultar contraseña En General
-  $(".toggle-password").click(function () {
-    // Encuentra el input más cercano
-    const passwordInput = $(this)
-      .closest(".form-group")
-      .find('input[type="password"], input[type="text"]');
-    const eyeIcon = $(this).find("i");
-
-    // Alternar el tipo de input entre password y text
-    if (passwordInput.attr("type") === "password") {
-      passwordInput.attr("type", "text");
-      eyeIcon.removeClass("fa-eye").addClass("fa-eye-slash");
-    } else {
-      passwordInput.attr("type", "password");
-      eyeIcon.removeClass("fa-eye-slash").addClass("fa-eye");
-    }
   });
 
   // Validar similitud de ingreso de contraseñas
@@ -388,9 +380,10 @@ $(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                data = $.parseJSON(response);
+                data = JSON.parse(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");
+                  console.error(data.error);
                 } else {
                   $("#form_edit_psw")[0].reset();
                   $("#modal_edit_psw").modal("hide");
@@ -446,7 +439,7 @@ $(function () {
           $("#loader").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
           if (objData.status) {
             $("#idderivacion").val(objData.data.idderivacion);
             $("#iddocumento").val(objData.data.iddocumento);
@@ -545,7 +538,7 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              objData = $.parseJSON(response);
+              objData = JSON.parse(response);
               if (objData.status) {
                 $("#form_aceptacion")[0].reset();
                 $("#modal_aceptacion").modal("hide");
@@ -654,7 +647,7 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              objData = $.parseJSON(response);
+              objData = JSON.parse(response);
               if (objData.status) {
                 $("#form_derivacion")[0].reset();
                 $("#modal_derivacion").modal("hide");
@@ -701,7 +694,7 @@ $(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#div_iframePDF").show();
           $("#loaderPDF").hide();
@@ -869,7 +862,7 @@ function llenarSelectDestino(area) {
       $("#loader").show();
     },
     success: function (response) {
-      data = $.parseJSON(response);
+      data = JSON.parse(response);
       let select = $("#select-destino");
       select.empty();
       let placeholderOption = $("<option></option>");

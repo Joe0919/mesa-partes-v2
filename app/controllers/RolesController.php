@@ -76,14 +76,23 @@ class RolesController extends Controllers
     // Método para crear o actualizar un rol
     public function setRol()
     {
-        $intIdrol = intval(limpiarCadena($_POST['idrol']));
-        $strRol = strtoupper(limpiarCadena($_POST['irol']));
-        $strDescipcion = strtoupper(limpiarCadena($_POST['idescripcion']));
-        $intEstado = intval(limpiarCadena($_POST['estado']));
+        try {
+            $intIdrol = intval(limpiarCadena($_POST['idrol']));
+            $strRol = strtoupper(limpiarCadena($_POST['irol']));
+            $strDescipcion = strtoupper(limpiarCadena($_POST['idescripcion']));
+            $intEstado = intval(limpiarCadena($_POST['estado']));
 
-        $request_rol = $this->handleRoleRequest($intIdrol, $strRol, $strDescipcion, $intEstado);
-        echo json_encode($request_rol, JSON_UNESCAPED_UNICODE);
-        die();
+            $request_rol = $this->handleRoleRequest($intIdrol, $strRol, $strDescipcion, $intEstado);
+            echo json_encode($request_rol, JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     // Método para manejar la creación o actualización de roles

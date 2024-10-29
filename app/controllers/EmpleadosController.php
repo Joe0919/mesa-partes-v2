@@ -72,14 +72,23 @@ class EmpleadosController extends Controllers
 
     public function setEmpleado()
     {
-        $IdEmpleado = intval(limpiarCadena($_POST['idempleado']));
-        $IdPersona = strtoupper(limpiarCadena($_POST['idpersona']));
-        $Codigo = strtoupper(limpiarCadena($_POST['codigo']));
-        $IdArea = intval(limpiarCadena($_POST['idarea']));
+        try {
+            $IdEmpleado = intval(limpiarCadena($_POST['idempleado']));
+            $IdPersona = strtoupper(limpiarCadena($_POST['idpersona']));
+            $Codigo = strtoupper(limpiarCadena($_POST['codigo']));
+            $IdArea = intval(limpiarCadena($_POST['idarea']));
 
-        $request_empleado = $this->handleEmpleadoRequest($IdEmpleado, $Codigo, $IdPersona, $IdArea);
-        echo json_encode($request_empleado, JSON_UNESCAPED_UNICODE);
-        die();
+            $request_empleado = $this->handleEmpleadoRequest($IdEmpleado, $Codigo, $IdPersona, $IdArea);
+            echo json_encode($request_empleado, JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     private function handleEmpleadoRequest($IdEmpleado, $Codigo, $IdPersona, $IdArea)

@@ -1,6 +1,6 @@
 <!-- MODAL DATOS INSTITUCIÓN-->
 <div class="modal fade" id="modal_inst">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-variant">
         <div class="modal-content">
             <form id="form_institucion" method="post">
                 <div class="modal-header">
@@ -26,20 +26,58 @@
                             <input type="hidden" name="bdr_logo" id="bdr_logo" value="0">
                         </div>
                         <div class="col-sm-8">
-                            <div class="form-group">
-                                <input type="hidden" class="form-control" name="idinstitucion" id="idinstitucion">
-                                <label>RUC</label><span class="span-required"></span>
-                                <input type="text" class="form-control" name="ruc" id="ruc" onkeypress='return validaNumericos(event)' maxlength="11" minlength="11" required>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input type="hidden" class="form-control" name="idinstitucion" id="idinstitucion">
+                                        <label>Razón Social</label><span class="span-required"></span>
+                                        <input type="text" class="form-control text-uppercase" name="razon" id="razon" required title="Ingrese Razón Social">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Razón</label><span class="span-required"></span>
-                                <input type="text" class="form-control text-uppercase" name="razon" id="razon" required>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>RUC</label><span class="span-required"></span>
+                                        <input type="text" class="form-control" name="ruc" id="ruc" onkeypress='return validaNumericos(event)' maxlength="11" minlength="11" required title="Ingrese RUC">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Dirección</label><span class="span-required"></span>
+                                        <input type="text" class="form-control text-uppercase" name="instdirec" id="instdirec" required title="Ingrese la dirección">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Dirección</label><span class="span-required"></span>
-                                <input type="text" class="form-control text-uppercase" name="instdirec" id="instdirec" required>
-                                <b id="error3"></b>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Télefono</label><span class="span-required"></span>
+                                        <input type="text" class="form-control" name="telefono" id="itelefono" required onkeypress='return validaNumericos(event)' maxlength="9" minlength="9" placeholder="Ingrese teléfono">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Email</label><span class="span-required"></span>
+                                        <input type="email" class="form-control" name="email" id="iemail" required title="Ingrese email">
+                                    </div>
+                                </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Página Web</label>
+                                        <input type="text" class="form-control" name="web" id="iweb" title="Ingrese dirección de pagina web">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Sector</label>
+                                        <input type="text" class="form-control text-uppercase" name="sector" id="isector" title="Ingrese el sector que pertenece">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -55,7 +93,7 @@
 </div>
 <!-- MODAL EDICIÓN DE USUARIO-->
 <div class="modal fade" id="modal_EditUser">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-variant">
         <div class="modal-content">
             <form id="form_EditUser" method="post">
                 <div class="modal-header" id="modal-header">

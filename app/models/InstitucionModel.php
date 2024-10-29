@@ -7,6 +7,10 @@ class InstitucionModel extends Mysql
     public $strRUC;
     public $strRazon;
     public $strDireccion;
+    public $strTelefono;
+    public $strEmail;
+    public $strPagWeb;
+    public $strSector;
     public $Foto;
 
     public function __construct()
@@ -31,12 +35,16 @@ class InstitucionModel extends Mysql
         return $request;
     }
 
-    public function editarInst(int $idinst, string $ruc, string $razon, string $desc, string $logo = "")
+    public function editarInst(int $idinst, string $ruc, string $razon, string $desc, string $tel, string $email, string $web, string $sector, string $logo = "")
     {
         $this->intIdInst = $idinst;
         $this->strRUC = $ruc;
         $this->strRazon = $razon;
         $this->strDireccion = $desc;
+        $this->strTelefono = $tel;
+        $this->strEmail = $email;
+        $this->strPagWeb = $web;
+        $this->strSector = $sector;
         $this->Foto = $logo;
 
         $where = " WHERE ruc = ? and razon = ? AND idinstitucion != ? ";
@@ -45,11 +53,11 @@ class InstitucionModel extends Mysql
         if (empty($request)) {
 
             if ($logo == "") {
-                $columns = "ruc = ?, razon = ?, direccion = ?";
-                $arrayData =  [$this->strRUC, $this->strRazon, $this->strDireccion, $this->intIdInst];
+                $columns = "ruc = ?, razon = ?, direccion = ?, telefono = ?, email = ?, web = ?, sector = ?";
+                $arrayData =  [$this->strRUC, $this->strRazon, $this->strDireccion, $this->strTelefono, $this->strEmail, $this->strPagWeb, $this->strSector, $this->intIdInst];
             } else {
-                $columns = "ruc = ?, razon = ?, direccion = ?, logo = ?";
-                $arrayData = [$this->strRUC, $this->strRazon, $this->strDireccion, $this->Foto, $this->intIdInst];
+                $columns = "ruc = ?, razon = ?, direccion = ?, telefono = ?, email = ?, web = ?, sector = ?, logo = ?";
+                $arrayData = [$this->strRUC, $this->strRazon, $this->strDireccion, $this->strTelefono, $this->strEmail, $this->strPagWeb, $this->strSector, $this->Foto, $this->intIdInst];
             }
             $request = $this->editar(
                 "institucion",

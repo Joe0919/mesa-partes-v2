@@ -23,7 +23,7 @@ class UsuarioModel extends Mysql
     public function selectUsuario()
     {
         $whereAdmin = "";
-        if ($_SESSION['idUsuario'] != 1) {
+        if ($_SESSION['userData']['idroles'] != 1) {
             $whereAdmin = " and u.idroles != 1 ";
         }
         $sql = "SELECT idusuarios, concat(p.nombres,' ',p.ap_paterno) datos, u.dni dni, email,telefono, u.idroles, rol, u.estado

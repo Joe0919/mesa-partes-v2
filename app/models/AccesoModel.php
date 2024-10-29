@@ -47,7 +47,7 @@ class AccesoModel extends Mysql
 		$this->intIdUsuario = $iduser;
 		//BUSCAR ROL
 		$sql = "SELECT idusuarios, u.dni dni, nombre nomusu, 
-				concat(p.nombres,' ', p.ap_paterno,' ', p.ap_materno) datos, foto, 
+				p.nombres,concat( p.ap_paterno,' ', p.ap_materno) apellidos, foto, 
 				u.estado, u.idroles, rol,
 				IFNULL(a.idareainstitu, 0) as idareainstitu, 
 				IFNULL(area, 'INVITADO') as area, 

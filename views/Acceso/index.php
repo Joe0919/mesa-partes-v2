@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,8 +41,25 @@
                     <div class="py-3 px-5 alerta">
                         <form class="form-signin d-flex" method="post" id="form_acceso">
                             <h3 class="title">Acceso a Mesa de Partes Virtual</h3>
-                            <input type="text" name="usuario" id="inputEmail" class="form-control" placeholder="Usuario" required autofocus minlength="8" maxlength="8">
-                            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+                            <div class="row">
+                                <div class="col-12">
+                                    <input type="text" name="usuario" id="inputEmail" class="form-control mb-0" placeholder="Usuario" required autofocus minlength="8" maxlength="8">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-0">
+                                <div class="row col-12 mt-2 mb-0 pr-0">
+                                    <div class="col">
+                                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Contraseña" required>
+                                    </div>
+                                    <div class="col-auto px-0">
+                                        <div class="input-group-append col-auto px-0" title="Mostrar/Ocultar Contraseña">
+                                            <button class="btn bg-gradient-light toggle-password" type="button">
+                                                <i class="fas fa-eye" id="eyeIcon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Ingresar</button>
                         </form>
 

@@ -20,8 +20,6 @@ $(function () {
 
   llenarSelectTipo();
 
-  console.log(page_id)
-
   $("#div_juridica").hide();
 
   // MOSTRAR SECCION DE PERSONA JURIDICA
@@ -88,7 +86,7 @@ $(function () {
           $("#loader").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
           if (objData.status) {
             $("#btn_validar").prop("disabled", true);
 
@@ -191,7 +189,7 @@ $(function () {
               processData: false,
               contentType: false,
               success: function (response) {
-                objData = $.parseJSON(response);
+                objData = JSON.parse(response);
                 if (objData.status) {
                   MostrarAlertaHtml(
                     objData.title,
@@ -289,7 +287,7 @@ function llenarSelectTipo() {
       $("#loader").show();
     },
     success: function (response) {
-      data = $.parseJSON(response);
+      data = JSON.parse(response);
       let select = $("#select_tipo");
       let placeholderOption = $("<option></option>");
       placeholderOption.val("");

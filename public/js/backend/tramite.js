@@ -118,7 +118,7 @@ $(function () {
               processData: false,
               contentType: false,
               success: function (response) {
-                objData = $.parseJSON(response);
+                objData = JSON.parse(response);
                 if (objData.status) {
                   const redireccionar = setTimeout(() => {
                     window.location.href = base_url
@@ -170,7 +170,7 @@ function llenarDatosTramite() {
       $("#loader").show();
     },
     success: function (response) {
-      objData = $.parseJSON(response);
+      objData = JSON.parse(response);
       if (objData.status) {
         $("#tdExpediente").text(objData.data.nro_expediente);
         Expediente = objData.data.nro_expediente;
@@ -227,7 +227,7 @@ function llenarSelectTipo() {
       $("#loader").show();
     },
     success: function (response) {
-      data = $.parseJSON(response);
+      data = JSON.parse(response);
       let select = $("#select_tipo");
       let placeholderOption = $("<option></option>");
       placeholderOption.val("");

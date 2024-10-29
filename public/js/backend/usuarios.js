@@ -129,9 +129,10 @@ $(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                data = $.parseJSON(response);
+                data = JSON.parse(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");
+                  console.error(data.error);
                 } else {
                   $("#form_user")[0].reset();
                   tablaUsuarios.ajax.reload(null, false);
@@ -171,7 +172,7 @@ $(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           openModal("edit");
           $("#idusuario").val(objData.data.idusuarios);
@@ -267,9 +268,10 @@ $(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                data = $.parseJSON(response);
+                data = JSON.parse(response);
                 if (!data.status) {
                   MostrarAlerta(data.title, data.msg, "error");
+                  console.error(data.error);
                 } else {
                   $("#form_edit_psw")[0].reset();
                   MostrarAlertaxTiempo(data.title, data.msg, "success");
@@ -325,7 +327,7 @@ $(function () {
             $("#loader").show();
           },
           success: function (response) {
-            data = $.parseJSON(response);
+            data = JSON.parse(response);
             if (data.status) {
               MostrarAlertaxTiempo(data.title, data.msg, "success");
               tablaUsuarios.ajax.reload(null, false);
@@ -435,7 +437,7 @@ function llenarSelectRol() {
       $("#loader").show();
     },
     success: function (response) {
-      data = $.parseJSON(response);
+      data = JSON.parse(response);
       let select = $("#select-rol");
       let placeholderOption = $("<option></option>");
       placeholderOption.val("");

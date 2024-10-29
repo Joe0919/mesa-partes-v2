@@ -26,10 +26,11 @@ $(function () {
         });
       },
       success: function (response) {
-        data = $.parseJSON(response);
+        data = JSON.parse(response);
         Swal.close();
         if (!data.status) {
           MostrarAlerta(data.title, data.msg, "error");
+          console.error(data.error);
         } else {
           Swal.fire({
             title: "Ingresando al sistema",

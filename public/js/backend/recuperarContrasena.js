@@ -36,7 +36,7 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (response) {
-            objData = $.parseJSON(response);
+            objData = JSON.parse(response);
             if (!objData.status) {
               MostrarAlerta(objData.title, objData.msg, "error");
             } else {
@@ -81,7 +81,7 @@ $(document).ready(function () {
                       });
                     },
                     success: function (response) {
-                      objData = $.parseJSON(response);
+                      objData = JSON.parse(response);
                       Swal.close(); 
 
                       if (objData.status) {

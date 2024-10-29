@@ -1,6 +1,7 @@
 $(document).ready(function () {
   let idrol = 0,
-    rol = "", accion = "";
+    rol = "",
+    accion = "";
   $("#loader").show();
   /*=============================   MOSTRAR TABLA DE USUARIOS  ================================= */
   tablaRoles = $("#tablaRoles").DataTable({
@@ -71,9 +72,10 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = $.parseJSON(response);
+              data = JSON.parse(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
+                console.error(data.error);
               } else {
                 $("#form_roles")[0].reset();
                 tablaRoles.ajax.reload(null, false);
@@ -112,7 +114,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idrol").val(objData.data.idroles);
           $("#irol").val(objData.data.rol);
@@ -158,7 +160,7 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (response) {
-            data = $.parseJSON(response);
+            data = JSON.parse(response);
             if (data.status) {
               MostrarAlertaxTiempo(data.title, data.msg, "success");
               tablaRoles.ajax.reload(null, false);
@@ -216,9 +218,10 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        data = $.parseJSON(response);
+        data = JSON.parse(response);
         if (!data.status) {
-          MostrarAlerta("¡Error!", data.msg, "error");
+          MostrarAlerta(data.title, data.msg, "error");
+          console.error(data.error);
         } else {
           MostrarAlertaxTiempo("¡Hecho!", data.msg, "success");
         }

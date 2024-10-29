@@ -174,87 +174,88 @@ class TramitesController extends Controllers
     }
     public function setTramite()
     {
-        if ($_POST) {
-            if (
-                empty($_POST['idni']) ||
-                empty($_POST['inombre']) ||
-                empty($_POST['iappat']) ||
-                empty($_POST['iapmat']) ||
-                empty($_POST['iemail']) ||
-                empty($_POST['idir']) ||
-                empty($_POST['icel']) ||
-                empty($_POST['itipo']) ||
-                empty($_POST['n_doc']) ||
-                empty($_POST['ifolios']) ||
-                empty($_FILES['ifile'])
-            ) {
-                $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
-            } else {
-                $idpersona = limpiarCadena($_POST['idpersona']);
-                $idusuario = intval(limpiarCadena($_POST['idusuario']));
-                $dni = limpiarCadena($_POST['idni']);
-                $ruc = limpiarCadena($_POST['iruc']);
-                $entidad = strtoupper(limpiarCadena($_POST['ientidad']));
-                $dni = limpiarCadena($_POST['idni']);
-                $nombres = strtoupper(limpiarCadena($_POST['inombre']));
-                $appat = strtoupper(limpiarCadena($_POST['iappat']));
-                $apmat = strtoupper(limpiarCadena($_POST['iapmat']));
-                $email = limpiarCadena($_POST['iemail']);
-                $direccion = strtoupper(limpiarCadena($_POST['idir']));
-                $cel = limpiarCadena($_POST['icel']);
-                $idtipo = intval(limpiarCadena($_POST['itipo']));
-                $ndoc = limpiarCadena($_POST['n_doc']);
-                $folios = intval(limpiarCadena($_POST['ifolios']));
-                $asunto = limpiarCadena($_POST['iasunto']);
-                $documento = $_FILES['ifile'];
+        try {
+            if ($_POST) {
+                if (
+                    empty($_POST['idni']) ||
+                    empty($_POST['inombre']) ||
+                    empty($_POST['iappat']) ||
+                    empty($_POST['iapmat']) ||
+                    empty($_POST['iemail']) ||
+                    empty($_POST['idir']) ||
+                    empty($_POST['icel']) ||
+                    empty($_POST['itipo']) ||
+                    empty($_POST['n_doc']) ||
+                    empty($_POST['ifolios']) ||
+                    empty($_FILES['ifile'])
+                ) {
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+                } else {
+                    $idpersona = limpiarCadena($_POST['idpersona']);
+                    $idusuario = intval(limpiarCadena($_POST['idusuario']));
+                    $dni = limpiarCadena($_POST['idni']);
+                    $ruc = limpiarCadena($_POST['iruc']);
+                    $entidad = strtoupper(limpiarCadena($_POST['ientidad']));
+                    $dni = limpiarCadena($_POST['idni']);
+                    $nombres = strtoupper(limpiarCadena($_POST['inombre']));
+                    $appat = strtoupper(limpiarCadena($_POST['iappat']));
+                    $apmat = strtoupper(limpiarCadena($_POST['iapmat']));
+                    $email = limpiarCadena($_POST['iemail']);
+                    $direccion = strtoupper(limpiarCadena($_POST['idir']));
+                    $cel = limpiarCadena($_POST['icel']);
+                    $idtipo = intval(limpiarCadena($_POST['itipo']));
+                    $ndoc = limpiarCadena($_POST['n_doc']);
+                    $folios = intval(limpiarCadena($_POST['ifolios']));
+                    $asunto = limpiarCadena($_POST['iasunto']);
+                    $documento = $_FILES['ifile'];
 
-                $request_persona = '';
-                $ruta_pdf = "";
+                    $request_persona = '';
+                    $ruta_pdf = "";
 
-                if ($idpersona != "") {
+                    if ($idpersona != "") {
 
-                    $ruta_raiz = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
-                    $rutaFecha = date('Y') . '/' . date('m') . '/' . date('d') . '/'; // 1/
-                    $file_tmp_name = $documento['tmp_name'];
+                        $ruta_raiz = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
+                        $rutaFecha = date('Y') . '/' . date('m') . '/' . date('d') . '/'; // 1/
+                        $file_tmp_name = $documento['tmp_name'];
 
-                    // Obtener el expediente
-                    $expedienteData = $this->model->genExpediente();
+                        // Obtener el expediente
+                        $expedienteData = $this->model->genExpediente();
 
-                    // Acceder al número de expediente
-                    $expediente = $expedienteData['Expediente'];
+                        // Acceder al número de expediente
+                        $expediente = $expedienteData['Expediente'];
 
-                    $nuevo_nombre = $ruta_raiz . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
+                        $nuevo_nombre = $ruta_raiz . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
 
-                    if (!file_exists($ruta_raiz)) {
-                        mkdir($ruta_raiz, 0777, true);
-                    }
-                    if (!file_exists($ruta_raiz . $rutaFecha)) {
-                        mkdir($ruta_raiz . $rutaFecha, 0777, true);
-                    }
-
-                    if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
-                        $ruta_pdf = 'files/docs/' . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
-
-                        $this->personaModel = $this->loadAdditionalModel("Persona");
-
-                        if ($idpersona == '0') {
-                            $request_persona = $this->personaModel->insertPersona($dni, $appat, $apmat, $nombres, $email, $cel, $direccion, $ruc, $entidad);
-                        } else {
-                            $this->personaModel->editarPersona($email, $cel, $dni);
-                            $request_persona = $idpersona;
+                        if (!file_exists($ruta_raiz)) {
+                            mkdir($ruta_raiz, 0777, true);
+                        }
+                        if (!file_exists($ruta_raiz . $rutaFecha)) {
+                            mkdir($ruta_raiz . $rutaFecha, 0777, true);
                         }
 
-                        if ($request_persona == 'exist') {
-                            $arrResponse = array("status" => false, "title" => "Error", "msg" => 'Datos duplicados.');
-                        } else {
-                            $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
-                            $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE', $idusuario);
+                        if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
+                            $ruta_pdf = 'files/docs/' . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
 
-                            $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
+                            $this->personaModel = $this->loadAdditionalModel("Persona");
 
-                            $arrData = $this->model->selectTramite($expediente, "");
+                            if ($idpersona == '0') {
+                                $request_persona = $this->personaModel->insertPersona($dni, $appat, $apmat, $nombres, $email, $cel, $direccion, $ruc, $entidad);
+                            } else {
+                                $this->personaModel->editarPersona($email, $cel, $dni);
+                                $request_persona = $idpersona;
+                            }
 
-                            $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
+                            if ($request_persona == 'exist') {
+                                $arrResponse = array("status" => false, "title" => "Error", "msg" => 'Datos duplicados.');
+                            } else {
+                                $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
+                                $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE', $idusuario);
+
+                                $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
+
+                                $arrData = $this->model->selectTramite($expediente, "");
+
+                                $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
                             <hr>
                             <p class='p_name'>Se le envía este mensaje desde la plataforma para informarle que su trámite ha sido
                                  registrado con éxito por lo que se le da a conocer la información del trámite recepcionado:
@@ -292,71 +293,80 @@ class TramitesController extends Controllers
                                 la pestaña <b><a href='" . base_url() . "/seguimiento'>Seguimiento</a></b>
                             </p>";
 
-                            $arrInst = $this->model->selectInstitucion();
-                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
+                                $arrInst = $this->model->selectInstitucion();
+                                $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
 
-                            $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
+                                $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
+                            }
+                        } else {
+                            $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar el pdf.');
                         }
                     } else {
-                        $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar el pdf.');
+                        $arrResponse = array("status" => false, "title" => "Error", "msg" => 'Falta el ID de la persona.');
                     }
-                } else {
-                    $arrResponse = array("status" => false, "title" => "Error", "msg" => 'Falta el ID de la persona.');
                 }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
     }
     public function putTramiteAceptacion()
     {
-        if ($_POST) {
-            $accion = limpiarCadena($_POST['accion']);
-            $iddocumento = intval(limpiarCadena($_POST['iddocumento']));
-            $idderivacion = intval(limpiarCadena($_POST['idderivacion']));
-            $dni = limpiarCadena($_POST['dni']);
-            $expediente = limpiarCadena($_POST['expediente']);
-            $origen = strtoupper(limpiarCadena($_POST['origen']));
-            $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
-            $idusuario = intval(limpiarCadena($_POST['idusuario']));
+        try {
+            if ($_POST) {
+                $accion = limpiarCadena($_POST['accion']);
+                $iddocumento = intval(limpiarCadena($_POST['iddocumento']));
+                $idderivacion = intval(limpiarCadena($_POST['idderivacion']));
+                $dni = limpiarCadena($_POST['dni']);
+                $expediente = limpiarCadena($_POST['expediente']);
+                $origen = strtoupper(limpiarCadena($_POST['origen']));
+                $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
+                $idusuario = intval(limpiarCadena($_POST['idusuario']));
 
-            $request = '';
+                $request = '';
 
-            // Controlar si se Acepta o Rechaza un Tramite
-            if ($accion === 'ACEPTAR') {
-                // Cambiamos el estado del documento a aceptado
-                $request = $this->model->editarDocumento($expediente, 'ACEPTADO');
-                // Guardamos la Aceptacion en el historial del doc
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ACEPTADO', $origen);
-                $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
-            } else if ($accion === 'RECHAZAR') {
-                // Validamos si en SECRETARIA se rechaza el tramite 
-                if ($origen === 'SECRETARIA') {
-                    // No es necesario Derivar a Secretaria, solo se rechaza
-                    // Colocamos la descripcion por la que se esta Rechazando
-                    $this->model->editarDerivacion($idderivacion, $descripcion);
-                    // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
+                // Controlar si se Acepta o Rechaza un Tramite
+                if ($accion === 'ACEPTAR') {
+                    // Cambiamos el estado del documento a aceptado
+                    $request = $this->model->editarDocumento($expediente, 'ACEPTADO');
+                    // Guardamos la Aceptacion en el historial del doc
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ACEPTADO', $origen);
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
+                } else if ($accion === 'RECHAZAR') {
+                    // Validamos si en SECRETARIA se rechaza el tramite 
+                    if ($origen === 'SECRETARIA') {
+                        // No es necesario Derivar a Secretaria, solo se rechaza
+                        // Colocamos la descripcion por la que se esta Rechazando
+                        $this->model->editarDerivacion($idderivacion, $descripcion);
+                        // Guardamos el Rechazo en el historial del doc
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
+                    } else {
+                        // Se cumple que es otra area
+                        // Derivamos el Tramite a Secretaria y este validara su ID
+                        $this->model->registrarDerivacion($iddocumento, '', $origen, 'SECRETARIA', $descripcion);
+                        // Guardamos el Rechazo en el historial del doc
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
+                        // Guardamos la Derivacion a SECRETARIA en el historial 
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario);
+                    }
+                    // Cambiamos el estado del documento a RECHAZADO
+                    $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
                 } else {
-                    // Se cumple que es otra area
-                    // Derivamos el Tramite a Secretaria y este validara su ID
-                    $this->model->registrarDerivacion($iddocumento, '', $origen, 'SECRETARIA', $descripcion);
-                    // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'RECHAZADO', $origen);
-                    // Guardamos la Derivacion a SECRETARIA en el historial 
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario);
-                }
-                // Cambiamos el estado del documento a RECHAZADO
-                $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
-                $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
-            } else {
-                $request = $this->model->editarDocumento($expediente, 'OBSERVADO');
-                // Guardamos la Aceptacion en el historial del doc
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'OBSERVADO', $origen);
-                $arrData = $this->model->selectTramite($expediente, "");
+                    $request = $this->model->editarDocumento($expediente, 'OBSERVADO');
+                    // Guardamos la Aceptacion en el historial del doc
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'OBSERVADO', $origen);
+                    $arrData = $this->model->selectTramite($expediente, "");
 
-                $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
+                    $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
                         <hr>
                         <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual.</b>
                             Para informarle que su trámite con Nro. Expediente <b>" . $arrData['nro_expediente'] . "</b>, 
@@ -374,51 +384,68 @@ class TramitesController extends Controllers
                             trámite una vez subsanado el motivo de la observación.
                         </p>";
 
-                $arrInst = $this->model->selectInstitucion();
-                $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $arrData['email'], "TRÁMITE OBSERVADO", $html, $arrInst);
-                // Cambiamos el estado del documento a observado
-                $arrResponse = array('status' => true, 'title' => 'Trámite Observado', "msg" => 'La acción se realizó con exito.', 'data' => $response);
+                    $arrInst = $this->model->selectInstitucion();
+                    $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $arrData['email'], "TRÁMITE OBSERVADO", $html, $arrInst);
+                    // Cambiamos el estado del documento a observado
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Observado', "msg" => 'La acción se realizó con exito.', 'data' => $response);
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+                die();
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
-            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
     }
     public function putTramiteDerivacion()
     {
-        if ($_POST) {
-            $accion = limpiarCadena($_POST['accion']);
-            $expediente = limpiarCadena($_POST['expediente']);
-            $dni = limpiarCadena($_POST['dni']);
-            $origen = strtoupper(limpiarCadena($_POST['origen']));
-            $iddestino = isset($_POST['iddestino']) ? intval(limpiarCadena($_POST['iddestino'])) : '';
-            $destino = limpiarCadena($_POST['destino']);
-            $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
-            $idusuario = intval(limpiarCadena($_POST['idusuario']));
+        try {
+            if ($_POST) {
+                $accion = limpiarCadena($_POST['accion']);
+                $expediente = limpiarCadena($_POST['expediente']);
+                $dni = limpiarCadena($_POST['dni']);
+                $origen = strtoupper(limpiarCadena($_POST['origen']));
+                $iddestino = isset($_POST['iddestino']) ? intval(limpiarCadena($_POST['iddestino'])) : '';
+                $destino = limpiarCadena($_POST['destino']);
+                $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
+                $idusuario = intval(limpiarCadena($_POST['idusuario']));
 
-            $request = '';
+                $request = '';
 
-            if ($accion === '1') {
-                // Derivamos el Tramite al Area Destino
-                $this->model->registrarDerivacion(0, $expediente, $origen, $iddestino, $descripcion);
-                // Cambiamos el estado  a PENDIENTE ya actualizamos la ubicacion del doc
-                $this->model->editarDocumento($expediente, 'PENDIENTE', $iddestino);
-                // Guardamos la Derivacion en el historial 
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'DERIVADO', $destino);
-                $request = $accion . ' ' . $expediente . ' ' . $dni . ' ' . $origen . ' ' . $destino . ' ' . $descripcion;
-                $arrResponse = array('status' => true, 'title' => 'Trámite Derivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
-            } else if ($accion === '2') {
-                // Cambiamos el estado  a ARCHIVADO ya actualizamos la ubicacion del doc
-                $this->model->editarDocumento($expediente, 'ARCHIVADO');
-                // Guardamos la Archivacion en el historial 
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ARCHIVADO', $origen);
-                $arrResponse = array('status' => true, 'title' => 'Trámite Archivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
+                if ($accion === '1') {
+                    // Derivamos el Tramite al Area Destino
+                    $this->model->registrarDerivacion(0, $expediente, $origen, $iddestino, $descripcion);
+                    // Cambiamos el estado  a PENDIENTE ya actualizamos la ubicacion del doc
+                    $this->model->editarDocumento($expediente, 'PENDIENTE', $iddestino);
+                    // Guardamos la Derivacion en el historial 
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'DERIVADO', $destino);
+                    $request = $accion . ' ' . $expediente . ' ' . $dni . ' ' . $origen . ' ' . $destino . ' ' . $descripcion;
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Derivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
+                } else if ($accion === '2') {
+                    // Cambiamos el estado  a ARCHIVADO ya actualizamos la ubicacion del doc
+                    $this->model->editarDocumento($expediente, 'ARCHIVADO');
+                    // Guardamos la Archivacion en el historial 
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, $idusuario, 'ARCHIVADO', $origen);
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Archivado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+                die();
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
-            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
     }
 }

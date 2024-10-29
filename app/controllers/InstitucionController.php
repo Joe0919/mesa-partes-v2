@@ -35,32 +35,45 @@ class InstitucionController extends Controllers
     // Método para establecer o actualizar una institución
     public function setInstitucion()
     {
-        if (!$_POST) {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
-            die();
-        }
+        try {
+            if (!$_POST) {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+                die();
+            }
 
-        $arrResponse = $this->validateInstitucionData($_POST);
-        if ($arrResponse['status'] === false) {
+            $arrResponse = $this->validateInstitucionData($_POST);
+            if ($arrResponse['status'] === false) {
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+                die();
+            }
+
+            $idInst = intval(limpiarCadena($_POST['idinstitucion']));
+            $RUC = limpiarCadena($_POST['ruc']);
+            $Razon = strtoupper(limpiarCadena($_POST['razon']));
+            $Direc = strtoupper(limpiarCadena($_POST['instdirec']));
+            $telefono = limpiarCadena($_POST['telefono']);
+            $email = limpiarCadena($_POST['email']);
+            $web = limpiarCadena($_POST['web']);
+            $sector = strtoupper(limpiarCadena($_POST['sector']));
+
+            if ($idInst > 0 && $_SESSION['permisosMod']['upd']) {
+                $ruta_foto = $this->handleFileUpload($idInst, $RUC);
+                $request_inst = $this->model->editarInst($idInst, $RUC, $Razon, $Direc, $telefono, $email, $web, $sector, $ruta_foto);
+                $arrResponse = $this->generateResponse($request_inst, $ruta_foto);
+            } else {
+                $arrResponse = ["status" => false, "title" => "Error", "msg" => "El ID es 0 o no tiene permisos."];
+            }
+
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
             die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
-
-        $idInst = intval(limpiarCadena($_POST['idinstitucion']));
-        $RUC = limpiarCadena($_POST['ruc']);
-        $Razon = strtoupper(limpiarCadena($_POST['razon']));
-        $Direc = strtoupper(limpiarCadena($_POST['instdirec']));
-
-        if ($idInst > 0 && $_SESSION['permisosMod']['upd']) {
-            $ruta_foto = $this->handleFileUpload($idInst, $RUC);
-            $request_inst = $this->model->editarInst($idInst, $RUC, $Razon, $Direc, $ruta_foto);
-            $arrResponse = $this->generateResponse($request_inst, $ruta_foto);
-        } else {
-            $arrResponse = ["status" => false, "title" => "Error", "msg" => "El ID es 0 o no tiene permisos."];
-        }
-
-        echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     // Método para obtener el listado de instituciones
@@ -106,7 +119,7 @@ class InstitucionController extends Controllers
         if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
             $ruta_destino = BASE_PATH . 'public/images/logo.png';
             if (copy($nuevo_nombre, $ruta_destino)) {
-                return 'files/images/logo/logo' . $idInst . '_' . $RUC . '_' . $date . '.' . $ext;
+                return 'files/logo/logo' . $idInst . '_' . $RUC . '_' . $date . '.' . $ext;
             } else {
                 return array("status" => false, "title" => "Error", "msg" => 'No fue posible copiar la imagen a la ruta de destino.');
             }

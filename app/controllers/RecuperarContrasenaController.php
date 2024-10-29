@@ -57,25 +57,26 @@ class RecuperarContrasenaController extends Controllers
 
     public function setPswUsuario()
     {
-        if ($_POST) {
-            if (
-                empty($_POST['idusuario'])
-            ) {
-                $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Complete correctamente');
-            } else {
-                $idUsuario = intval(limpiarCadena($_POST['idusuario']));
-                $usuario = limpiarCadena($_POST['usuario']);
-                $correo = limpiarCadena($_POST['correo']);
-                $nuevaContrasena = genContrasena();
-                $request = "";
+        try {
+            if ($_POST) {
+                if (
+                    empty($_POST['idusuario'])
+                ) {
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Complete correctamente');
+                } else {
+                    $idUsuario = intval(limpiarCadena($_POST['idusuario']));
+                    $usuario = limpiarCadena($_POST['usuario']);
+                    $correo = limpiarCadena($_POST['correo']);
+                    $nuevaContrasena = genContrasena();
+                    $request = "";
 
-                if ($idUsuario !== 0) {
+                    if ($idUsuario !== 0) {
 
-                    $request = $this->model->editarPswUsuario($idUsuario, $nuevaContrasena);
+                        $request = $this->model->editarPswUsuario($idUsuario, $nuevaContrasena);
 
-                    if ($request > 0) {
+                        if ($request > 0) {
 
-                        $html = "<p class='p_name'>Estimado(a): <b>" . $usuario . "</b></p>
+                            $html = "<p class='p_name'>Estimado(a): <b>" . $usuario . "</b></p>
                             <hr>
                             <p>Se le envía este mensaje desde la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio Caldas Domínguez -
                                     Pomabamba.</b>
@@ -96,31 +97,39 @@ class RecuperarContrasenaController extends Controllers
                                 <br>
                             </div>";
 
-                        $this->tramiteModel = $this->loadAdditionalModel("Tramite");
-                        $arrInst = $this->tramiteModel->selectInstitucion();
-                        $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $usuario, $correo, "CAMBIO DE CONTRASEÑA", $html, $arrInst);
+                            $this->tramiteModel = $this->loadAdditionalModel("Tramite");
+                            $arrInst = $this->tramiteModel->selectInstitucion();
+                            $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $usuario, $correo, "CAMBIO DE CONTRASEÑA", $html, $arrInst);
 
-                        $arrResponse = array(
-                            'status' => true,
-                            'title' => 'Actualizado',
-                            'msg' => 'La contraseña se actualizó',
-                            'data' =>  $nuevaContrasena,
-                            'response' => $response
-                        );
-                    } else {
-                        $arrResponse = array(
-                            'status' => false,
-                            'title' => 'Error',
-                            'msg' => 'No se actualizó la contraseña',
-                            'data' =>  $request
-                        );
+                            $arrResponse = array(
+                                'status' => true,
+                                'title' => 'Actualizado',
+                                'msg' => 'La contraseña se actualizó',
+                                'data' =>  $nuevaContrasena,
+                                'response' => $response
+                            );
+                        } else {
+                            $arrResponse = array(
+                                'status' => false,
+                                'title' => 'Error',
+                                'msg' => 'No se actualizó la contraseña',
+                                'data' =>  $request
+                            );
+                        }
                     }
+                    echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
                 }
-                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             }
-        } else {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
-        die();
     }
 }

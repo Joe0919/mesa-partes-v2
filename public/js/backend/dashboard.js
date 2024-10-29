@@ -53,7 +53,7 @@ $(document).ready(function () {
           $("#overlayGrafEstado").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
           $("#span_cant_pendientes").text(objData[0].total_pendiente);
           $("#span_cant_aceptados").text(objData[0].total_aceptado);
           $("#span_cant_archivados").text(objData[0].total_archivado);
@@ -97,7 +97,7 @@ $(document).ready(function () {
             $("#overlayArea").show();
           },
           success: function (response) {
-            objData = $.parseJSON(response);
+            objData = JSON.parse(response);
             $("#span_cant_pendientes_area").text(objData[0].total_pendiente);
             $("#span_cant_aceptados_area").text(objData[0].total_aceptado);
             $("#span_cant_archivados_area").text(objData[0].total_archivado);
@@ -189,7 +189,7 @@ $(document).ready(function () {
           $("#overlayLineRegistrados").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
 
           const labels = [];
           const values = [];
@@ -229,7 +229,7 @@ $(document).ready(function () {
           $("#overlayLineProcesados").show();
         },
         success: function (response) {
-          objData = $.parseJSON(response);
+          objData = JSON.parse(response);
 
           const labels1 = [];
           const values1 = [];

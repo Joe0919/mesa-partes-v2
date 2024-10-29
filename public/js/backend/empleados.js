@@ -64,7 +64,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idpersonaU").val(objData.data.idpersona);
           $("#idusuarioU").val(objData.data.idusuarios);
@@ -119,9 +119,10 @@ $(document).ready(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = $.parseJSON(response);
+              data = JSON.parse(response);
               if (!data.status) {
                 MostrarAlerta(data.title, data.msg, "error");
+                console.error(data.error);
               } else {
                 $("#form_empleado")[0].reset();
                 tablaEmpleados.ajax.reload(null, false);
@@ -160,8 +161,7 @@ $(document).ready(function () {
         $("#loader").show();
       },
       success: function (response) {
-
-        objData = $.parseJSON(response);
+        objData = JSON.parse(response);
         if (objData.status) {
           $("#idempleado").val(objData.data.idempleado);
           $("#idpersona").val(objData.data.idpersona);
@@ -216,7 +216,7 @@ $(document).ready(function () {
             $("#loader").show();
           },
           success: function (response) {
-            data = $.parseJSON(response);
+            data = JSON.parse(response);
             if (data.status) {
               MostrarAlertaxTiempo(data.title, data.msg, "success");
               tablaEmpleados.ajax.reload(null, false);

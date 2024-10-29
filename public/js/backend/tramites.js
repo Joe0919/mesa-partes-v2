@@ -41,7 +41,7 @@ $(document).ready(function () {
           $("#loader").show();
         },
         success: function (response) {
-          data = $.parseJSON(response);
+          data = JSON.parse(response);
           let select = $("#selectAreas");
           let placeholderOption = $("<option></option>");
           placeholderOption.val("-1"); // al usar 0 el controlador no lo detecta

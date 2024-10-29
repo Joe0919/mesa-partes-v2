@@ -23,46 +23,63 @@ class SeguimientoController extends Controllers
     // Método para obtener el trámite por expediente, DNI y año
     public function getTramite()
     {
-        if ($_POST) {
-            $arrResponse = $this->validateInput($_POST); //Valida los datos del POST sean existentes
-            if ($arrResponse['status'] === true) {
-                $expediente = limpiarCadena($_POST['expediente']);
-                $dni = limpiarCadena($_POST['dni']);
-                $anio = limpiarCadena($_POST['anio']);
-                $arrData = $this->model->selectTramitexAnio($expediente, $dni, $anio);
-                $arrResponse = empty($arrData)
-                    ? ['status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.']
-                    : ['status' => true, 'title' => 'ok', 'data' => $arrData];
+        try {
+            if ($_POST) {
+                $arrResponse = $this->validateInput($_POST); //Valida los datos del POST sean existentes
+                if ($arrResponse['status'] === true) {
+                    $expediente = limpiarCadena($_POST['expediente']);
+                    $dni = limpiarCadena($_POST['dni']);
+                    $anio = limpiarCadena($_POST['anio']);
+                    $arrData = $this->model->selectTramitexAnio($expediente, $dni, $anio);
+                    $arrResponse = empty($arrData)
+                        ? ['status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.']
+                        : ['status' => true, 'title' => 'ok', 'data' => $arrData];
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+                die();
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
-
-        echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
-        die();
     }
 
     // Método para obtener el historial del trámite
     public function getHistorialTramite()
     {
-        if ($_POST) {
-            $arrResponse = $this->validateInput($_POST);
-            if ($arrResponse['status'] === true) {
-                $expediente = limpiarCadena($_POST['expediente']);
-                $dni = limpiarCadena($_POST['dni']);
-                $anio = limpiarCadena($_POST['anio']);
-                $arrData = $this->model->selectHistorial($expediente, $dni, $anio);
+        try {
+            if ($_POST) {
+                $arrResponse = $this->validateInput($_POST);
+                if ($arrResponse['status'] === true) {
+                    $expediente = limpiarCadena($_POST['expediente']);
+                    $dni = limpiarCadena($_POST['dni']);
+                    $anio = limpiarCadena($_POST['anio']);
+                    $arrData = $this->model->selectHistorial($expediente, $dni, $anio);
 
-                $arrResponse = empty($arrData)
-                    ? ['status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.']
-                    : ['status' => true, 'title' => 'ok', 'data' => $this->generateTimelineHtml($arrData, $expediente)];
+                    $arrResponse = empty($arrData)
+                        ? ['status' => false, 'title' => 'Error', 'msg' => 'Datos no encontrados.']
+                        : ['status' => true, 'title' => 'ok', 'data' => $this->generateTimelineHtml($arrData, $expediente)];
+                }
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+                die();
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-            die();
-        }
 
-        echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
-        die();
+            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     // Método para validar la entrada
@@ -138,6 +155,6 @@ class SeguimientoController extends Controllers
     // Método para obtener la preposición basada en la acción
     private function getPreposicion($accion)
     {
-        return in_array($accion, ['ACEPTADO', 'RECHAZADO', 'ARCHIVADO','OBSERVADO']) ? "en" : "a";
+        return in_array($accion, ['ACEPTADO', 'RECHAZADO', 'ARCHIVADO', 'OBSERVADO']) ? "en" : "a";
     }
 }

@@ -9,7 +9,7 @@ class TramitesRecibidosController extends Controllers
             session_start();
         }
         if (empty($_SESSION['login'])) {
-            header('Location: ' . base_url() . '/acceso'); 
+            header('Location: ' . base_url() . '/acceso');
             exit();
         }
         getPermisos(8);
@@ -98,49 +98,58 @@ class TramitesRecibidosController extends Controllers
     }
     public function putTramiteAceptacion()
     {
-        if ($_POST) {
-            $accion = limpiarCadena($_POST['accion']);
-            $iddocumento = intval(limpiarCadena($_POST['iddocumento']));
-            $idderivacion = intval(limpiarCadena($_POST['idderivacion']));
-            $dni = limpiarCadena($_POST['dni']);
-            $expediente = limpiarCadena($_POST['expediente']);
-            $origen = strtoupper(limpiarCadena($_POST['origen']));
-            $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
+        try {
+            if ($_POST) {
+                $accion = limpiarCadena($_POST['accion']);
+                $iddocumento = intval(limpiarCadena($_POST['iddocumento']));
+                $idderivacion = intval(limpiarCadena($_POST['idderivacion']));
+                $dni = limpiarCadena($_POST['dni']);
+                $expediente = limpiarCadena($_POST['expediente']);
+                $origen = strtoupper(limpiarCadena($_POST['origen']));
+                $descripcion = strtoupper(limpiarCadena($_POST['descripcion']));
 
-            $request = '';
+                $request = '';
 
-            // Controlar si se Acepta o Rechaza un Tramite
-            if ($accion === 'ACEPTAR') {
-                // Cambiamos el estado del documento a aceptado
-                $request = $this->model->editarDocumento($expediente, 'ACEPTADO');
-                // Guardamos la Aceptacion en el historial del doc
-                $this->model->registrarHistorial($expediente, $dni, $descripcion, 'ACEPTADO', $origen);
-                $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
-            } else if ($accion === 'RECHAZAR') {
-                // Validamos si en SECRETARIA se rechaza el tramite 
-                if ($origen === 'SECRETARIA') {
-                    // No es necesario Derivar a Secretaria, solo se rechaza
-                    // Colocamos la descripcion por la que se esta Rechazando
-                    $this->model->editarDerivacion($idderivacion, $descripcion);
-                    // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
-                } else {
-                    // Se cumple que es otra area
-                    // Derivamos el Tramite a Secretaria sabiendo su ID
-                    $this->model->registrarDerivacion($iddocumento, '', $origen, '8', $descripcion);
-                    // Guardamos el Rechazo en el historial del doc
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
-                    // Guardamos la Derivacion a SECRETARIA en el historial 
-                    $this->model->registrarHistorial($expediente, $dni, $descripcion);
+                // Controlar si se Acepta o Rechaza un Tramite
+                if ($accion === 'ACEPTAR') {
+                    // Cambiamos el estado del documento a aceptado
+                    $request = $this->model->editarDocumento($expediente, 'ACEPTADO');
+                    // Guardamos la Aceptacion en el historial del doc
+                    $this->model->registrarHistorial($expediente, $dni, $descripcion, 'ACEPTADO', $origen);
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
+                } else if ($accion === 'RECHAZAR') {
+                    // Validamos si en SECRETARIA se rechaza el tramite 
+                    if ($origen === 'SECRETARIA') {
+                        // No es necesario Derivar a Secretaria, solo se rechaza
+                        // Colocamos la descripcion por la que se esta Rechazando
+                        $this->model->editarDerivacion($idderivacion, $descripcion);
+                        // Guardamos el Rechazo en el historial del doc
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
+                    } else {
+                        // Se cumple que es otra area
+                        // Derivamos el Tramite a Secretaria sabiendo su ID
+                        $this->model->registrarDerivacion($iddocumento, '', $origen, '8', $descripcion);
+                        // Guardamos el Rechazo en el historial del doc
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion, 'RECHAZADO', $origen);
+                        // Guardamos la Derivacion a SECRETARIA en el historial 
+                        $this->model->registrarHistorial($expediente, $dni, $descripcion);
+                    }
+                    // Cambiamos el estado del documento a RECHAZADO
+                    $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
+                    $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
                 }
-                // Cambiamos el estado del documento a RECHAZADO
-                $request = $this->model->editarDocumento($expediente, 'RECHAZADO');
-                $arrResponse = array('status' => true, 'title' => 'Trámite Rechazado', "msg" => 'La acción se realizó con exito.');
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             }
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
     }
     public function getSelectDestino()
@@ -156,33 +165,42 @@ class TramitesRecibidosController extends Controllers
     }
     public function getHistorial(string $expediente)
     {
-        if ($_SESSION['permisosMod']['rea']) {
-            $Expediente = limpiarCadena($expediente);
+        try {
+            if ($_SESSION['permisosMod']['rea']) {
+                $Expediente = limpiarCadena($expediente);
 
-            $arrData = $this->model->selectHistorial($Expediente);
-            for ($i = 0; $i < count($arrData); $i++) {
+                $arrData = $this->model->selectHistorial($Expediente);
+                for ($i = 0; $i < count($arrData); $i++) {
 
-                $arrData[$i]['fecha'] = '<b>' . $arrData[$i]['fecha'] . '</b>';
+                    $arrData[$i]['fecha'] = '<b>' . $arrData[$i]['fecha'] . '</b>';
 
-                if ($arrData[$i]['accion'] == "PENDIENTE") {
-                    $arrData[$i]['accion'] = '<span class="badge bg-black">' . $arrData[$i]['accion'] . '</span>';
-                } else if ($arrData[$i]['accion'] == "ACEPTADO") {
-                    $arrData[$i]['accion'] = '<span class="badge bg-success">' . $arrData[$i]['accion'] . '</span>';
-                } elseif ($arrData[$i]['accion'] == "DERIVADO") {
-                    $arrData[$i]['accion'] = '<span class="badge bg-primary">' . $arrData[$i]['accion'] . '</span>';
-                } elseif ($arrData[$i]['accion'] == "RECHAZADO") {
-                    $arrData[$i]['accion'] = '<span class="badge bg-danger">' . $arrData[$i]['accion'] . '</span>';
-                } else {
-                    $arrData[$i]['accion'] = '<span class="badge bg-warning">' . $arrData[$i]['accion'] . '</span>';
+                    if ($arrData[$i]['accion'] == "PENDIENTE") {
+                        $arrData[$i]['accion'] = '<span class="badge bg-black">' . $arrData[$i]['accion'] . '</span>';
+                    } else if ($arrData[$i]['accion'] == "ACEPTADO") {
+                        $arrData[$i]['accion'] = '<span class="badge bg-success">' . $arrData[$i]['accion'] . '</span>';
+                    } elseif ($arrData[$i]['accion'] == "DERIVADO") {
+                        $arrData[$i]['accion'] = '<span class="badge bg-primary">' . $arrData[$i]['accion'] . '</span>';
+                    } elseif ($arrData[$i]['accion'] == "RECHAZADO") {
+                        $arrData[$i]['accion'] = '<span class="badge bg-danger">' . $arrData[$i]['accion'] . '</span>';
+                    } else {
+                        $arrData[$i]['accion'] = '<span class="badge bg-warning">' . $arrData[$i]['accion'] . '</span>';
+                    }
                 }
+
+                $arrResponse = $arrData;
+
+                echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
             }
-
-            $arrResponse = $arrData;
-
-            echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
-        } else {
-            echo json_encode($this->unauthorizedResponse(), JSON_UNESCAPED_UNICODE);
+            die();
+        } catch (ArgumentCountError $e) {
+            echo json_encode([
+                "status" => false,
+                "title" => "Error en el servidor",
+                "msg" => "Ocurrió un error. Revisa la consola para más detalles.",
+                "error" => $e->getMessage()
+            ]);
         }
-        die();
     }
 }

@@ -21,7 +21,7 @@ function MostrarAlertaHtml(titulo, html, tipoalerta) {
     icon: tipoalerta,
     showConfirmButton: true,
     confirmButtonText: "Entendido",
-    width: '750px',
+    width: "750px",
   });
 }
 
@@ -60,7 +60,6 @@ function MostrarAlerta(titulo, descripcion, tipoalerta) {
     confirmButtonText: "Entendido",
   });
 }
-
 
 function verificarCampos(formulario) {
   let camposVacios = formulario.find("input[required]").filter(function () {
@@ -196,7 +195,9 @@ function validarCamposRequeridos(formularioID) {
 
 function eliminarValidacion(formularioID) {
   // Seleccionar los elementos con el atributo required dentro del formulario
-  $(`${formularioID} input[required], ${formularioID} select[required], ${formularioID} textarea[required]`).each(function() {
+  $(
+    `${formularioID} input[required], ${formularioID} select[required], ${formularioID} textarea[required]`
+  ).each(function () {
     // Eliminar las clases is-invalid e is-valid de cada uno de los elementos
     $(this).removeClass("is-invalid is-valid");
   });
@@ -244,7 +245,7 @@ function llenarSelectAjax(opcion, select1, anio = "") {
       $("#loader").show();
     },
     success: function (response) {
-      data = $.parseJSON(response);
+      data = JSON.parse(response);
       let placeholderOption = $("<option></option>");
       placeholderOption.val("");
       placeholderOption.text("Seleccione...");
@@ -331,3 +332,25 @@ function inicializarTablaTramites(tabla, controlador) {
   });
 }
 
+//Mostrar/Ocultar contraseña En General
+$(".toggle-password").click(function () {
+  // Encuentra el input más cercano
+  const passwordInput = $(this)
+    .closest(".form-group")
+    .find('input[type="password"], input[type="text"]');
+  const eyeIcon = $(this).find("i");
+
+  // Alternar el tipo de input entre password y text
+  if (passwordInput.attr("type") === "password") {
+    passwordInput.attr("type", "text");
+    eyeIcon.removeClass("fa-eye").addClass("fa-eye-slash");
+  } else {
+    passwordInput.attr("type", "password");
+    eyeIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+  }
+});
+
+function resetEyeIcon(form) {
+  const eyeIcon = $(form).find("i");
+  eyeIcon.removeClass("fa-eye-slash").addClass("fa-eye");
+}
