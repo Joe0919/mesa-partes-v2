@@ -1,13 +1,14 @@
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-dark navbar-cyan d-flex justify-content-between w-auto">
             <!-- Left navbar links -->
-            <ul class="navbar-nav">
+            <ul class="navbar-nav flex-grow-1 d-flex justify-content-start">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="nav-item d-flex align-items-center">
-                    <h3 class="font-weight-bold h6 m-0 d-none d-md-block">
-                        USUARIO: <span id="info-datos" class="font-weight-normal"><?= $_SESSION['userData']['nombres'] . ' ' . $_SESSION['userData']['apellidos'] ?></span>
+                <li class="nav-item d-flex flex-grow-1 align-items-center justify-content-between justify-content-lg-start">
+                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-md-row">
+                        <strong class="mr-0 mr-md-1">USUARIO: </strong>
+                        <span id="info-datos"><?= $_SESSION['userData']['nombres'] . ' ' . $_SESSION['userData']['apellidos'] ?></span>
                     </h3>
                     <input id="id_areaid" type="hidden" value="<?= $_SESSION['userData']['idareainstitu'] ?>">
                     <input id="info-area" type="hidden" value="<?= $_SESSION['userData']['area'] ?>">
@@ -15,11 +16,9 @@
                     <input id="iduser" name="iduser" type="hidden" value="<?= $_SESSION['userData']['idusuarios'] ?>">
                     <input id="dniuser" name="dniuser" type="hidden" value="<?= $_SESSION['userData']['dni'] ?>">
                     <input id="foto_user" name="foto_user" type="hidden" value="<?= $_SESSION['userData']['foto'] ?>">
-                </li>
-                <li class="nav-item d-flex align-items-center ml-5">
-                    <h3 class="font-weight-bold h6 m-0 d-none d-md-block">
-                        ÁREA:
-                        <span id="info-area1" class="font-weight-normal"><?= $_SESSION['userData']['area'] ?></span>
+                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-md-row ml-lg-4">
+                        <strong class="mr-0 mr-md-1">AREA: </strong>
+                        <span id="info-area1"><?= $_SESSION['userData']['area'] ?></span>
                     </h3>
                 </li>
             </ul>
@@ -27,7 +26,7 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav d-flex align-items-center">
                 <!-- Notifications Dropdown Menu -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
                         <span class="badge badge-danger navbar-badge h5">15</span>
@@ -52,7 +51,7 @@
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
                     </div>
-                </li>
+                </li> -->
                 <li class="nav-item">
                     <div class="demo-navbar-user nav-item dropdown">
                         <a class="nav-link dropdown-toggle m-0 py-0 d-flex align-items-center" href="#" data-toggle="dropdown">
@@ -73,9 +72,9 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end" style="width: 300px;">
                             <div class="dropdown-header text-center">
-                                <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" 
-                                alt="Foto perfil" class="img-thumbnail rounded-circle" style="width: 100px;">
-                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['nombres']?><br><?= $_SESSION['userData']['apellidos']?></h5>
+                                <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>"
+                                    alt="Foto perfil" class="img-thumbnail rounded-circle" style="width: 100px;">
+                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['nombres'] ?><br><?= $_SESSION['userData']['apellidos'] ?></h5>
                                 <h6 class="text-muted text-bold mt-1"><?= $_SESSION['userData']['rol'] ?></h6>
                                 <h7 class="text-muted"><?= $_SESSION['userData']['area'] ?></h7>
                             </div>

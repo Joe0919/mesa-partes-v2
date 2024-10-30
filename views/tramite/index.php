@@ -26,7 +26,7 @@
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
-<body class="bg-color-gray">
+<body class="sidebar-mini layout-fixed bg-principal">
 
     <?php require_once "views/inc/Loader/Loader.php" ?>
 

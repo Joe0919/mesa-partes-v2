@@ -935,3 +935,10 @@ body {
   margin: 10px;
 }
 
+.layout-fixed .main-sidebar {
+  left: auto;
+}
+
+.nav-item:nth-child(2) {
+  margin-left: auto;
+}

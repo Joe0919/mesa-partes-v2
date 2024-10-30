@@ -26,7 +26,7 @@
     <title><?= ($data["page_title"]) ?></title>
 </head>
 
-<body class="bg-color-gray">
+<body class="sidebar-mini layout-fixed bg-principal">
     <section class="fondo contenedor bg-principal">
         <div class="container bg-light form-login rounded-3 overflow-hidden">
             <div class="row">

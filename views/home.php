@@ -22,7 +22,7 @@
     <title>Mesa de Partes Virtual</title>
 </head>
 
-<body class="bg-color-gray">
+<body class="sidebar-mini layout-fixed bg-principal">
     <div class="contenedor bg-principal text-light">
         <!-- Navbar -->
         <nav class="navbar bg-oscuro p-3">
@@ -76,6 +76,7 @@
                 <article class="col-lg-10 col-xl-8 col-12 mx-auto mt-2">
                     <div class="card">
                         <div class="card-body p-2">
+                            <h5 class="my-2 text-bold text-muted text-center">BENEFICIOS:</h5>
                             <ul class="topic__rows row">
                                 <ul class="topic__rows row">
                                     <li class="col topic__rows__item">

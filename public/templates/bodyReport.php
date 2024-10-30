@@ -92,19 +92,7 @@
             padding: 3px;
         }
 
-        .footer {
-            position: fixed;
-            bottom: -10px;
-            width: 100%;
-        }
 
-        .footer-table {
-            border-top: 1px solid gray;
-            padding: 6px;
-            vertical-align: middle;
-            text-align: center;
-            width: 100%;
-        }
 
         .p-tipo {
             margin: 0;
@@ -139,6 +127,20 @@
 
         .title-detalle {
             font-size: 14px;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0px;
+            width: 100%;
+        }
+
+        .footer-table {
+            /* border-top: 1px solid gray; */
+            padding: 6px;
+            vertical-align: middle;
+            text-align: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -185,7 +187,6 @@
     <div class="footer">
         <table class="footer-table">
             <tr>
-                <td>Página 1 de 5</td>
             </tr>
         </table>
     </div>

@@ -27,7 +27,7 @@
 
 </head>
 
-<body class="bg-color-gray">
+<body class="sidebar-mini layout-fixed bg-principal">
 
     <div class="error-container contenedor">
         <div class="container-xl bg-color-gray h-100 d-flex align-items-center justify-content-center">
