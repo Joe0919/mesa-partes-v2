@@ -28,7 +28,7 @@
                         <div class="col d-flex justify-content-between">
                             <h4 class="m-0">Informe de Trámites</h4>
                             <ol class="breadcrumb float-sm-right">
-                                <li class="li-nav-info"><i class="nav-icon fas fa-file-export"></i><?= $data['page_title'] ?></li>
+                                <li class="li-nav-info"><i class="nav-icon fas fa-file-contract"></i><?= $data['page_title'] ?></li>
                             </ol>
                         </div>
                     </div>

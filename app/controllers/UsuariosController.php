@@ -40,7 +40,7 @@ class UsuariosController extends Controllers
                 $btnEditPsw = '';
                 $btnBorrar = '';
 
-                if ($arrData[$i]['estado'] == "ACTIVO") {
+                if ($arrData[$i]['estado'] == 1) {
                     $arrData[$i]['estado'] = '<span class="badge bg-success">ACTIVO</span>';
                 } else {
                     $arrData[$i]['estado'] = '<span class="badge bg-gray">INACTIVO</span>';
@@ -122,7 +122,7 @@ class UsuariosController extends Controllers
                     || empty($_POST['iemail']) || empty($_POST['idir']) || empty($_POST['icel'] || empty($_POST['inomusu']))
                     || empty($_POST['irol'])
                 ) {
-                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar el formulario.');
                 } else {
                     $idUsuario = intval(limpiarCadena($_POST['idusuario']));
                     $idPersona = intval(limpiarCadena($_POST['idpersona']));
@@ -142,30 +142,36 @@ class UsuariosController extends Controllers
                     $ruta_foto = "";
                     $success = false;
 
-                    if ($_POST['foto_bdr'] === '1') {
+                    if ($_POST['foto_bdr'] === '1') { // Se selecciono una imagen
                         $ruta_raiz = UPLOADS_PATH . 'images/'; // RAIZ/public/files/images/
-                        $rutaID = $idUsuario . '/'; // 1/
+                        if ($idUsuario == 0) {
+                            $arrID = $this->model->selectNewID();
+                            $newID = $arrID['newID'];
+                            $rutaID = $newID . '/'; // 1/
+                        } else {
+                            $rutaID = $idUsuario . '/'; // 1/
+                        }
                         $file_tmp_name = $foto['tmp_name'];
 
                         $ext = pathinfo($foto['name'], PATHINFO_EXTENSION);
                         $date = date("Ymd");
 
-                        $nuevo_nombre = UPLOADS_PATH . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+                        $nuevo_nombre = $ruta_raiz . $rutaID . 'profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
 
                         if (!file_exists($ruta_raiz)) {
                             mkdir($ruta_raiz, 0777, true);
                         }
-                        if (file_exists(UPLOADS_PATH . $rutaID)) {
-                            $files = array_diff(scandir(UPLOADS_PATH . $rutaID), array('.', '..'));
+                        if (file_exists($ruta_raiz . $rutaID)) {
+                            $files = array_diff(scandir($ruta_raiz . $rutaID), array('.', '..'));
                             if (count($files) > 0) {
-                                eliminarArchivos(UPLOADS_PATH . $rutaID);
+                                eliminarArchivos($ruta_raiz . $rutaID);
                             }
                         } else {
-                            mkdir(UPLOADS_PATH . $rutaID, 0777, true);
+                            mkdir($ruta_raiz . $rutaID, 0777, true);
                         }
 
                         if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
-                            $ruta_foto = 'files/images/' . $idUsuario . '/profile_' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
+                            $ruta_foto = 'files/images/' . $idUsuario . '/profile' . $idUsuario . '_' . $dni . '_' . $date . '.' . $ext;
                             $success = true;
                         } else {
                             $arrResponse = array("status" => false, "title" => "Error", "msg" => 'No fue posible guardar la foto.');
@@ -180,7 +186,12 @@ class UsuariosController extends Controllers
                             $option = 1;
                             $strPassword =  empty($_POST['ipassword']) ?  genContrasena() :  limpiarCadena($_POST['ipassword']);
                             if ($_SESSION['permisosMod']['cre']) {
+
+                                if ($idPersona == '0') {
+                                } else {
+                                }
                                 $request_user = $this->model->insertUsuario(
+                                    $idPersona,
                                     $dni,
                                     $appat,
                                     $apmat,
@@ -241,7 +252,7 @@ class UsuariosController extends Controllers
                                     'status' => true,
                                     'title' => 'Actualizado',
                                     'msg' => 'Datos actualizados correctamente.',
-                                    'results' => $request_user
+                                    'results' => $estado
                                 );
                             }
                         } else {
@@ -363,12 +374,12 @@ class UsuariosController extends Controllers
                                 'results' =>  $request_user
                             );
                         } else if ($request_user > 0) {
-
+                            sessionUser($idUsuario);
                             $arrResponse = array(
                                 'status' => true,
                                 'title' => 'Actualizado',
                                 'msg' => 'Datos actualizados correctamente.',
-                                'results' => $request_user
+                                'results' => sessionUser($idUsuario)
                             );
                         } else {
                             $arrResponse = array(

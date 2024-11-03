@@ -37,7 +37,7 @@ class RegistroTramiteController extends Controllers
                     empty($_POST['ifolios']) ||
                     empty($_FILES['ifile'])
                 ) {
-                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar el formulario.');
                 } else {
                     $idpersona = limpiarCadena($_POST['idpersona']);
                     $idusuario = intval(limpiarCadena($_POST['idusuario']));
@@ -54,7 +54,7 @@ class RegistroTramiteController extends Controllers
                     $idtipo = intval(limpiarCadena($_POST['itipo']));
                     $ndoc = limpiarCadena($_POST['n_doc']);
                     $folios = intval(limpiarCadena($_POST['ifolios']));
-                    $asunto = limpiarCadena($_POST['iasunto']);
+                    $asunto = strtoupper(limpiarCadena($_POST['iasunto']));
                     $documento = $_FILES['ifile'];
 
                     $request_persona = '';
@@ -62,23 +62,21 @@ class RegistroTramiteController extends Controllers
 
                     if ($idpersona != "") {
 
-                        $ruta_aux = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
+                        $ruta_raiz = UPLOADS_PATH . 'docs/'; // RAIZ/public/files/docs/
                         $rutaFecha = date('Y') . '/' . date('m') . '/' . date('d') . '/'; // 1/
                         $file_tmp_name = $documento['tmp_name'];
 
-                        // Obtener el expediente
                         $expedienteData = $this->model->genExpediente();
 
-                        // Acceder al número de expediente
                         $expediente = $expedienteData['Expediente'];
 
-                        $nuevo_nombre = $ruta_aux . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
+                        $nuevo_nombre = $ruta_raiz . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
 
-                        if (!file_exists($ruta_aux)) {
-                            mkdir($ruta_aux, 0777, true);
+                        if (!file_exists($ruta_raiz)) {
+                            mkdir($ruta_raiz, 0777, true);
                         }
-                        if (!file_exists($ruta_aux . $rutaFecha)) {
-                            mkdir($ruta_aux . $rutaFecha, 0777, true);
+                        if (!file_exists($ruta_raiz . $rutaFecha)) {
+                            mkdir($ruta_raiz . $rutaFecha, 0777, true);
                         }
 
                         if (move_uploaded_file($file_tmp_name, $nuevo_nombre)) {
@@ -98,17 +96,15 @@ class RegistroTramiteController extends Controllers
                             } else {
                                 $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
                                 $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE', $idusuario);
-
-                                $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
+                                // El Cuarto parametro 'SECRETARIA' ya que buscamos esa area sino cualquier otro ID de area
+                                $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', 'SECRETARIA', 'DERIVANDO A SECRETARIA');
 
                                 $arrData = $this->model->selectTramite($expediente, "");
 
                                 $html = "<p class='p_name'>Estimado(a): <b>" . $arrData['Datos'] . "</b></p>
                             <hr>
-                            <p class='p_name'>Se le envía este mensaje desde la <b>Mesa de Partes Virtual</b> del <b>Hospital Antonio
-                                Caldas Domínguez - Pomabamba.</b>
-                                <br>Para informarle que su trámite a sido enviado por lo que se le da a conocer información del trámite
-                                recepcionado:
+                            <p class='p_name'>Se le envía este mensaje desde la plataforma para informarle que su trámite ha sido
+                                 registrado con éxito por lo que se le da a conocer la información del trámite recepcionado:
                             </p>
                             <div class='container'>
                                 <table width='100%' border='1' cellspacing='0' cellpadding='5' id='tableDoc'>
@@ -138,12 +134,12 @@ class RegistroTramiteController extends Controllers
                                     </tr>
                                 </table>
                             </div>                   
-                            <p>Puede realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
+                            <p>Para realizar el seguimiento de su trámite puede ingresar a la plataforma de la <b>Mesa de Partes
                                     Virtual</b> en
-                                la pestaña <b><i>Seguimiento</i></b>
+                                la pestaña <b><a href='" . base_url() . "/seguimiento'>Seguimiento</a></b>
                             </p>";
-                                $this->tramiteModel = $this->loadAdditionalModel("Tramite");
-                                $arrInst = $this->tramiteModel->selectInstitucion();
+
+                                $arrInst = $this->model->selectInstitucion();
                                 $response = $this->enviarCorreo("MESA DE PARTES VIRTUAL", $arrData['Datos'], $email, "TRÁMITE REGISTRADO CON ÉXITO", $html, $arrInst);
 
                                 $arrResponse = array('status' => true, 'title' => 'Trámite Registrado', "msg" => 'Su trámite se guardo con éxito.', 'data' => $arrData, 'response' => $response);
@@ -156,6 +152,8 @@ class RegistroTramiteController extends Controllers
                     }
                 }
                 echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+            } else {
+                echo json_encode($this->sinPOSTResponse(), JSON_UNESCAPED_UNICODE);
             }
         } catch (ArgumentCountError $e) {
             echo json_encode([

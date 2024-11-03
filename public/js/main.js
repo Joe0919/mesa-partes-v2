@@ -34,6 +34,7 @@ $(function () {
   }
 
   // # ********************** ACCION PARA CAMBIAR DATOS DE INSTITUCIÓN **********************
+
   // # **************************** DATOS INSTITUCION ****************************
   //Boton mostrar datos de Institucion general
   $("#conf-inst").click(function () {
@@ -123,7 +124,7 @@ $(function () {
         confirmButtonText: "Si, editar",
       }).then((result) => {
         if (result.isConfirmed) {
-          $("#bdr_logo").val() !== "0" ? (logo_bdr = 1) : (logo_bdr = 0);
+          $("#bdr_logo").val() !== "0" ? (logo_bdr = 1) : (logo_bdr = 0); //Auxiliar para saber si se actualizo el logo
           var formData = new FormData(this);
           formData.append("logo_bdr", logo_bdr);
           $.ajax({
@@ -137,13 +138,14 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = JSON.parse(response);
-              if (!data.status) {
-                MostrarAlerta(data.title, data.msg, "error");
-                console.error(data.error);
+              objData = JSON.parse(response);
+              if (!objData.status) {
+                MostrarAlerta(objData.title, objData.msg, "error");
+                console.error(objData.error);
               } else {
+                $("#inst_footer").text(objData.results);
                 $("#form_institucion")[0].reset();
-                MostrarAlertaxTiempo(data.title, data.msg, "success");
+                MostrarAlertaxTiempo(objData.title, objData.msg, "success");
                 $("#modal_inst").modal("hide");
               }
               $("#loader").hide();
@@ -155,7 +157,7 @@ $(function () {
                 "Error en el servidor. Por favor, revise la consola para más detalles.",
                 "error"
               );
-              console.log("Error: " + textStatus + " - " + errorThrown);
+              console.error("Error: " + textStatus + " - " + errorThrown);
             },
           });
         }
@@ -170,6 +172,7 @@ $(function () {
   });
 
   // # **************************** DATOS DEL PERFIL ****************************
+
   //Mostrar modal con datos de usuario logeado
   $("#conf-perfil").click(function () {
     $.ajax({
@@ -183,10 +186,13 @@ $(function () {
         if (objData.status) {
           $("#idusuarioP").val(objData.data.idusuarios);
           $("#idpersonaP").val(objData.data.idpersona);
-          $("#foto_perfilP").css(
-            "background-image",
-            "url(" + base_url + "/public/" + objData.data.foto + ")"
-          );
+
+          //Evitar que se use misma foto de caché
+          let imageUrl = base_url + "/public/" + objData.data.foto;
+          let uniqueParam = new Date().getTime();
+          let finalUrl = imageUrl + "?t=" + uniqueParam;
+          $("#foto_perfilP").css("background-image", "url(" + finalUrl + ")");
+
           $("#idniP").val(objData.data.dni);
           $("#idniP").prop("readonly", true);
 
@@ -276,14 +282,25 @@ $(function () {
               $("#loader").show();
             },
             success: function (response) {
-              data = JSON.parse(response);
-              if (!data.status) {
-                MostrarAlerta(data.title, data.msg, "error");
-                console.error(data.error);
+              objData = JSON.parse(response);
+              if (!objData.status) {
+                MostrarAlerta(objData.title, objData.msg, "error");
+                console.error(objData.error);
               } else {
                 $("#form_EditUser")[0].reset();
-                MostrarAlertaxTiempo(data.title, data.msg, "success");
+                MostrarAlertaxTiempo(objData.title, objData.msg, "success");
                 $("#modal_EditUser").modal("hide");
+                let uniqueParam = new Date().getTime();
+                $("#img_perfil").attr(
+                  "src",
+                  base_url +
+                    "/public/" +
+                    objData.results.foto +
+                    "?t=" +
+                    uniqueParam
+                );
+                $(".span_header_name").text(objData.results.nombres);
+                $(".span_header_lastname").text(objData.results.apellidos);
               }
               $("#loader").hide();
             },

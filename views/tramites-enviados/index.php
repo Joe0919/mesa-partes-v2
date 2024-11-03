@@ -43,7 +43,7 @@
                             <div class="card card-danger card-outline">
                                 <div class="card-header">
                                     <div class="row row-cols-2">
-                                        <div class="col-12 col-lg-7">
+                                        <div class="col-12">
                                             <h3 class="card-title font-weight-bold card-header-title">Lista de Trámites Enviados desde <?= $_SESSION['userData']['area'] ?></span></h3>
                                             <button type="button" id="btn_reload" class="btn btn-tool bg-color-gray p-1 px-2 m-0 ml-2 text-dark"
                                                 data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">

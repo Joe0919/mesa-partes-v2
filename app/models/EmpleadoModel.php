@@ -87,7 +87,7 @@ class EmpleadoModel extends Mysql
 
             $request = $this->editar(
                 "usuarios",
-                "estado = 'ACTIVO'",
+                "estado = 1",
                 "dni = (SELECT dni FROM persona WHERE idpersona = ?)",
                 [$this->intIdPersona]
             );
@@ -104,11 +104,11 @@ class EmpleadoModel extends Mysql
 
             $arrData = array($this->intIdPersona, $this->intIdArea);
             $request_insert = $this->registrar("empleado", "(null,(gen_cod_empleado('E', 5)),?,
-                (SELECT idareainstitu FROM areainstitu WHERE idarea = ?),0)", $arrData);
+                ?,0)", $arrData);
 
             $request = $this->editar(
                 "usuarios",
-                "estado = 'ACTIVO'",
+                "estado = 1",
                 "dni = (SELECT dni FROM persona WHERE idpersona = ?)",
                 [$this->intIdPersona]
             );
@@ -147,7 +147,7 @@ class EmpleadoModel extends Mysql
 
         $request = $this->editar(
             "usuarios",
-            "estado = 'INACTIVO'",
+            "estado = 0",
             "dni = (SELECT dni FROM persona WHERE idpersona = 
             (SELECT idpersona FROM empleado WHERE idempleado = ?))",
             [$this->intIdEmpleado]

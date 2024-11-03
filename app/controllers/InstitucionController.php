@@ -59,7 +59,7 @@ class InstitucionController extends Controllers
             if ($idInst > 0 && $_SESSION['permisosMod']['upd']) {
                 $ruta_foto = $this->handleFileUpload($idInst, $RUC);
                 $request_inst = $this->model->editarInst($idInst, $RUC, $Razon, $Direc, $telefono, $email, $web, $sector, $ruta_foto);
-                $arrResponse = $this->generateResponse($request_inst, $ruta_foto);
+                $arrResponse = $this->generateResponse($request_inst, $Razon);
             } else {
                 $arrResponse = ["status" => false, "title" => "Error", "msg" => "El ID es 0 o no tiene permisos."];
             }
@@ -129,7 +129,7 @@ class InstitucionController extends Controllers
     }
 
     // Método para generar la respuesta según el resultado de la operación
-    private function generateResponse($request_inst, $ruta_foto)
+    private function generateResponse($request_inst, $razon)
     {
         if ($request_inst === 'exist') {
             return [
@@ -142,7 +142,7 @@ class InstitucionController extends Controllers
                 'status' => true,
                 'title' => 'Actualizado',
                 'msg' => 'Datos actualizados correctamente.',
-                'results' => $request_inst . " " . $ruta_foto,
+                'results' => $razon,
             ];
         } else {
             return ["status" => false, 'title' => 'Error', "msg" => 'No es posible almacenar los datos.'];

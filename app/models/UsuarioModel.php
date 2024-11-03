@@ -49,8 +49,9 @@ class UsuarioModel extends Mysql
         return $request;
     }
 
-    public function insertUsuario($dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol, $Foto)
+    public function insertUsuario($idpersona, $dni,  $appat, $apmat, $nombre, $email, $celular, $direccion, $nom_usu, $psw, $rol, $Foto)
     {
+        $this->intIdPersona = $idpersona;
         $this->strDNI = $dni;
         $this->strApPaterno = $appat;
         $this->strApMaterno = $apmat;
@@ -72,11 +73,21 @@ class UsuarioModel extends Mysql
         );
 
         if (empty($request)) {
-            $arrData = array($this->strDNI, $this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion);
-            $request_insert = $this->registrar("persona", "(null,?,?,?,?,?,?,?,null,null,0)", $arrData);
+
+            if ($this->intIdPersona == 0) {
+                $arrData = array($this->strDNI, $this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion);
+                $request_insert = $this->registrar("persona", "(null,?,?,?,?,?,?,?,null,null,0)", $arrData);
+            } else {
+                $request = $this->editar(
+                    "persona",
+                    "ap_paterno = ?, ap_materno = ?, nombres = ?, email = ?, telefono = ?, direccion = ?",
+                    "idpersona = ?",
+                    [$this->strApPaterno, $this->strApMaterno, $this->strNombre, $this->strEmail, $this->intTelefono, $this->strDireccion, $this->intIdPersona]
+                );
+            }
 
             $arrData = array($this->strNombreUsuario, $this->strDNI, $this->strPassword, $this->strFoto, $this->intIdRol);
-            $request_insert = $this->registrar("usuarios", " (null,?,?,?,sysdate(),null,sysdate(),'INACTIVO',?,?,0)", $arrData);
+            $request_insert = $this->registrar("usuarios", " (null,?,?,?,sysdate(),null,sysdate(),0,?,?,0)", $arrData);
 
             $return = $request_insert;
         } else {
@@ -303,7 +314,7 @@ class UsuarioModel extends Mysql
         if (empty($request)) {
             $request = $this->editar(
                 "usuarios",
-                " deleted = 1, estado = 'INACTIVO' ",
+                " deleted = 1, estado = 0 ",
                 " dni = ? ",
                 [$this->strDNI]
             );
@@ -315,6 +326,17 @@ class UsuarioModel extends Mysql
         } else {
             $request = 'exist';
         }
+        return $request;
+    }
+
+    public function selectNewID()
+    {
+        $request = $this->consultar(
+            "max(idusuarios) + 1 'newID'",
+            "usuarios",
+            '',
+            []
+        );
         return $request;
     }
 }

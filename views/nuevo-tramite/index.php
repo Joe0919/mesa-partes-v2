@@ -47,7 +47,7 @@
                                         <div class="col-sm-6 col-md-8 col-lg-9 d-flex align-items-center">
                                             <h3 class="title-content-h3 m-0"><i class="fas fa-plus-circle mr-1"></i><b>DATOS DEL TRAMITE TRÁMITE</b></h3>
                                         </div>
-                                        <div class="col-sm-6 col-md-4 col-lg-3 mt-2">
+                                        <div class="col-sm-6 col-md-4 col-lg-3">
                                             <button type="button" id="btnLimpiar" class="btn btn-block bg-gradient-white">
                                                 <i class="nav-icon fas fa-eraser mr-1"></i><b>Limpiar Campos</b>
                                             </button>
@@ -177,7 +177,7 @@
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label>Adjuntar archivo (Solamente PDFs).</label><span class="span-required"></span>
+                                                            <label>Adjuntar archivo (Solo PDF y max. 10MB).</label><span class="span-required"></span>
                                                             <div class="file">
                                                                 <label for="idfile" id="archivo">
                                                                     <i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...

@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
     <!-- Estilos principales -->
     <link rel="stylesheet" href="<?= media() ?>/css/style.css">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/toastr/toastr.min.css">
 
     <link rel="icon" type="image/png" href="<?= media() ?>/images/logo.png">
     <title><?= ($data["page_title"]) ?></title>
@@ -192,7 +194,7 @@
                                                             <textarea class="form-control text-uppercase" rows="3" id="idasunto" name="iasunto" placeholder="Ingrese el asunto del documento" required></textarea>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label>Adjuntar archivo (Solamente PDFs).</label><span class="span-required"></span>
+                                                            <label>Adjuntar archivo (Solo PDF y max. 10MB).</label><span class="span-required"></span>
                                                             <div class="file">
                                                                 <label for="idfile" id="archivo">
                                                                     <i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...
@@ -272,7 +274,8 @@
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
     <!-- Sweet Alert -->
     <script src="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
-
+    <!-- Toastr -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/toastr/toastr.min.js"></script>
 
 </body>
 

@@ -6,9 +6,12 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-flex flex-grow-1 align-items-center justify-content-between justify-content-lg-start">
-                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-md-row">
+                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-xl-row">
                         <strong class="mr-0 mr-md-1">USUARIO: </strong>
-                        <span id="info-datos"><?= $_SESSION['userData']['nombres'] . ' ' . $_SESSION['userData']['apellidos'] ?></span>
+                        <p class="d-flex m-0">
+                            <span class="span_header_name"><?= $_SESSION['userData']['nombres'] ?></span>
+                            <span class="span_header_lastname ml-1"><?= $_SESSION['userData']['apellidos'] ?> </span>
+                        </p>
                     </h3>
                     <input id="id_areaid" type="hidden" value="<?= $_SESSION['userData']['idareainstitu'] ?>">
                     <input id="info-area" type="hidden" value="<?= $_SESSION['userData']['area'] ?>">
@@ -16,7 +19,7 @@
                     <input id="iduser" name="iduser" type="hidden" value="<?= $_SESSION['userData']['idusuarios'] ?>">
                     <input id="dniuser" name="dniuser" type="hidden" value="<?= $_SESSION['userData']['dni'] ?>">
                     <input id="foto_user" name="foto_user" type="hidden" value="<?= $_SESSION['userData']['foto'] ?>">
-                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-md-row ml-lg-4">
+                    <h3 class="h6 m-0 d-none d-md-flex flex-column flex-xl-row ml-lg-4">
                         <strong class="mr-0 mr-md-1">AREA: </strong>
                         <span id="info-area1"><?= $_SESSION['userData']['area'] ?></span>
                     </h3>
@@ -60,7 +63,7 @@
                                 $foto = $_SESSION['userData']['foto'];
                                 $timestamp = time();
                                 ?>
-                                <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" alt="Foto perfil" class="d-block rounded-circle" style="max-width: 35px;">
+                                <img id="img_perfil" src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>" alt="Foto perfil" class="d-block rounded-circle" style="max-width: 35px;">
                                 <span class="px-1 mr-lg-2 ml-2 ml-lg-0 font-name">
                                     <?php
                                     $utf8_string = $_SESSION['userData']['nomusu'];
@@ -74,14 +77,19 @@
                             <div class="dropdown-header text-center">
                                 <img src="<?php echo media() . "/" . $foto . "?t=" . $timestamp; ?>"
                                     alt="Foto perfil" class="img-thumbnail rounded-circle" style="width: 100px;">
-                                <h5 class="mt-2 mb-0"><?= $_SESSION['userData']['nombres'] ?><br><?= $_SESSION['userData']['apellidos'] ?></h5>
+                                <h5 class="mt-2 mb-0 d-flex flex-column">
+                                    <span class="   "><?= $_SESSION['userData']['nombres'] ?></span>
+                                    <span class="span_header_lastname ml-1"><?= $_SESSION['userData']['apellidos'] ?> </span>
+                                </h5>
                                 <h6 class="text-muted text-bold mt-1"><?= $_SESSION['userData']['rol'] ?></h6>
                                 <h7 class="text-muted"><?= $_SESSION['userData']['area'] ?></h7>
                             </div>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item cursor-pointer" id="conf-inst" data-toggle="modal">
-                                <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span>
-                            </a>
+                            <?php if ($_SESSION['userData']['idroles'] == 1) { ?>
+                                <a class="dropdown-item cursor-pointer" id="conf-inst" data-toggle="modal">
+                                    <i class="feather icon-info text-muted"></i><span class="ml-1">Institución</span>
+                                </a>
+                            <?php } ?>
                             <a class="dropdown-item cursor-pointer" id="conf-perfil" data-toggle="modal">
                                 <i class="feather icon-user text-muted"></i><span class="ml-1">Datos del Perfil</span>
                             </a>

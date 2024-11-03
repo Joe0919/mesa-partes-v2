@@ -70,7 +70,7 @@ class AccesoController extends Controllers
         }
 
         $arrData = $requestUser;
-        if ($arrData["estado"] === 'ACTIVO') {
+        if ($arrData["estado"] === 1) {
             $_SESSION["idUsuario"] = $arrData["idusuarios"];
             $_SESSION["login"] = true;
 

@@ -10,6 +10,7 @@ $(function () {
   $("#loader").show();
 
   /*=============================   MOSTRAR TABLA DE USUARIOS  ================================= */
+
   tablaUsuarios = $("#tablaUsuarios").DataTable({
     destroy: true,
     language: {
@@ -35,15 +36,16 @@ $(function () {
     },
   });
 
+  //Esperamos para Cargar Select de Roles
   setTimeout(() => {
     llenarSelectRol();
-  }, 200);
+  }, 500);
 
-
+  //Recargar tabla
   $("#btn_reload").click(function () {
     tablaUsuarios.ajax.reload(null, false);
   });
-
+  /*=============================   NUEVO USUARIO  ================================= */
   //Mostrar modal de nuevo usuario
   $("#btn_new_user").click(function () {
     idusu = null;
@@ -54,6 +56,7 @@ $(function () {
     $("#idni").prop("readonly", false);
     $(".aviso").text("");
     eliminarValidacion("#form_user");
+    $("#validarDNI").removeClass("d-none");
   });
 
   //Visualizar Foto Seleccionada
@@ -89,6 +92,58 @@ $(function () {
   //Validar Campos requeridos y Cambiar Clases
   validarCamposRequeridos("#form_user");
 
+  condicionarInputs(true);
+
+  $("#validarDNI").click(function () {
+    let dni = $("#idni").val();
+    if (dni.length < 8) {
+      alert("El DNI debe tener 8 digitos");
+      $("#idni").focus();
+    } else {
+      $.ajax({
+        url: `${base_url}/Persona/getPersona/${dni}`,
+        type: "GET",
+        beforeSend: function () {
+          $("#loader").show();
+        },
+        success: function (response) {
+          objData = JSON.parse(response);
+          condicionarInputs(false);
+          if (objData.status) {
+            $("#idpersona").val(objData.data.idpersona);
+            $("#iappat").val(objData.data.ap_paterno);
+            $("#iapmat").val(objData.data.ap_materno);
+            $("#inombre").val(objData.data.nombres);
+            $("#iemail").val(objData.data.email);
+            $("#icel").val(objData.data.telefono);
+            $("#idir").val(objData.data.direccion);
+            MostrarAlertaToast(
+              "DNI ENCONTRADO",
+              "Campos Completados",
+              "success"
+            );
+          } else {
+            MostrarAlertaToast(
+              "DNI NO ENCONTRADO",
+              "Ingrese los datos de la persona",
+              "error"
+            );
+            $("#inombre").focus();
+            data.error ? console.log(data.error) : null;
+          }
+          $("#loader").hide();
+          $(this).prop("disabled", true);
+          $("#idni").prop("readonly", true);
+        },
+        error: function (error) {
+          MostrarAlerta("Error", "Error al cargar los datos", "error");
+          console.error("Error: " + error);
+          $("#loader").hide();
+        },
+      });
+    }
+  });
+
   //Registrar o editar los datos del usuario
   $("#form_user").on("submit", function (e) {
     e.preventDefault();
@@ -113,8 +168,8 @@ $(function () {
         }).then((result) => {
           if (result.isConfirmed) {
             $("#checkEstado").is(":checked")
-              ? $("#iestado").val("ACTIVO")
-              : $("#iestado").val("INACTIVO");
+              ? $("#iestado").val(1)
+              : $("#iestado").val(0);
             $("#bdr-photo").val() !== "0" ? (foto_bdr = 1) : (foto_bdr = 0);
             let formData = new FormData(this);
             formData.append("foto_bdr", foto_bdr);
@@ -129,15 +184,19 @@ $(function () {
                 $("#loader").show();
               },
               success: function (response) {
-                data = JSON.parse(response);
-                if (!data.status) {
-                  MostrarAlerta(data.title, data.msg, "error");
-                  console.error(data.error);
+                objData = JSON.parse(response);
+                if (!objData.status) {
+                  MostrarAlerta(objData.title, objData.msg, "error");
+                  console.error(objData.error);
                 } else {
+                  $("input_photo").val("");
                   $("#form_user")[0].reset();
                   tablaUsuarios.ajax.reload(null, false);
-                  MostrarAlertaxTiempo(data.title, data.msg, "success");
+                  MostrarAlertaxTiempo(objData.title, objData.msg, "success");
                   $("#modal_user").modal("hide");
+                  eliminarValidacion("#form_user");
+                  resetEyeIcon("#form_user");
+                  $("#foto_perfilf").css("background-image", "none");
                 }
                 $("#loader").hide();
               },
@@ -159,6 +218,12 @@ $(function () {
     }
   });
 
+  //limpiar los datos
+  $("#limpiarUsuario").click(function () {
+    condicionarInputs(true);
+    resetFormUsuarios();
+  });
+
   /* =============================   ACCIONES BOTONES EN TABLA  ================================= */
 
   //Mostrar datos de usuario para edicion
@@ -177,12 +242,15 @@ $(function () {
           openModal("edit");
           $("#idusuario").val(objData.data.idusuarios);
           $("#idpersona").val(objData.data.idpersona);
-          $("#foto_perfilf").css(
-            "background-image",
-            "url(" + base_url + "/public/" + objData.data.foto + ")"
-          );
+
+          let imageUrl = base_url + "/public/" + objData.data.foto;
+
+          let uniqueParam = new Date().getTime();
+          let finalUrl = imageUrl + "?t=" + uniqueParam;
+
+          $("#foto_perfilf").css("background-image", "url(" + finalUrl + ")");
+
           $("#idni").val(objData.data.dni);
-          $("#idni").prop("readonly", true);
 
           $("#inombre").val(objData.data.nombres);
           $("#iappat").val(objData.data.ap);
@@ -193,7 +261,13 @@ $(function () {
           $("#inomusu").val(objData.data.nombre);
           $("#select-rol").val(objData.data.idroles);
           $("#bdr-photo").val("0");
-          if (objData.data.estado == "ACTIVO") {
+          condicionarInputs(false);
+
+          $("#idni").prop("readonly", true);
+          $("#idni").prop("required", false);
+          $("#validarDNI").addClass("d-none");
+
+          if (objData.data.estado == 1) {
             $("#checkEstado").prop("checked", true);
             $("#label-estado").text("ACTIVO").css("color", "green");
             $("#estado").val(objData.data.estado);
@@ -373,8 +447,8 @@ $(function () {
       $(this).val(
         generarNombreUsuario(
           $("#inombre").val(),
-          $("#iapmat").val(),
           $("#iappat").val(),
+          $("#iapmat").val(),
           $("#idni").val()
         )
       );
@@ -396,7 +470,6 @@ $(function () {
         .css("color", "red");
     }
   });
-
   $("#ipassco").blur(function () {
     //Validacion de contraseña
     if ($("#ipassco").val().length < 8) {
@@ -411,6 +484,7 @@ $(function () {
         .css("color", "red");
     }
   });
+
   //CAmbiar color y texto de estado
   $("#checkEstado").change(function () {
     if ($(this).is(":checked")) {
@@ -488,7 +562,32 @@ function openModal(type) {
     $("#estado-row").hide();
     resetHidden($("#form_user"));
   }
-
   $("#modal_user").modal({ backdrop: "static", keyboard: false });
   $(".aviso").val("");
+}
+
+function condicionarInputs(bool) {
+  $("#idni").prop("disabled", !bool);
+  $("#inombre").prop("disabled", bool);
+  $("#inombre").prop("required", !bool);
+  $("#iappat").prop("disabled", bool);
+  $("#iappat").prop("required", !bool);
+  $("#iapmat").prop("disabled", bool);
+  $("#iapmat").prop("required", !bool);
+  $("#iemail").prop("disabled", bool);
+  $("#iemail").prop("required", !bool);
+  $("#idir").prop("disabled", bool);
+  $("#idir").prop("required", !bool);
+  $("#icel").prop("disabled", bool);
+  $("#icel").prop("required", !bool);
+
+  $("#validarDNI").prop("disabled", !bool);
+}
+
+function resetFormUsuarios() {
+  $("#form_user").trigger("reset");
+  $("#validarDNI").prop("disabled", false);
+  $("#idpersona").val("0");
+  eliminarValidacion("#form_user");
+  $("#idni").prop("readonly", false);
 }

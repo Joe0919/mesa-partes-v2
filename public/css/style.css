@@ -8,6 +8,7 @@
   --color5: #8c0505;
   --color6: #cb2020;
   --color7: #f5f2f2;
+  --color8: #007bff;
 
   --color-table1: #3c8dbc;
   --color-table1-5: #dcedf8;
@@ -941,4 +942,34 @@ body {
 
 .nav-item:nth-child(2) {
   margin-left: auto;
+}
+
+.p-nota {
+  font-size: 0.9rem;
+  color: var(--color-gray1);
+}
+.toastr {
+  font-size: 20px;
+}
+
+#btn-volver-arriba {
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--color8); /* Color de fondo */
+  color: white; /* Color del icono */
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: opacity 0.3s ease;
+  opacity: 0.5;
+}
+
+#btn-volver-arriba:hover {
+  opacity: 1;
 }

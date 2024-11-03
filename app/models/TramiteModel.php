@@ -27,7 +27,6 @@ class TramiteModel extends Mysql
     {
         parent::__construct();
     }
-
     public function selectTramites($IdUbicacion, $area, $estado)
     {
         $this->strArea = $area;
@@ -140,7 +139,7 @@ class TramiteModel extends Mysql
     {
         $this->strExpediente = $expediente;
         $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado,t.idtipodoc, tipodoc, asunto, dni,
-                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, area,
+                    concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, IFNULL(NULLIF(TRIM(ruc_institu), ''),'Ninguna') ruc_institu,IFNULL(NULLIF(TRIM(institucion), ''),'Ninguna') institucion, archivo, area,
                     date_format(fechad, '%d/%m/%Y') Fecha, descripcion
                 FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
                 JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
@@ -157,7 +156,8 @@ class TramiteModel extends Mysql
         $this->strExpediente = $expediente;
         $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado,t.idtipodoc, tipodoc, asunto, p.dni,
         concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion, 
-        IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, ae.area,
+        IFNULL(NULLIF(TRIM(ruc_institu), ''),'Ninguna') ruc_institu,IFNULL(NULLIF(TRIM(institucion), ''),'Ninguna') institucion,
+        archivo, a.idarea, ae.area,
         date_format(fechad, '%d/%m/%Y') Fecha, h.descrip
         FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
         JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
@@ -177,7 +177,8 @@ class TramiteModel extends Mysql
 
         $sql = "SELECT idderivacion, nro_expediente, dc.iddocumento, nro_doc ,folios, estado, tipodoc, asunto, dni,
                     concat(nombres,' ',ap_paterno,' ',ap_materno) Datos, email , telefono, direccion,
-                     IFNULL(ruc_institu,'Ninguna') ruc_institu,IFNULL(institucion,'Ninguna') institucion, archivo, area,
+                     IFNULL(NULLIF(TRIM(ruc_institu), ''),'Ninguna') ruc_institu,IFNULL(NULLIF(TRIM(institucion), ''),'Ninguna') institucion,
+                      archivo, area,
                     date_format(fechad , '%d/%m/%Y') Fecha, descripcion  
                 FROM derivacion d JOIN documento dc ON d.iddocumento=dc.iddocumento
                 JOIN areainstitu a ON d.idareainstitu=a.idareainstitu
@@ -281,9 +282,10 @@ class TramiteModel extends Mysql
             $request_insert = $this->registrar(
                 "documento",
                 "(null,?,?,?,?,'PENDIENTE',?,?,?,
-                (SELECT idareainstitu 
-                FROM areainstitu ai JOIN area a ON ai.idarea = a.idarea 
-                WHERE area = 'SECRETARIA' OR area = 'SECRETARÍA'), 0,sysdate())",
+                (SELECT ai.idareainstitu
+                    FROM areainstitu ai
+                    JOIN area a ON ai.idarea = a.idarea
+                    WHERE a.area LIKE '%SECRETARIA%'), 0,sysdate())",
                 $arrData
             );
             $return = $request_insert;
@@ -334,7 +336,7 @@ class TramiteModel extends Mysql
 
         return $request;
     }
-    public function registrarHistorial($expediente, $dni, $desc, $idusuario, $accion = 'DERIVADO', $area = 'SECRETARÍA')
+    public function registrarHistorial($expediente, $dni, $desc, $idusuario, $accion = 'DERIVADO', $area = '')
     {
         $this->strExpediente = $expediente;
         $this->strDNI = $dni;
@@ -347,6 +349,17 @@ class TramiteModel extends Mysql
         $datos_aux = '-';
         $rol_aux = '-';
         $area_aux = '-';
+
+        if ($this->strArea === '') {
+            $strArea = "(SELECT area
+            FROM areainstitu ai
+            JOIN area a ON ai.idarea = a.idarea
+            WHERE a.area LIKE ?)";
+            $this->strArea = '%SECRETARIA%';
+        } else {
+            $strArea = '?';
+        }
+
 
         //si es usuario registrado 
         if ($idusuario != '0') {
@@ -365,7 +378,6 @@ class TramiteModel extends Mysql
             $area_aux = $request['area'];
         }
 
-
         $arrData = array(
             $this->strExpediente,
             $this->strDNI,
@@ -379,9 +391,10 @@ class TramiteModel extends Mysql
             $area_aux
         );
 
+
         $request_insert = $this->registrar(
             "historial",
-            "(null, sysdate(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            "(null, sysdate(), ?, ?, ?, $strArea, ?, ?, ?, ?, ?, ?, 0)",
             $arrData
         );
         $return = $request_insert;
@@ -398,9 +411,15 @@ class TramiteModel extends Mysql
 
         $iddoc = $this->strExpediente !== '' ? '(SELECT iddocumento FROM documento WHERE nro_expediente = ?)' : '?';
 
-        $idarea = $this->strIdDestino === 'SECRETARIA' ?
-            '(SELECT idareainstitu FROM areainstitu ai JOIN area a ON a.idarea=ai.idarea WHERE area = ?)' :
-            '?';
+        if ($this->strIdDestino === 'SECRETARIA') {
+            $idarea = "(SELECT ai.idareainstitu
+            FROM areainstitu ai
+            JOIN area a ON ai.idarea = a.idarea
+            WHERE a.area LIKE ?)";
+            $this->strIdDestino = '%SECRETARIA%';
+        } else {
+            $idarea = '?';
+        }
 
         $arrData = $this->strExpediente !== '' ? array(
             $this->strOrigen,
@@ -444,11 +463,11 @@ class TramiteModel extends Mysql
         $arrValues = $this->intIdUbicacion == '' ? [] : [$this->intIdUbicacion];
 
         $request = $this->consultarVarios(
-            "SUM(CASE WHEN estado = 'PENDIENTE' THEN 1 ELSE 0 END) AS total_pendiente,
-                SUM(CASE WHEN estado = 'ACEPTADO' THEN 1 ELSE 0 END) AS total_aceptado,
-                SUM(CASE WHEN estado = 'OBSERVADO' THEN 1 ELSE 0 END) AS total_observado,
-                SUM(CASE WHEN estado = 'RECHAZADO' THEN 1 ELSE 0 END) AS total_rechazado,
-                SUM(CASE WHEN estado = 'ARCHIVADO' THEN 1 ELSE 0 END) AS total_archivado",
+            "IFNULL(SUM(CASE WHEN estado = 'PENDIENTE' THEN 1 ELSE 0 END), 0) AS total_pendiente,
+                IFNULL(SUM(CASE WHEN estado = 'ACEPTADO' THEN 1 ELSE 0 END), 0) AS total_aceptado,
+                IFNULL(SUM(CASE WHEN estado = 'OBSERVADO' THEN 1 ELSE 0 END), 0) AS total_observado,
+                IFNULL(SUM(CASE WHEN estado = 'RECHAZADO' THEN 1 ELSE 0 END), 0) AS total_rechazado,
+                IFNULL(SUM(CASE WHEN estado = 'ARCHIVADO' THEN 1 ELSE 0 END), 0) AS total_archivado",
             "documento",
             $where,
             $arrValues

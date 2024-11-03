@@ -30,3 +30,5 @@
 
 <!-- SweetAlert2 -->
 <script src="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="<?= media() ?>/templates/AdminLTE/plugins/toastr/toastr.min.js"></script>

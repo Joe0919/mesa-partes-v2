@@ -166,7 +166,7 @@
                                                                 </div>
 
                                                                 <div class="form-group">
-                                                                    <label>Adjuntar archivo (Solamente PDFs).</label><span class="span-red"> (*)</span>
+                                                                    <label>Adjuntar archivo (Solo PDF y max. 10MB).</label><span class="span-red"> (*)</span>
                                                                     <div class="file">
                                                                         <label for="idfile" id="archivo">
                                                                             <i class="nav-icon fas fa-upload mr-1"></i>Elige el Archivo...

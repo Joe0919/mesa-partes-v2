@@ -54,12 +54,12 @@ $(document).ready(function () {
           MostrarAlertaHtml(
             "Trámite No encontrado",
             `<p class='lh-base'>
-                No se encontró el trámite con Expediente: <b>` +
+                No se encontró el trámite <b>` +
               $("#expediente_b").val() +
               `</b>
                 , DNI del Firmante: <b>` +
               $("#dni_b").val() +
-              `</b> y año de Registro: <b>` +
+              `</b> en el <b>` +
               $("#select-año").val() +
               `</b>,
                 <br>
@@ -68,7 +68,7 @@ $(document).ready(function () {
             "error"
           );
           $("#form_busqueda")[0].reset();
-          $("#expediente_b").focus();
+          eliminarValidacion("#form_busqueda");
         }
 
         $("#loader").hide();

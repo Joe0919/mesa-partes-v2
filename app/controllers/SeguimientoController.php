@@ -86,7 +86,7 @@ class SeguimientoController extends Controllers
     private function validateInput($input)
     {
         if (empty($input['expediente']) || empty($input['dni']) || empty($input['anio'])) {
-            return ["status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.'];
+            return ["status" => false, "title" => "Faltan Datos", "msg" => 'Completar el formulario.'];
         }
         return ["status" => true];
     }

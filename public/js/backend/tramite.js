@@ -3,7 +3,9 @@ let url,
   ok = false,
   Expediente,
   ruta,
-  dniRemitente;
+  dniRemitente,
+  idDocumento,
+  AreaActual;
 
 // equivalente a $(document).ready(function () {
 $(function () {
@@ -106,6 +108,8 @@ $(function () {
             formData.append("ruta", ruta);
             formData.append("dni", dniRemitente);
             formData.append("email", emailRemitente);
+            formData.append("iddocumento", idDocumento);
+            formData.append("AreaActual", AreaActual);
             $("#loader").show();
             $("#loader-text").text(
               "Por favor espere. Estamos registrando su trámite..."
@@ -121,7 +125,7 @@ $(function () {
                 objData = JSON.parse(response);
                 if (objData.status) {
                   const redireccionar = setTimeout(() => {
-                    window.location.href = base_url
+                    window.location.href = base_url;
                   }, 5000);
 
                   Swal.fire({
@@ -132,7 +136,7 @@ $(function () {
                   }).then((result) => {
                     if (result.isConfirmed) {
                       clearTimeout(redireccionar);
-                      window.location.href = base_url
+                      window.location.href = base_url;
                     }
                   });
                   $("#form_tramite_obs")[0].reset();
@@ -174,6 +178,8 @@ function llenarDatosTramite() {
       if (objData.status) {
         $("#tdExpediente").text(objData.data.nro_expediente);
         Expediente = objData.data.nro_expediente;
+        idDocumento = objData.data.iddocumento;
+        AreaActual = objData.data.area;
         $("#tdFecha").text(objData.data.Fecha);
         $("#tdRemitente").text(objData.data.Datos);
         $("#tdDNI").text(objData.data.dni);

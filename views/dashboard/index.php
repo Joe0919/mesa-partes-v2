@@ -1,6 +1,3 @@
-<?php // require_once "views/inc/Validacion/Validacion.php" 
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,9 +6,6 @@
     <?php require_once "views/inc/MainHeadLink/MainHeadLink.php" ?>
 
     <title><?= $data['page_title'] ?> | Mesa de Partes Virtual</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
 </head>
 
 <body class="sidebar-mini layout-fixed bg-principal">
@@ -33,23 +27,21 @@
                     <div class="row mb-2">
                         <div class="col-sm-10 d-flex justify-content-center">
                             <h4 class="m-0 font-weight-bold">BIENVENIDO</h3>
-                        </div><!-- /.col -->
+                        </div>
                         <div class="col-sm-2">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="modal-title-weight li-nav-info"><i class="nav-icon fas fa-home"></i><?= $data['page_title'] ?></li>
                             </ol>
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- /.content-header -->
 
             <!-- Main content -->
             <main class="content">
                 <div class="container-fluid">
-
                     <!-- RESUMEN DE DOCUMENTOS GENERAL -->
-                    <?php if ($_SESSION['userData']['idusuarios'] == 1) { ?>
+                    <?php if ($_SESSION['userData']['idroles'] == 1) { ?>
                         <div class="row">
                             <div class="col-12 col-sm-6 col-xl-3">
                                 <a href="<?= base_url(); ?>/tramites" title="Administrar">
@@ -58,7 +50,7 @@
                                         <div class="info-box-content content-lh">
                                             <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
                                             <span class="info-box-text1 info-box-count" id="span_cant_pendientes"></span>
-                                            <span class="progress-description info-box-desc">Documentos</span>
+                                            <span class="info-box-desc">Documentos</span>
                                         </div>
                                     </div>
                                 </a>
@@ -70,7 +62,7 @@
                                         <div class="info-box-content content-lh">
                                             <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
                                             <span class="info-box-text1 info-box-count" id="span_cant_aceptados"></span>
-                                            <span class="progress-description info-box-desc">Documentos</span>
+                                            <span class="info-box-desc">Documentos</span>
                                         </div>
                                     </div>
                                 </a>
@@ -83,7 +75,7 @@
                                         <div class="info-box-content content-lh">
                                             <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
                                             <span class="info-box-text1 info-box-count" id="span_cant_archivados"></span>
-                                            <span class="progress-description info-box-desc">Documentos</span>
+                                            <span class="info-box-desc">Documentos</span>
                                         </div>
                                     </div>
                                 </a>
@@ -96,7 +88,7 @@
                                         <div class="info-box-content content-lh">
                                             <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
                                             <span class="info-box-text1 info-box-count" id="span_cant_rechazados"></span>
-                                            <span class="progress-description info-box-desc">Documentos</span>
+                                            <span class="info-box-desc">Documentos</span>
                                         </div>
                                     </div>
                                 </a>
@@ -109,7 +101,7 @@
                             <!-- RESUMEN DE DOCUMENTOS EN EL AREA -->
                             <div class="card card-outline card-fuchsia">
                                 <div class="card-header">
-                                    <h3 class="card-title"><i class="fas fa-minus mr-1"></i>DOCUMENTOS EN: <strong id="area"><?= $_SESSION['userData']['area'] ?></strong></h3>
+                                    <h3 class="card-title"><i class="fas fa-folder mr-1"></i>DOCUMENTOS EN: <strong id="area"><?= $_SESSION['userData']['area'] ?></strong></h3>
                                     <div class="card-tools">
                                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                             <i class="fas fa-minus"></i>
@@ -127,7 +119,7 @@
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">PENDIENTES</span>
                                                         <span class="info-box-text1 info-box-count" id="span_cant_pendientes_area"></span>
-                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                        <span class="info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -139,7 +131,7 @@
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">ACEPTADOS</span>
                                                         <span class="info-box-text1 info-box-count" id="span_cant_aceptados_area"></span>
-                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                        <span class="info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -151,7 +143,7 @@
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">ARCHIVADOS</span>
                                                         <span class="info-box-text1 info-box-count" id="span_cant_archivados_area"></span>
-                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                        <span class="info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -163,7 +155,7 @@
                                                     <div class="info-box-content content-lh">
                                                         <span class="info-box-text info-box-text1 info-box-title">RECHAZADOS</span>
                                                         <span class="info-box-text1 info-box-count" id="span_cant_rechazados_area"></span>
-                                                        <span class="progress-description info-box-desc">Documentos</span>
+                                                        <span class="info-box-desc">Documentos</span>
                                                     </div>
                                                 </div>
                                             </a>
@@ -366,6 +358,9 @@
 
     <script src="<?= media() ?>/js/backend/<?= $data['file_js'] ?>"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/chart.js/Chart_v4.4.js"></script>
+    <script src="<?= media() ?>/templates/AdminLTE/plugins/chart.js/Chart.plugin.datalabels_v2.2.js"></script>
 
 
 </body>

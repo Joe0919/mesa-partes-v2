@@ -61,6 +61,32 @@ function MostrarAlerta(titulo, descripcion, tipoalerta) {
   });
 }
 
+function MostrarAlertaToast(
+  titulo,
+  descripcion,
+  tipoalerta,
+  posicion = "toast-top-center"
+) {
+  toastr.options = {
+    closeButton: true,
+    debug: false,
+    newestOnTop: false,
+    progressBar: false,
+    positionClass: posicion,
+    preventDuplicates: true,
+    onclick: null,
+    showDuration: "300",
+    hideDuration: "1000",
+    timeOut: "3000",
+    extendedTimeOut: "500",
+    showEasing: "swing",
+    hideEasing: "linear",
+    showMethod: "fadeIn",
+    hideMethod: "fadeOut",
+  };
+  Command: toastr[tipoalerta](descripcion, titulo);
+}
+
 function verificarCampos(formulario) {
   let camposVacios = formulario.find("input[required]").filter(function () {
     return $.trim($(this).val()) === "";
@@ -196,7 +222,7 @@ function validarCamposRequeridos(formularioID) {
 function eliminarValidacion(formularioID) {
   // Seleccionar los elementos con el atributo required dentro del formulario
   $(
-    `${formularioID} input[required], ${formularioID} select[required], ${formularioID} textarea[required]`
+    `${formularioID} input, ${formularioID} select, ${formularioID} textarea`
   ).each(function () {
     // Eliminar las clases is-invalid e is-valid de cada uno de los elementos
     $(this).removeClass("is-invalid is-valid");
@@ -303,7 +329,6 @@ function inicializarTablaTramites(tabla, controlador) {
     area.replace(/ /g, "+") +
     "/" +
     estado.replace(/ /g, "+");
-
   tabla = $("#" + tabla).DataTable({
     destroy: true,
     language: {

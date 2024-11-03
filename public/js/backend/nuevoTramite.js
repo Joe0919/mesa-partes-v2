@@ -88,8 +88,6 @@ $(function () {
         success: function (response) {
           objData = JSON.parse(response);
           if (objData.status) {
-            $("#btn_validar").prop("disabled", true);
-
             $("#idni").prop("readonly", true);
             $("#idnombre").prop("readonly", true);
             $("#idap").prop("readonly", true);
@@ -115,15 +113,19 @@ $(function () {
               $("#idruc").prop("readonly", true);
               $("#identidad").prop("readonly", true);
             }
+            MostrarAlertaToast(
+              "DNI ENCONTRADO",
+              "Datos Completados. Solo puede incluir un único email.",
+              "success",
+              "toast-bottom-center"
+            );
           } else {
-            Swal.fire({
-              position: "center",
-              icon: "warning",
-              title: "No esta registrado",
-              text: "Por favor llene los campos con sus datos.",
-              showConfirmButton: false,
-              timer: 2800,
-            });
+            MostrarAlertaToast(
+              "DNI NO ENCONTRADO",
+              "Por favor, registre sus datos en el formulario",
+              "error",
+              "toast-bottom-center"
+            );
             $("#idni").prop("readonly", true);
             $("#idnombre").prop("readonly", false);
             $("#idap").prop("readonly", false);
@@ -133,6 +135,7 @@ $(function () {
             $("#idemail").prop("readonly", false);
             $("#idnombre").focus();
           }
+          $("#btn_validar").prop("disabled", true);
           $("#loader").hide();
         },
         error: function (error) {

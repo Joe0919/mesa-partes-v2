@@ -189,7 +189,7 @@ class TramitesController extends Controllers
                     empty($_POST['ifolios']) ||
                     empty($_FILES['ifile'])
                 ) {
-                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar el formulario.');
                 } else {
                     $idpersona = limpiarCadena($_POST['idpersona']);
                     $idusuario = intval(limpiarCadena($_POST['idusuario']));
@@ -206,7 +206,7 @@ class TramitesController extends Controllers
                     $idtipo = intval(limpiarCadena($_POST['itipo']));
                     $ndoc = limpiarCadena($_POST['n_doc']);
                     $folios = intval(limpiarCadena($_POST['ifolios']));
-                    $asunto = limpiarCadena($_POST['iasunto']);
+                    $asunto = strtoupper(limpiarCadena($_POST['iasunto']));
                     $documento = $_FILES['ifile'];
 
                     $request_persona = '';
@@ -218,10 +218,8 @@ class TramitesController extends Controllers
                         $rutaFecha = date('Y') . '/' . date('m') . '/' . date('d') . '/'; // 1/
                         $file_tmp_name = $documento['tmp_name'];
 
-                        // Obtener el expediente
                         $expedienteData = $this->model->genExpediente();
 
-                        // Acceder al número de expediente
                         $expediente = $expedienteData['Expediente'];
 
                         $nuevo_nombre = $ruta_raiz . $rutaFecha . 'doc_' . $expediente . '_' . date('dmY') . '_' . $dni . '.pdf';
@@ -250,8 +248,8 @@ class TramitesController extends Controllers
                             } else {
                                 $iddocumento = $this->model->registrarDocumento($expediente, $ndoc, $folios, $asunto, $ruta_pdf, $request_persona, $idtipo);
                                 $this->model->registrarHistorial($expediente, $dni, 'INGRESO DE NUEVO TRÁMITE', $idusuario);
-
-                                $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', '8', 'DERIVANDO A SECRETARIA');
+                                // El Cuarto parametro 'SECRETARIA' ya que buscamos esa area sino cualquier otro ID de area
+                                $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', 'SECRETARIA', 'DERIVANDO A SECRETARIA');
 
                                 $arrData = $this->model->selectTramite($expediente, "");
 
@@ -342,7 +340,7 @@ class TramitesController extends Controllers
                     $arrResponse = array('status' => true, 'title' => 'Trámite Aceptado', "msg" => 'La acción se realizó con exito.', 'data' => $request);
                 } else if ($accion === 'RECHAZAR') {
                     // Validamos si en SECRETARIA se rechaza el tramite 
-                    if ($origen === 'SECRETARIA') {
+                    if (stripos($origen, 'SECRETARIA') !== false) {
                         // No es necesario Derivar a Secretaria, solo se rechaza
                         // Colocamos la descripcion por la que se esta Rechazando
                         $this->model->editarDerivacion($idderivacion, $descripcion);

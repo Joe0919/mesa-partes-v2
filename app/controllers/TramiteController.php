@@ -75,13 +75,15 @@ class TramiteController extends Controllers
                     empty($_POST['email']) ||
                     empty($_FILES['ifile'])
                 ) {
-                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar todos los campos.');
+                    $arrResponse = array("status" => false, "title" => "Faltan Datos", "msg" => 'Completar el formulario');
                 } else {
                     $expediente = limpiarCadena($_POST['expediente']);
                     $idtipo = intval(limpiarCadena($_POST['itipo']));
+                    $AreaActual = limpiarCadena($_POST['AreaActual']);
+                    $iddocumento = intval(limpiarCadena($_POST['iddocumento']));
                     $ndoc = limpiarCadena($_POST['n_doc']);
                     $folios = intval(limpiarCadena($_POST['ifolios']));
-                    $asunto = limpiarCadena($_POST['iasunto']);
+                    $asunto = strtoupper(limpiarCadena($_POST['iasunto']));
                     $documento = $_FILES['ifile'];
                     $ruta = limpiarCadena($_POST['ruta']);
 
@@ -110,6 +112,11 @@ class TramiteController extends Controllers
                         $this->model->editarDocumento($expediente, 'PENDIENTE');
 
                         $this->model->registrarHistorial($expediente, $dni, 'LEVANTAMIENTO DE OBSERVACIONES', '0');
+
+                        if (stripos($AreaActual, 'SECRETARIA') !== false) {
+                            // El Cuarto parametro 'SECRETARIA' ya que buscamos esa area sino cualquier otro ID de area
+                            $this->model->registrarDerivacion($iddocumento, '', 'EXTERIOR', 'SECRETARIA', 'DERIVANDO PARA REVISIÓN');
+                        }
 
                         $arrData = $this->model->selectTramite($expediente, "");
 

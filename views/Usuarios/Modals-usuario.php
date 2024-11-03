@@ -28,13 +28,23 @@
                             <input type="hidden" name="bdr-photo" id="bdr-photo" value="0">
                         </div>
                         <div class="col-md-9">
+                            <small class="p-nota text-muted mb-1">NOTA: Valide el DNI. Si existen coincidencias se completarán los datos y pueden ser editados</small>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="idni">DNI</label><span class="span-required"></span>
-                                        <input type="text" class="form-control text-uppercase" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required placeholder="Ingrese DNI">
-                                        <p id="ErrorDNI" class="m-0 p-0 aviso"></p>
+                                    <div class="row form-group ">
+                                        <div class="col-12">
+                                            <label for="idni">DNI</label><span class="span-required"></span>
+                                        </div>
+                                        <div class="row col-12 pr-0">
+                                            <div class="col">
+                                                <input type="text" class="form-control text-uppercase" name="idni" id="idni" onkeypress='return validaNumericos(event)' maxlength="8" minlength="8" required placeholder="Ingrese DNI">
+                                            </div>
+                                            <div class="col-auto pr-0">
+                                                <input id="validarDNI" type="button" class="btn btn-success" value="Validar DNI">
+                                            </div>
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -155,7 +165,10 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn1 btn-danger" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn1 btn-primary" id="submitUsuario"></button>
+                    <div>
+                        <button type="button" class="btn btn1 btn-info" id="limpiarUsuario">Limpiar</button>
+                        <button type="submit" class="btn btn1 btn-primary" id="submitUsuario"></button>
+                    </div>
                 </div>
             </form>
         </div>

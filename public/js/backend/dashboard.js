@@ -123,7 +123,7 @@ $(document).ready(function () {
       tablaRanking = $("#tablaRanking").DataTable({
         destroy: true,
         language: {
-          url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+          url: "Spanish.json",
         },
         ajax: {
           url: base_url + "/Dashboard/getRanking",
@@ -156,7 +156,7 @@ $(document).ready(function () {
       tablaDocsxTiempo = $("#tablaDocsxTiempo").DataTable({
         destroy: true,
         language: {
-          url: "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json",
+          url: "Spanish.json",
         },
         ajax: {
           url: base_url + "/Dashboard/getDocsxTiempo",

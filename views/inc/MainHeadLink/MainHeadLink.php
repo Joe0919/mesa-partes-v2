@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/dist/css/adminlte.min.css">
 <!-- Sweet Alert -->
 <link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/sweetalert2/sweetalert2.min.css">
+<!-- Toastr -->
+<link rel="stylesheet" href="<?= media() ?>/templates/AdminLTE/plugins/toastr/toastr.min.css">
 <!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <!-- Estilos principales -->
