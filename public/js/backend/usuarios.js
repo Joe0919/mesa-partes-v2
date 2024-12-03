@@ -173,6 +173,7 @@ $(function () {
             $("#bdr-photo").val() !== "0" ? (foto_bdr = 1) : (foto_bdr = 0);
             let formData = new FormData(this);
             formData.append("foto_bdr", foto_bdr);
+            formData.append("idni", $("#idni").val().trim());
             $.ajax({
               url: base_url + "/Usuarios/setUsuario",
               type: "POST",
@@ -187,7 +188,7 @@ $(function () {
                 objData = JSON.parse(response);
                 if (!objData.status) {
                   MostrarAlerta(objData.title, objData.msg, "error");
-                  console.error(objData.error);
+                  console.error(objData.msg);
                 } else {
                   $("input_photo").val("");
                   $("#form_user")[0].reset();

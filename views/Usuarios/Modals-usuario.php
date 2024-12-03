@@ -31,7 +31,7 @@
                             <small class="p-nota text-muted mb-1">NOTA: Valide el DNI. Si existen coincidencias se completarán los datos y pueden ser editados</small>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="row form-group ">
+                                    <div class="row form-group">
                                         <div class="col-12">
                                             <label for="idni">DNI</label><span class="span-required"></span>
                                         </div>
